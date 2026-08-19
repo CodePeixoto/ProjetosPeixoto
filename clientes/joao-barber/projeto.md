@@ -6,6 +6,9 @@
 >
 > Fonte bruta: `conversa-dialogo.md` (transcrição de 29 min, 17/08).
 > Identidade visual: `identidade.md`. Documentação do site: `site/NOTAS.md`.
+> Motor do agendamento: `agendamento/`.
+>
+> **Site no ar (fechado):** https://joao-barber-k7x.netlify.app
 
 ---
 

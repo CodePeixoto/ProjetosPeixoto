@@ -206,10 +206,14 @@ A regra completa do travessão está em `_memoria/preferencias.md`.
 
 Entraram na operação em agosto/2026, por causa do case do João Barber:
 
-- [x] **GitHub** (`github.com/mazzeoia/MazyOS`), onde o workspace vive.
-      Precisa estar privado, tem dado de cliente
-- [x] **Netlify**, hospedagem dos sites. Ligado no GitHub: todo push na
-      `main` publica sozinho. Skill `/publicar-site` pro caminho manual
+- [x] **GitHub** (`github.com/CodePeixoto/ProjetosPeixoto`), onde o
+      workspace vive. Privado, tem dado de cliente. O repositório do
+      MazyOS original (`mazzeoia/MazyOS`) foi desconectado em 19/08, era
+      de terceiro
+- [x] **Netlify**, hospedagem dos sites. O Claude publica direto pela
+      linha de comando com a skill `/publicar-site`: cria o projeto,
+      sobe e devolve o link, sem ninguém abrir navegador. Token pessoal
+      em `.claude/.netlify-token`, fora do Git
 - [x] **Google Agenda + Planilhas + Apps Script**, o motor do
       agendamento. Roda de graça dentro da conta Google do cliente
 - [x] **Google Meu Negócio**, perfil do cliente

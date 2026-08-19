@@ -141,14 +141,22 @@ as fotos em boa resolução. Pedir um punhado das melhores pro João.
 
 ## Publicar
 
-Ainda não está no ar. Caminho mais simples (grátis):
+**No ar desde 19/08/2026:** https://joao-barber-k7x.netlify.app
 
-1. Netlify Drop, arrasta a pasta `site/` em https://app.netlify.com/drop
-   e já sai no ar com uma URL. Bom pra mostrar pro João rápido
-2. Se ele aprovar, dá pra ligar num domínio próprio
-   (ex: `joaobarber.com.br`) ou num subdomínio grátis do Netlify
+Publicar de novo é só pedir (`/publicar-site`). O id do projeto está em
+`clientes/joao-barber/.netlify-site-id`, e é ele que garante que o
+endereço nunca muda.
 
-Quando estiver no ar, o link entra na bio do Instagram dele.
+**Estado atual: fechado pra visitante.** A conta do Netlify cria projetos
+com proteção ligada, então quem não está logado vê tela de login. Isso é
+proposital por enquanto, porque a mídia ainda não é do João. Pra abrir:
+no projeto, **Site configuration → Access & security → Visitor access**.
+
+Somado a isso, o site sobe com `robots.txt` e meta `noindex`. Os três
+(proteção, robots e noindex) só saem quando o material real entrar.
+
+Domínio próprio (ex: `joaobarber.com.br`) fica pra quando ele aprovar, e
+registrado no CPF dele, não no do Miguel.
 
 ## Próximo passo sugerido (fora do site)
 

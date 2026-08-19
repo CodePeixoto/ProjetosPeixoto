@@ -9,7 +9,7 @@
 **Perfil:** Freelancer
 **Atende clientes:** Primeiro cliente fechado (verbalmente) em 17/08/2026: João Lucas, 21 anos, barbeiro na Barbearia Rota 020 com CNPJ próprio, atende a domicílio, identificado no Instagram como "João Barber". É amigo próximo do Miguel. Disse sim ao pacote. Preço fechado: R$ 300 de implementação e R$ 200 por mês, aceito por ele. O pagamento começa por volta de meados de setembro/2026.
 **Equipe:** Sozinho.
-**Ferramentas:** GitHub (repositório `mazzeoia/MazyOS`), Netlify (hospedagem, ligada no GitHub, publica a cada push), Google Agenda + Planilhas + Apps Script (motor do agendamento) e Google Meu Negócio. Canva, Metricool e Firecrawl seguem em uso esporádico, fora do fluxo de cliente. Ver `CLAUDE.md`.
+**Ferramentas:** GitHub (repositório privado `CodePeixoto/ProjetosPeixoto`), Netlify (hospedagem, publicada pelo Claude via `/publicar-site`), Google Agenda + Planilhas + Apps Script (motor do agendamento) e Google Meu Negócio. Canva, Metricool e Firecrawl seguem em uso esporádico, fora do fluxo de cliente. Ver `CLAUDE.md`.
 **Principais entregas:** Site, **agendamento online** (Google Agenda + planilha + WhatsApp, sem mensalidade de ferramenta), carrossel/conteúdo pra Instagram, Google Meu Negócio, Meta Ads e Google Ads. Preço praticado: R$ 300 de implementação e R$ 200 por mês.
 
 ## Contexto adicional
