@@ -31,3 +31,6 @@ clientes/*/midia-original/
 
 # Token do Netlify (nunca versionar)
 .claude/.netlify-token
+
+# Local Netlify folder
+.netlify
