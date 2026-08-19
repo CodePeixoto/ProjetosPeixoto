@@ -141,19 +141,19 @@ as fotos em boa resolução. Pedir um punhado das melhores pro João.
 
 ## Publicar
 
-**No ar desde 19/08/2026:** https://joao-barber-k7x.netlify.app
+**Não está no ar.** Foi publicado em 19/08/2026 pra testar o fluxo, em
+`joao-barber-k7x.netlify.app`, e o projeto foi apagado no mesmo dia a
+pedido do Miguel. O endereço não existe mais.
 
-Publicar de novo é só pedir (`/publicar-site`). O id do projeto está em
-`clientes/joao-barber/.netlify-site-id`, e é ele que garante que o
-endereço nunca muda.
+Publicar de novo é só pedir (`/publicar-site`): o Claude cria o projeto e
+devolve o link. Como o projeto anterior foi apagado, **o endereço novo
+provavelmente será diferente**. A partir da próxima vez, o id fica salvo
+em `clientes/joao-barber/.netlify-site-id` e aí o link passa a ser fixo.
 
-**Estado atual: fechado pra visitante.** A conta do Netlify cria projetos
-com proteção ligada, então quem não está logado vê tela de login. Isso é
-proposital por enquanto, porque a mídia ainda não é do João. Pra abrir:
-no projeto, **Site configuration → Access & security → Visitor access**.
-
-Somado a isso, o site sobe com `robots.txt` e meta `noindex`. Os três
-(proteção, robots e noindex) só saem quando o material real entrar.
+Quando for publicar pra valer, três travas precisam sair juntas:
+proteção de visitante (no painel da Netlify, em Site configuration →
+Access & security), o `robots.txt` e a meta `noindex` do `index.html`.
+Só depois que a mídia real do João estiver no lugar.
 
 Domínio próprio (ex: `joaobarber.com.br`) fica pra quando ele aprovar, e
 registrado no CPF dele, não no do Miguel.

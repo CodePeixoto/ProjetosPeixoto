@@ -8,7 +8,7 @@
 > Identidade visual: `identidade.md`. Documentação do site: `site/NOTAS.md`.
 > Motor do agendamento: `agendamento/`.
 >
-> **Site no ar (fechado):** https://joao-barber-k7x.netlify.app
+> **Site não está no ar.** Publicação é sob demanda, com `/publicar-site`.
 
 ---
 

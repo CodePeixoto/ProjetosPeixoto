@@ -17,9 +17,9 @@ real: o que for contexto do projeto entra no `projeto.md`.
 | `agendamento/` | Apps Script do agendamento e o passo a passo de instalação |
 
 Mídia bruta fica em `midia-original/` (fora do Git). Carrossel em
-`carrossel/`. O arquivo `.netlify-site-id` guarda o id do projeto na
-Netlify e não deve ser apagado: é ele que mantém o endereço do site
-estável entre publicações.
+`carrossel/`. Quando o site for publicado, aparece um `.netlify-site-id`
+com o id do projeto na Netlify. Esse arquivo não deve ser apagado: é ele
+que mantém o endereço estável entre publicações.
 
 ## Regra que filtra qualquer entrega nova
 
@@ -42,5 +42,6 @@ que é a marca do Miguel.
   Logo real ainda pendente, usar wordmark em texto até o arquivo chegar
 - A marca é do João Lucas, não da Rota 020 onde ele trabalha
 - Preço fechado: R$ 300 de implementação e R$ 200 por mês
-- Site publicado em https://joao-barber-k7x.netlify.app, ainda fechado
-  pra visitante e com `noindex`, porque a mídia atual não é dele
+- Site fora do ar. Só publicar quando a mídia for do João de verdade.
+  Hoje o `index.html` sobe com `noindex` e tem um `robots.txt` de
+  bloqueio, os dois marcados com comentário pra remover na hora certa
