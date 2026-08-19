@@ -24,3 +24,10 @@ node_modules/
 # Drop zone do usuário (só o README vai versionado)
 dados/*
 !dados/README.md
+
+# Mídia original dos clientes (arquivos brutos, pesados demais pro Git).
+# A versão comprimida que o site usa fica em clientes/<nome>/site/ e vai versionada.
+clientes/*/midia-original/
+
+# Token do Netlify (nunca versionar)
+.claude/.netlify-token

@@ -1,0 +1,1010 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>João Barber · Barbeiro em Sobradinho DF · Atendimento a domicílio</title>
+<meta name="description" content="João Lucas, barbeiro em Sobradinho DF. Corte, barba e acabamento a domicílio ou na Barbearia Rota 020. Agende pelo WhatsApp.">
+
+<!-- Open Graph: como o link aparece quando compartilhado no WhatsApp/Instagram -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="João Barber · Barbeiro em Sobradinho DF">
+<meta property="og:description" content="Corte, barba e acabamento a domicílio ou na Barbearia Rota 020. Agende pelo WhatsApp.">
+<meta property="og:locale" content="pt_BR">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- Oswald: a condensada da referência. Usada na página inteira. -->
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --preto:#0B0B0B;
+  --carvao:#141414;
+  --dourado:#C9A227;
+  --dourado-claro:#E0BE4A;
+  --claro:#FAFAF7;
+  --muted:#A8A8A2;
+  --linha:rgba(250,250,247,.12);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+
+body{
+  background:var(--preto);
+  color:var(--claro);
+  font-family:'Oswald',system-ui,sans-serif;
+  font-weight:300;line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+.wrap{width:100%;max-width:1240px;margin:0 auto;padding:0 22px}
+
+/* ---------- tipografia ---------- */
+.eyebrow{
+  font-size:12px;font-weight:500;text-transform:uppercase;
+  letter-spacing:.30em;color:var(--dourado);
+}
+h1{
+  font-size:clamp(34px,6.4vw,60px);font-weight:700;
+  line-height:1.1;letter-spacing:.005em;text-transform:uppercase;
+}
+h2{
+  font-size:clamp(26px,4.4vw,40px);font-weight:600;
+  line-height:1.16;letter-spacing:.01em;text-transform:uppercase;
+}
+h3{font-size:21px;font-weight:500;text-transform:uppercase;letter-spacing:.04em}
+p{font-size:16px;font-weight:300;color:var(--muted)}
+.regua{width:58px;height:2px;background:var(--dourado);border:0}
+
+/* ---------- header ---------- */
+/* O cabeçalho fica fixo o tempo todo, acompanhando a rolagem.
+   Sobre o hero ele é totalmente transparente, sem barra e sem linha,
+   com sombra no texto pra garantir a leitura sobre a foto.
+   Passando o hero, ganha fundo sólido. */
+header{
+  position:fixed;top:0;left:0;right:0;z-index:40;
+  border-bottom:1px solid transparent;
+  text-shadow:0 1px 10px rgba(0,0,0,.55);
+  transition:background .3s ease,border-color .3s ease;
+}
+header.solido{
+  background:rgba(11,11,11,.96);
+  backdrop-filter:blur(12px);border-bottom-color:var(--linha);
+  text-shadow:none;
+}
+.header-in{display:flex;align-items:center;height:78px}
+
+.logo{text-decoration:none;color:var(--claro);flex:none;display:flex;align-items:center;gap:10px}
+.logo .marca{width:26px;height:26px;color:var(--dourado);flex:none}
+.logo b{
+  font-size:23px;font-weight:600;letter-spacing:.01em;line-height:1;
+}
+.logo b span{color:var(--dourado)}
+
+nav{flex:1;display:none;justify-content:center;gap:26px}
+nav a{
+  font-size:13px;font-weight:400;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--claro);text-decoration:none;
+  padding:5px 0;border-bottom:2px solid transparent;transition:.15s;
+}
+nav a:hover{color:var(--dourado)}
+nav a.ativo{color:var(--dourado);border-bottom-color:var(--dourado)}
+
+header .header-cta{margin-left:auto;padding:11px 16px;font-size:11px}
+
+.burger{
+  margin-left:12px;background:none;border:0;cursor:pointer;
+  width:36px;height:36px;display:flex;flex-direction:column;
+  justify-content:center;gap:5px;padding:0;flex:none;
+}
+.burger span{display:block;height:2px;background:var(--claro);border-radius:2px;transition:.2s}
+.burger[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.burger[aria-expanded="true"] span:nth-child(2){opacity:0}
+.burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+
+.menu-mobile{
+  display:none;flex-direction:column;
+  padding:12px 22px 24px;background:rgba(11,11,11,.97);
+  border-top:1px solid var(--linha);
+  /* com o cabeçalho fixo, o menu não pode passar da altura da tela */
+  max-height:calc(100svh - 78px);overflow-y:auto;
+}
+.menu-mobile.aberto{display:flex}
+.menu-mobile a{
+  font-size:15px;font-weight:400;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--claro);text-decoration:none;padding:15px 0;
+  border-bottom:1px solid var(--linha);
+}
+.menu-mobile a:last-of-type{border-bottom:0}
+.menu-mobile .btn{margin-top:16px}
+
+/* ---------- botões ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  padding:15px 30px;border-radius:0;
+  font-family:'Oswald',sans-serif;
+  font-size:13px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;
+  text-decoration:none;border:1.5px solid transparent;white-space:nowrap;
+  transition:transform .15s,background .15s,border-color .15s,color .15s;
+}
+.btn:active{transform:translateY(1px)}
+.btn-primary{background:var(--dourado);color:#120E04}
+.btn-primary:hover{background:var(--dourado-claro)}
+.btn-ghost{border-color:rgba(250,250,247,.75);color:var(--claro)}
+.btn-ghost:hover{border-color:var(--dourado);color:var(--dourado)}
+.btn svg{width:17px;height:17px;flex:none;fill:currentColor}
+
+/* ---------- hero ---------- */
+.hero{
+  position:relative;min-height:100svh;display:flex;align-items:center;
+  padding:130px 0 96px;overflow:hidden;text-align:center;
+  background-color:var(--preto);
+  background-image:radial-gradient(70% 80% at 50% 45%,rgba(201,162,39,.14),transparent 68%);
+}
+
+/* ----- camada de mídia (fotos em loop + vídeo opcional) ----- */
+.hero-media{position:absolute;inset:0;z-index:0;overflow:hidden}
+.hero-slide{
+  position:absolute;inset:0;
+  background-size:cover;background-position:center;
+  opacity:0;transition:opacity 1.6s ease;
+  will-change:opacity,transform;
+}
+.hero-slide.on{opacity:1;animation:kenburns 9s ease-out forwards}
+@keyframes kenburns{from{transform:scale(1)}to{transform:scale(1.09)}}
+
+.hero-video{
+  position:absolute;inset:0;width:100%;height:100%;
+  object-fit:cover;object-position:center;
+  opacity:0;transition:opacity 1.2s ease;
+}
+.hero-video.on{opacity:1}
+
+/* Véu: vinheta central. Mais leve que antes, porque o texto agora é
+   centralizado e a foto precisa aparecer, como na referência. */
+.hero-veu{
+  position:absolute;inset:0;z-index:1;
+  background:
+    radial-gradient(78% 70% at 50% 48%,rgba(11,11,11,.28) 0%,rgba(11,11,11,.52) 62%,rgba(11,11,11,.70) 100%),
+    linear-gradient(to bottom,rgba(11,11,11,.24) 0%,transparent 22%,transparent 70%,rgba(11,11,11,.78) 100%);
+}
+
+.hero .wrap{position:relative;z-index:2}
+.hero-in{max-width:820px}
+
+/* ----- emblema central ----- */
+.emblema{
+  display:flex;flex-direction:column;align-items:center;
+  margin-bottom:26px;
+  text-shadow:0 2px 14px rgba(0,0,0,.55);
+}
+.emblema .e-top{
+  font-size:clamp(17px,2.4vw,22px);font-weight:300;
+  letter-spacing:.42em;text-indent:.42em;text-transform:uppercase;
+  color:var(--claro);line-height:1;
+}
+.emblema .e-big{
+  font-size:clamp(30px,4.6vw,44px);font-weight:500;
+  letter-spacing:.20em;text-indent:.20em;text-transform:uppercase;
+  color:var(--claro);line-height:1.12;margin-top:6px;
+}
+.hero h1{
+  margin:0 auto 18px;max-width:16ch;
+  text-shadow:0 3px 18px rgba(0,0,0,.6);
+}
+.hero p{
+  font-size:16px;font-weight:300;line-height:1.7;letter-spacing:.012em;
+  margin:0 auto 36px;max-width:50ch;
+  color:rgba(250,250,247,.88);
+  text-shadow:0 2px 12px rgba(0,0,0,.65);
+}
+.hero-cta{display:flex;flex-wrap:wrap;gap:14px;justify-content:center}
+
+/* ---------- seções ---------- */
+section{padding:88px 0;border-bottom:1px solid var(--linha);scroll-margin-top:78px}
+.sec-head{margin-bottom:48px;text-align:center}
+.sec-head .eyebrow{display:block;margin-bottom:14px}
+.sec-head h2{margin-bottom:18px}
+.sec-head .regua{margin:0 auto}
+
+/* ---------- sobre (texto à esquerda + quadro de foto à direita) ---------- */
+.sobre{background:var(--carvao)}
+.sobre-grid{display:grid;grid-template-columns:1fr;gap:44px;align-items:center}
+
+.sobre h2{text-align:left}
+.sobre h2 span{color:var(--dourado)}
+.sobre .regua{margin:20px 0 0}
+
+.sobre .lead{
+  margin-top:28px;font-size:17px;font-style:italic;font-weight:300;
+  line-height:1.75;color:rgba(250,250,247,.90);
+}
+.sobre .corpo{margin-top:18px;font-size:15.5px;line-height:1.8}
+
+.assinatura{margin-top:30px}
+.assinatura b{
+  display:block;font-size:21px;font-weight:500;
+  letter-spacing:.02em;color:var(--claro);
+}
+.assinatura span{
+  display:block;margin-top:5px;
+  font-size:11px;font-weight:400;letter-spacing:.24em;
+  text-transform:uppercase;color:var(--dourado);
+}
+
+/* o quadro: menor que a metade da tela, não sangra até a borda */
+.sobre-foto{display:flex;justify-content:center}
+.sobre-foto img{
+  display:block;width:100%;max-width:300px;
+  aspect-ratio:3/4;object-fit:cover;object-position:center 22%;
+  border:1px solid var(--linha);
+}
+
+/* ---------- serviços (foto + selo circular + texto) ---------- */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(232px,1fr));gap:24px}
+
+.svc{background:var(--carvao);text-align:center}
+.svc-foto{position:relative}
+.svc-img{aspect-ratio:4/3;overflow:hidden}
+.svc-img img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  transition:transform .6s ease;
+}
+.svc:hover .svc-img img{transform:scale(1.07)}
+
+/* o selo cavalga a divisa entre a foto e o painel escuro */
+.svc-selo{
+  position:absolute;left:50%;bottom:-27px;transform:translateX(-50%);
+  width:54px;height:54px;border-radius:50%;
+  background:var(--dourado);color:#120E04;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 6px 18px rgba(0,0,0,.45);
+}
+.svc-selo svg{
+  width:24px;height:24px;
+  fill:none;stroke:currentColor;stroke-width:1.7;
+  stroke-linecap:round;stroke-linejoin:round;
+}
+
+.svc-txt{padding:50px 22px 34px}
+.svc-txt h3{margin-bottom:12px}
+.svc-txt p{font-size:14.5px;max-width:30ch;margin:0 auto}
+
+.nota{margin:36px auto 0;font-size:15px;text-align:center;max-width:56ch}
+
+
+/* ---------- domicílio (foto sangra à esquerda, texto à direita) ---------- */
+.destaque{background:var(--carvao);padding:0}
+.dom{display:grid;grid-template-columns:1fr}
+.dom-foto{position:relative;min-height:300px}
+.dom-foto img{
+  position:absolute;inset:0;
+  width:100%;height:100%;object-fit:cover;object-position:center;display:block;
+}
+.dom-txt{padding:64px 22px}
+.dom-in{max-width:480px}
+.dom-in h2{margin-bottom:22px}
+.dom-in .lead{
+  font-size:17px;font-style:italic;font-weight:300;line-height:1.7;
+  color:var(--dourado);margin-bottom:20px;
+}
+.dom-in .corpo{font-size:15.5px;line-height:1.85;margin-bottom:34px}
+
+/* ---------- galeria de trabalhos ---------- */
+.galeria{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+.gal{margin:0}
+.gal-img{position:relative;aspect-ratio:1;overflow:hidden;background:var(--carvao)}
+.gal-img img{
+  width:100%;height:100%;object-fit:cover;display:block;
+  filter:grayscale(1) contrast(1.05);
+  transition:filter .45s ease,transform .55s ease;
+}
+.gal:hover .gal-img img{filter:grayscale(0) contrast(1);transform:scale(1.06)}
+
+/* o texto por cima só existe no hover. No celular fica a legenda de baixo */
+.gal-over{
+  position:absolute;inset:0;padding:20px;
+  background:rgba(11,11,11,.88);
+  display:flex;flex-direction:column;justify-content:center;
+  opacity:0;transition:opacity .35s ease;
+}
+.gal:hover .gal-over{opacity:1}
+.gal-over b{
+  display:block;margin-bottom:10px;
+  font-size:15px;font-weight:500;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--dourado);
+}
+.gal-over p{font-size:13.5px;line-height:1.65}
+
+.gal figcaption{
+  margin-top:12px;font-size:12px;font-weight:400;
+  letter-spacing:.22em;text-transform:uppercase;color:var(--muted);
+}
+
+/* ---------- cta final ---------- */
+.final{position:relative;border:0;background-color:var(--preto);overflow:hidden}
+.final::before{
+  content:"";position:absolute;inset:0;
+  background-image:
+    linear-gradient(rgba(11,11,11,.86),rgba(11,11,11,.90)),
+    url('img/foto-3.jpg');
+  background-size:cover;background-position:center;
+  filter:grayscale(1);
+}
+.final .wrap{position:relative;z-index:1}
+.final-grid{display:grid;grid-template-columns:1fr;gap:40px;align-items:center}
+
+.mapa{border:6px solid rgba(250,250,247,.92);background:#e8e8e4;line-height:0}
+.mapa iframe{display:block;width:100%;aspect-ratio:4/3;border:0}
+
+.final h2{margin-bottom:18px}
+.final .corpo{font-size:15.5px;line-height:1.8;max-width:44ch}
+
+.linhas{margin:28px 0 32px;display:grid;gap:13px}
+.linhas div{font-size:15px;color:var(--muted);line-height:1.65}
+.linhas b{
+  display:inline-block;color:var(--claro);font-weight:500;
+  letter-spacing:.10em;text-transform:uppercase;font-size:13px;
+}
+.linhas a{color:var(--muted);text-decoration:none}
+.linhas a:hover{color:var(--dourado)}
+.linhas .end-lin{color:rgba(250,250,247,.80)}
+
+/* ---------- footer (painel com três colunas) ---------- */
+footer{padding:56px 0 44px}
+/* sem caixa: o rodapé fica aberto, sobre o fundo da página */
+.rodape{padding:8px 0 0}
+.rod-grid{display:grid;grid-template-columns:1fr;gap:38px;justify-items:center;text-align:center}
+
+.rod-marca .marca-sm{
+  display:block;width:30px;height:30px;
+  color:var(--dourado);margin:0 auto 12px;
+}
+.rod-nome i{
+  display:block;font-style:normal;font-size:13px;font-weight:300;
+  letter-spacing:.42em;text-indent:.42em;text-transform:uppercase;
+  color:var(--dourado);line-height:1;
+}
+.rod-nome b{
+  display:block;margin-top:6px;font-size:25px;font-weight:500;
+  letter-spacing:.20em;text-indent:.20em;text-transform:uppercase;
+  color:var(--dourado);line-height:1.1;
+}
+
+.sociais{display:flex;gap:12px;justify-content:center;margin-top:22px}
+.sociais a{
+  width:40px;height:40px;border-radius:50%;
+  border:1px solid rgba(201,162,39,.45);color:var(--dourado);
+  display:flex;align-items:center;justify-content:center;transition:.2s;
+}
+.sociais a:hover{background:var(--dourado);color:#120E04;border-color:var(--dourado)}
+.sociais svg{width:18px;height:18px;fill:currentColor}
+
+.tagline{
+  font-size:19px;font-weight:300;color:var(--dourado);
+  letter-spacing:.04em;margin-bottom:24px;
+}
+
+.rod-contato{display:grid;gap:10px;font-size:14.5px;color:var(--muted)}
+.rod-contato a{color:var(--muted);text-decoration:none}
+.rod-contato a:hover{color:var(--dourado)}
+
+.rod-base{
+  margin-top:40px;padding-top:22px;border-top:1px solid var(--linha);
+  display:grid;gap:10px;text-align:center;
+  font-size:12.5px;color:#6E6E68;letter-spacing:.03em;
+}
+
+/* ================= ANIMAÇÕES =================
+   Tudo abaixo só vale quando o JS marca <html class="anim">. Assim,
+   se o JS falhar ou o visitante pedir menos animação, o conteúdo
+   aparece normalmente em vez de ficar invisível. */
+
+@keyframes surgir-palavra{
+  0%  {opacity:0;transform:translateY(26px) scale(.94);filter:blur(8px)}
+  55% {opacity:.85;transform:translateY(6px) scale(.99);filter:blur(1.5px)}
+  100%{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}
+}
+@keyframes surgir{
+  from{opacity:0;transform:translateY(26px)}
+  to  {opacity:1;transform:translateY(0)}
+}
+@keyframes flutuar{
+  0%,100%{transform:translate(0,0);opacity:.15}
+  25%    {transform:translate(6px,-14px);opacity:.55}
+  50%    {transform:translate(-4px,-7px);opacity:.32}
+  75%    {transform:translate(9px,-20px);opacity:.65}
+}
+@keyframes risco{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+html.anim .palavra{display:inline-block;opacity:0;will-change:transform,opacity,filter}
+html.anim .palavra.on{animation:surgir-palavra .85s cubic-bezier(.22,.7,.3,1) forwards}
+
+html.anim [data-revelar]{opacity:0;will-change:transform,opacity}
+html.anim [data-revelar].on{animation:surgir .85s cubic-bezier(.22,.7,.3,1) forwards}
+
+/* a régua dourada se desenha do centro pra fora */
+html.anim .regua{transform:scaleX(0);transform-origin:center}
+html.anim .regua.on{animation:risco .9s cubic-bezier(.22,.7,.3,1) forwards}
+
+/* pó dourado boiando no hero */
+.poeira{
+  position:absolute;z-index:2;
+  width:3px;height:3px;border-radius:50%;
+  background:var(--dourado);opacity:0;pointer-events:none;
+  animation:flutuar 7s ease-in-out infinite;
+}
+
+/* ---------- desktop ---------- */
+@media(min-width:920px){
+  .burger{display:none}
+  .menu-mobile{display:none!important}
+  nav{display:flex}
+  header .header-cta{margin-left:0}
+  .hero{padding:100px 0}
+  section{padding:110px 0}
+  .dom{grid-template-columns:1fr 1fr}
+  .dom-foto{min-height:580px}
+  .dom-txt{display:flex;align-items:center;padding:96px 60px 96px 76px}
+  .sobre-grid{grid-template-columns:1.25fr .75fr;gap:64px}
+  .sobre-foto img{max-width:360px}
+  .galeria{grid-template-columns:repeat(4,1fr);gap:20px}
+  .final-grid{grid-template-columns:1fr 1fr;gap:66px}
+  .rod-grid{grid-template-columns:1fr 1fr 1fr;align-items:center;gap:40px}
+  .rod-marca{justify-self:start}
+  .rod-contato{justify-self:end;text-align:right}
+  .rod-base{grid-template-columns:1fr auto 1fr;align-items:center;gap:20px}
+  .rod-base :first-child{text-align:left}
+  .rod-base :last-child{text-align:right}
+}
+
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *{transition:none!important;animation:none!important}
+}
+</style>
+</head>
+<body>
+
+<header id="topo">
+  <div class="wrap header-in">
+    <a href="#topo" class="logo">
+      <svg class="marca" viewBox="0 0 40 40" aria-hidden="true">
+        <circle cx="10" cy="31" r="5" fill="none" stroke="currentColor" stroke-width="2.4"/>
+        <circle cx="30" cy="31" r="5" fill="none" stroke="currentColor" stroke-width="2.4"/>
+        <path d="M27.5 27.5 L10 5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+        <path d="M12.5 27.5 L30 5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+      </svg>
+      <b>João<span>Barber</span></b>
+    </a>
+
+    <nav>
+      <a href="#topo" class="ativo">Início</a>
+      <a href="#sobre">Sobre</a>
+      <a href="#servicos">Serviços</a>
+      <a href="#trabalhos">Trabalhos</a>
+      <a href="#domicilio">A domicílio</a>
+      <a href="#contato">Contato</a>
+    </nav>
+
+    <a class="btn btn-primary header-cta" href="https://wa.me/message/4J746DNCQC6ED1" target="_blank" rel="noopener">Agendar</a>
+
+    <button class="burger" id="burger" aria-expanded="false" aria-controls="menu-mobile" aria-label="Abrir menu">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+
+  <div class="menu-mobile" id="menu-mobile">
+    <a href="#topo">Início</a>
+    <a href="#sobre">Sobre</a>
+    <a href="#servicos">Serviços</a>
+    <a href="#trabalhos">Trabalhos</a>
+    <a href="#domicilio">A domicílio</a>
+    <a href="#contato">Contato</a>
+    <a class="btn btn-primary" href="https://wa.me/message/4J746DNCQC6ED1" target="_blank" rel="noopener">Agendar no WhatsApp</a>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ HERO ============ -->
+  <!-- MÍDIA DE FUNDO (ver NOTAS.md)
+       Fotos: img/foto-*.jpg (passam em loop)   Vídeo: video/hero.mp4 (só desktop) -->
+  <div class="hero">
+
+    <div class="hero-media" aria-hidden="true">
+      <div class="hero-slide on" style="background-image:url('img/foto-4.jpg')"></div>
+      <div class="hero-slide" data-bg="img/foto-7.jpg"></div>
+      <div class="hero-slide" data-bg="img/foto-6.jpg"></div>
+      <div class="hero-slide" data-bg="img/foto-2.jpg"></div>
+      <video class="hero-video" id="hero-video" muted loop playsinline preload="none"></video>
+    </div>
+
+    <div class="hero-veu" aria-hidden="true"></div>
+
+    <span class="poeira" style="top:24%;left:14%;animation-delay:.2s" aria-hidden="true"></span>
+    <span class="poeira" style="top:62%;left:86%;animation-delay:1.1s" aria-hidden="true"></span>
+    <span class="poeira" style="top:38%;left:9%;animation-delay:2s" aria-hidden="true"></span>
+    <span class="poeira" style="top:76%;left:91%;animation-delay:2.8s" aria-hidden="true"></span>
+    <span class="poeira" style="top:18%;left:72%;animation-delay:3.4s" aria-hidden="true"></span>
+    <span class="poeira" style="top:82%;left:28%;animation-delay:4.2s" aria-hidden="true"></span>
+
+    <div class="wrap hero-in">
+
+      <!-- Emblema central (no lugar do brasão JB, que ainda não temos) -->
+      <div class="emblema">
+        <span class="e-top">João</span>
+        <span class="e-big">Barber</span>
+      </div>
+
+      <h1 data-palavras>Seu corte onde você estiver</h1>
+      <p>Sem fila, sem sair de casa, sem perder a tarde. Levo a barbearia até você, ou te atendo na Rota 020. Você escolhe.</p>
+
+      <div class="hero-cta">
+        <a class="btn btn-primary" href="https://wa.me/message/4J746DNCQC6ED1" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.1-.7.2-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5 0-.2 0-.4 0-.5 0-.2-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5 4.5.7.3 1.2.5 1.7.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.4 1.3 4.9L2 22l5.2-1.3c1.4.8 3 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
+          Agendar no WhatsApp
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ SOBRE ============ -->
+  <!-- Faixa de largura total: foto de fundo esmaecida + texto por cima. -->
+  <section class="sobre" id="sobre">
+    <div class="wrap sobre-grid">
+
+      <div class="sobre-txt">
+        <h2 data-palavras>Um barbeiro <span>só seu</span></h2>
+        <hr class="regua">
+        <p class="lead">Nem todo mundo tem uma tarde inteira pra passar esperando a vez.</p>
+        <p class="corpo">Sou o João Lucas, barbeiro em Sobradinho. Atendo na Barbearia Rota 020 e também na casa dos meus clientes. Aqui o corte é feito com calma, do jeito que combina com a sua cabeça e com a sua rotina, não com um modelo pronto.</p>
+        <div class="assinatura">
+          <b>João Lucas</b>
+          <span>Barbeiro · Sobradinho DF</span>
+        </div>
+      </div>
+
+      <!-- PLACEHOLDER: trocar por um retrato de verdade do João (vertical).
+           Ver NOTAS.md. Esse é o único lugar do site que pede foto dele sozinho. -->
+      <div class="sobre-foto">
+        <img src="img/foto-3.jpg" alt="João Lucas atendendo um cliente">
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ SERVIÇOS ============ -->
+  <section id="servicos">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Serviços</span>
+        <h2 data-palavras>O que eu faço</h2>
+        <hr class="regua">
+      </div>
+      <!-- PLACEHOLDER: as fotos dos cards são de exemplo. Trocar por fotos
+           reais de cada serviço feito pelo João. -->
+      <div class="grid">
+
+        <div class="svc">
+          <div class="svc-foto">
+            <div class="svc-img"><img src="img/foto-5.jpg" alt="Corte de cabelo"></div>
+            <span class="svc-selo" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <circle cx="6.5" cy="17.8" r="2.7"/><circle cx="17.5" cy="17.8" r="2.7"/>
+                <path d="M16.1 15.6 6.5 3.4"/><path d="M7.9 15.6 17.5 3.4"/>
+              </svg>
+            </span>
+          </div>
+          <div class="svc-txt">
+            <h3>Corte</h3>
+            <p>Do clássico ao degradê. Cortado do jeito que combina com você, não com um modelo pronto.</p>
+          </div>
+        </div>
+
+        <div class="svc">
+          <div class="svc-foto">
+            <div class="svc-img"><img src="img/foto-8.jpg" alt="Barba feita na navalha"></div>
+            <span class="svc-selo" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M20.2 4.2 8.6 15.8H5.2L16.8 4.2z"/>
+                <path d="M4 20.4 8.4 16"/>
+              </svg>
+            </span>
+          </div>
+          <div class="svc-txt">
+            <h3>Barba</h3>
+            <p>Desenho, alinhamento e acabamento na navalha. Toalha quente pra fechar.</p>
+          </div>
+        </div>
+
+        <div class="svc">
+          <div class="svc-foto">
+            <div class="svc-img"><img src="img/foto-1.jpg" alt="Corte e barba na mesma sessão"></div>
+            <span class="svc-selo" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 3.4l2.65 5.37 5.93.86-4.29 4.18 1.01 5.9L12 16.9l-5.3 2.81 1.01-5.9-4.29-4.18 5.93-.86z"/>
+              </svg>
+            </span>
+          </div>
+          <div class="svc-txt">
+            <h3>Combos</h3>
+            <p>Corte e barba na mesma sessão. Sai mais em conta e o visual fecha por completo.</p>
+          </div>
+        </div>
+
+        <div class="svc">
+          <div class="svc-foto">
+            <div class="svc-img"><img src="img/foto-6.jpg" alt="Acabamento e pezinho"></div>
+            <span class="svc-selo" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M3.6 5.2h16.8v4.2H3.6z"/>
+                <path d="M7.6 9.4v9M12 9.4v9M16.4 9.4v9"/>
+              </svg>
+            </span>
+          </div>
+          <div class="svc-txt">
+            <h3>Acabamento</h3>
+            <p>Pezinho e sobrancelha. Rápido, pra manter o corte em dia entre uma visita e outra.</p>
+          </div>
+        </div>
+
+      </div>
+      <p class="nota">Valores conforme o serviço e o local do atendimento. Me chama no WhatsApp que eu te passo certinho.</p>
+    </div>
+  </section>
+
+  <!-- ============ TRABALHOS ============ -->
+  <!-- PLACEHOLDER: as 8 fotos e os nomes dos cortes são de exemplo.
+       Trocar por trabalhos reais do João, e conferir se o nome bate
+       com o que aparece na foto. Ver NOTAS.md. -->
+  <section id="trabalhos">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Trabalhos</span>
+        <h2 data-palavras>Quem já passou pela cadeira</h2>
+        <hr class="regua">
+      </div>
+
+      <div class="galeria">
+
+        <figure class="gal">
+          <div class="gal-img">
+            <img src="img/foto-4.jpg" alt="Corte degradê">
+            <div class="gal-over"><b>Degradê</b><p>Transição limpa da máquina pra tesoura, sem degrau na lateral.</p></div>
+          </div>
+          <figcaption>Degradê</figcaption>
+        </figure>
+
+        <figure class="gal">
+          <div class="gal-img">
+            <img src="img/foto-7.jpg" alt="Corte social">
+            <div class="gal-over"><b>Social</b><p>Clássico e alinhado. Serve pro trabalho e pra qualquer ocasião.</p></div>
+          </div>
+          <figcaption>Social</figcaption>
+        </figure>
+
+        <figure class="gal">
+          <div class="gal-img">
+            <img src="img/foto-2.jpg" alt="Corte undercut">
+            <div class="gal-over"><b>Undercut</b><p>Laterais baixas e topo comprido, com contraste bem marcado.</p></div>
+          </div>
+          <figcaption>Undercut</figcaption>
+        </figure>
+
+        <figure class="gal">
+          <div class="gal-img">
+            <img src="img/foto-5.jpg" alt="Corte navalhado">
+            <div class="gal-over"><b>Navalhado</b><p>Acabamento na navalha pra deixar o contorno bem definido.</p></div>
+          </div>
+          <figcaption>Navalhado</figcaption>
+        </figure>
+
+        <figure class="gal">
+          <div class="gal-img">
+            <img src="img/foto-8.jpg" alt="Corte com risco desenhado">
+            <div class="gal-over"><b>Freestyle</b><p>Risco desenhado à mão, do jeito que o cliente pediu.</p></div>
+          </div>
+          <figcaption>Freestyle</figcaption>
+        </figure>
+
+        <figure class="gal">
+          <div class="gal-img">
+            <img src="img/foto-3.jpg" alt="Barba desenhada">
+            <div class="gal-over"><b>Barba</b><p>Desenho, alinhamento e toalha quente pra fechar.</p></div>
+          </div>
+          <figcaption>Barba</figcaption>
+        </figure>
+
+        <figure class="gal">
+          <div class="gal-img">
+            <img src="img/foto-6.jpg" alt="Acabamento e finalização">
+            <div class="gal-over"><b>Finalização</b><p>Secador e produto na medida, pro corte ficar em pé o dia todo.</p></div>
+          </div>
+          <figcaption>Finalização</figcaption>
+        </figure>
+
+        <figure class="gal">
+          <div class="gal-img">
+            <img src="img/foto-1.jpg" alt="Pezinho">
+            <div class="gal-over"><b>Pezinho</b><p>Manutenção rápida pra segurar o corte mais uma semana.</p></div>
+          </div>
+          <figcaption>Pezinho</figcaption>
+        </figure>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ DOMICÍLIO ============ -->
+  <section class="destaque" id="domicilio">
+    <div class="dom">
+
+      <!-- PLACEHOLDER: o ideal aqui é uma foto de um atendimento em casa. -->
+      <div class="dom-foto">
+        <img src="img/foto-5.jpg" alt="Atendimento a domicílio">
+      </div>
+
+      <div class="dom-txt">
+        <div class="dom-in">
+          <span class="eyebrow">Atendimento a domicílio</span>
+          <h2 data-palavras style="margin-top:16px">Eu vou até você</h2>
+          <p class="lead">Você marca a hora. Eu levo a barbearia.</p>
+          <p class="corpo">Levo máquina, navalha, capa e produtos. Só preciso de uma tomada e de um canto com luz. Atendo em Sobradinho e região, inclusive fora do horário comercial, e dá pra atender mais de uma pessoa na mesma visita.</p>
+          <a class="btn btn-primary" href="https://wa.me/message/4J746DNCQC6ED1" target="_blank" rel="noopener">Agendar no WhatsApp</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ============ CONTATO ============ -->
+  <section class="final" id="contato">
+    <div class="wrap final-grid">
+
+      <!-- Mapa da Barbearia Rota 020. Pra trocar o ponto, é só mudar o
+           endereço no ?q= do endereço do iframe. -->
+      <div class="mapa">
+        <iframe
+          src="https://www.google.com/maps?q=Barbearia+Rota+020,+QD+08+BL+19,+Sobradinho,+Bras%C3%ADlia+-+DF&output=embed"
+          title="Mapa da Barbearia Rota 020, em Sobradinho DF"
+          loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </div>
+
+      <div class="contato">
+        <span class="eyebrow">Bora marcar</span>
+        <h2 data-palavras style="margin-top:16px">Me chama e a gente acerta o horário</h2>
+        <p class="corpo">Resposta rápida pelo WhatsApp. Só falar o dia e onde você prefere: na barbearia ou na sua casa.</p>
+
+        <div class="linhas">
+          <div><b>WhatsApp:</b> <a href="https://wa.me/message/4J746DNCQC6ED1" target="_blank" rel="noopener">Chamar agora</a></div>
+          <div><b>Instagram:</b> <a href="https://instagram.com/joao_barber._" target="_blank" rel="noopener">@joao_barber._</a></div>
+          <div><b>A domicílio:</b> Sobradinho e região</div>
+          <div style="margin-top:8px">
+            <b>Onde eu atendo:</b><br>
+            <span class="end-lin">Barbearia Espaço Rota 020<br>Quadra 08, Bloco 19, Lote 07, Lojas 1 e 2<br>Sobradinho · Brasília DF</span>
+          </div>
+        </div>
+
+        <a class="btn btn-primary" href="https://wa.me/message/4J746DNCQC6ED1" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.1-.7.2-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5 0-.2 0-.4 0-.5 0-.2-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5 4.5.7.3 1.2.5 1.7.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.4 1.3 4.9L2 22l5.2-1.3c1.4.8 3 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
+          Agendar no WhatsApp
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="rodape">
+      <div class="rod-grid">
+
+        <div class="rod-marca">
+          <svg class="marca-sm" viewBox="0 0 40 40" aria-hidden="true">
+            <circle cx="10" cy="31" r="5" fill="none" stroke="currentColor" stroke-width="2.4"/>
+            <circle cx="30" cy="31" r="5" fill="none" stroke="currentColor" stroke-width="2.4"/>
+            <path d="M27.5 27.5 L10 5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+            <path d="M12.5 27.5 L30 5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+          </svg>
+          <span class="rod-nome"><i>João</i><b>Barber</b></span>
+
+          <div class="sociais">
+            <a href="https://instagram.com/joao_barber._" target="_blank" rel="noopener" aria-label="Instagram do João Barber">
+              <svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 1.2.1 1.8.2 2.2.4.6.2 1 .5 1.4.9.4.4.7.8.9 1.4.2.4.4 1 .4 2.2.1 1.3.1 1.7.1 4.9s0 3.6-.1 4.9c-.1 1.2-.2 1.8-.4 2.2-.2.6-.5 1-.9 1.4-.4.4-.8.7-1.4.9-.4.2-1 .4-2.2.4-1.3.1-1.7.1-4.9.1s-3.6 0-4.9-.1c-1.2-.1-1.8-.2-2.2-.4-.6-.2-1-.5-1.4-.9-.4-.4-.7-.8-.9-1.4-.2-.4-.4-1-.4-2.2C2.2 15.6 2.2 15.2 2.2 12s0-3.6.1-4.9c.1-1.2.2-1.8.4-2.2.2-.6.5-1 .9-1.4.4-.4.8-.7 1.4-.9.4-.2 1-.4 2.2-.4 1.3-.1 1.7-.1 4.8-.1zm0 5.8a4 4 0 100 8 4 4 0 000-8zm0 6.6a2.6 2.6 0 110-5.2 2.6 2.6 0 010 5.2zm5.1-6.7a.94.94 0 11-1.9 0 .94.94 0 011.9 0z"/></svg>
+            </a>
+            <a href="https://wa.me/message/4J746DNCQC6ED1" target="_blank" rel="noopener" aria-label="WhatsApp do João Barber">
+              <svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.1-.7.2-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5 0-.2 0-.4 0-.5 0-.2-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5 4.5.7.3 1.2.5 1.7.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.4 1.3 4.9L2 22l5.2-1.3c1.4.8 3 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="rod-centro">
+          <p class="tagline" data-palavras>Seu corte onde você estiver</p>
+          <a class="btn btn-primary" href="https://wa.me/message/4J746DNCQC6ED1" target="_blank" rel="noopener">Agendar no WhatsApp</a>
+        </div>
+
+        <div class="rod-contato">
+          <div><a href="https://instagram.com/joao_barber._" target="_blank" rel="noopener">@joao_barber._</a></div>
+          <div>Sobradinho · Brasília DF</div>
+          <div>Atendimento a domicílio</div>
+        </div>
+
+      </div>
+
+      <div class="rod-base">
+        <span>© 2026 João Lucas · Barbeiro</span>
+        <span>Barbearia Espaço Rota 020 · Sobradinho DF</span>
+        <span>Agendamento pelo WhatsApp</span>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// menu mobile
+var burger = document.getElementById('burger');
+var menu = document.getElementById('menu-mobile');
+burger.addEventListener('click', function(){
+  var aberto = menu.classList.toggle('aberto');
+  burger.setAttribute('aria-expanded', aberto);
+  burger.setAttribute('aria-label', aberto ? 'Fechar menu' : 'Abrir menu');
+});
+menu.addEventListener('click', function(e){
+  if (e.target.tagName === 'A') {
+    menu.classList.remove('aberto');
+    burger.setAttribute('aria-expanded', 'false');
+  }
+});
+
+/* O cabeçalho é fixo o tempo todo. Fica transparente só no topo da
+   página (sobre a foto do hero) e ganha fundo sólido assim que a
+   rolagem começa, senão o título do hero passa por trás dele e os
+   links do menu ficam ilegíveis. */
+var header = document.getElementById('topo');
+function fundoDoHeader(){
+  header.classList.toggle('solido', window.scrollY > 40);
+}
+window.addEventListener('scroll', fundoDoHeader, {passive:true});
+fundoDoHeader(); // caso a página abra já rolada (F5 no meio)
+
+
+/* ---------- mídia do hero ----------
+   1) fotos passam em loop com cross-fade + zoom lento
+   2) se existir video/hero.mp4, ele entra por cima, só no desktop,
+      pra não gastar o 4G de quem chega pelo Instagram no celular    */
+
+var semAnimacao = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+var slides = document.querySelectorAll('.hero-slide');
+
+if (slides.length > 1 && !semAnimacao) {
+  window.addEventListener('load', function(){
+    // as fotos seguintes só baixam depois que a página abriu
+    slides.forEach(function(s){
+      if (s.dataset.bg) s.style.backgroundImage = "url('" + s.dataset.bg + "')";
+    });
+
+    var atual = 0;
+    setInterval(function(){
+      slides[atual].classList.remove('on');
+      atual = (atual + 1) % slides.length;
+      slides[atual].classList.add('on');
+    }, 5000);
+  });
+}
+
+(function(){
+  var video = document.getElementById('hero-video');
+  var conexao = navigator.connection || {};
+
+  if (window.innerWidth < 920) return;
+  if (conexao.saveData) return;
+  if (/2g/.test(conexao.effectiveType || '')) return;
+  if (semAnimacao) return;
+
+  video.addEventListener('canplay', function(){
+    video.play().then(function(){
+      video.classList.add('on');
+    }).catch(function(){
+      /* navegador barrou o autoplay. As fotos continuam rodando */
+    });
+  }, {once:true});
+
+  video.addEventListener('error', function(){
+    video.remove(); // arquivo não existe: segue só com as fotos
+  }, {once:true});
+
+  video.src = 'video/hero.mp4';
+  video.load();
+})();
+
+
+/* =================== ANIMAÇÕES ===================
+   Títulos surgem palavra por palavra e blocos sobem ao entrar na tela.
+
+   A classe 'anim' no <html> é o interruptor: sem JS, ou com "menos
+   animação" ligado no sistema, ela nunca entra e a página aparece
+   inteira, estática. Nada fica invisível por acidente.              */
+
+if (!semAnimacao) {
+  document.documentElement.classList.add('anim');
+
+  /* ---- 1. quebra os títulos em palavras ----
+     Percorre os nós de texto e preserva as tags de dentro (é o que
+     mantém o "só seu" dourado do título da seção Sobre). */
+  function fatiar(el){
+    var n = 0;
+    (function anda(no){
+      Array.prototype.slice.call(no.childNodes).forEach(function(filho){
+        if (filho.nodeType === 3) {
+          if (!filho.textContent.trim()) return;
+          var pedaco = document.createDocumentFragment();
+          filho.textContent.split(/(\s+)/).forEach(function(t){
+            if (!t) return;
+            if (!t.trim()) { pedaco.appendChild(document.createTextNode(t)); return; }
+            var s = document.createElement('span');
+            s.className = 'palavra';
+            s.textContent = t;
+            s.style.animationDelay = (n++ * 70) + 'ms';
+            pedaco.appendChild(s);
+          });
+          no.replaceChild(pedaco, filho);
+        } else if (filho.nodeType === 1) {
+          anda(filho);
+        }
+      });
+    })(el);
+  }
+  document.querySelectorAll('[data-palavras]').forEach(fatiar);
+
+  /* ---- 2. marca o que sobe ao entrar na tela ---- */
+  function preparar(seletor, passo, base){
+    document.querySelectorAll(seletor).forEach(function(el, i){
+      // esses dois têm animação própria. Não podem levar o reveal junto,
+      // senão a opacidade zera e nada traz de volta
+      if (el.hasAttribute('data-palavras')) return;
+      if (el.classList.contains('regua')) return;
+      el.setAttribute('data-revelar','');
+      el.style.animationDelay = ((base || 0) + i * (passo || 0)) + 'ms';
+    });
+  }
+  preparar('.hero .emblema', 0, 0);
+  preparar('.hero p, .hero-cta', 90, 500);
+  preparar('.sobre-txt > *', 80, 0);
+  preparar('.sobre-foto', 0, 160);
+  preparar('#servicos .sec-head > *', 70, 0);
+  preparar('#servicos .svc', 110, 120);
+  preparar('#servicos .nota', 0, 300);
+  preparar('#trabalhos .sec-head > *', 70, 0);
+  preparar('#trabalhos .gal', 70, 120);
+  preparar('#domicilio .dom-foto', 0, 0);
+  preparar('#domicilio .dom-in > *', 80, 120);
+  preparar('#contato .mapa', 0, 0);
+  preparar('#contato .contato > *', 80, 120);
+  preparar('footer .rod-grid > *', 120, 0);
+  preparar('footer .rod-base', 0, 260);
+
+  /* ---- 3. dispara quando entra na tela ---- */
+  var olho = new IntersectionObserver(function(itens){
+    itens.forEach(function(item){
+      if (!item.isIntersecting) return;
+      var el = item.target;
+      el.classList.add('on');
+      el.querySelectorAll('.palavra').forEach(function(p){ p.classList.add('on'); });
+      olho.unobserve(el);
+    });
+  }, {threshold:0.15, rootMargin:'0px 0px -6% 0px'});
+
+  document.querySelectorAll('[data-revelar],[data-palavras],.regua')
+    .forEach(function(el){ olho.observe(el); });
+
+}
+</script>
+
+</body>
+</html>
