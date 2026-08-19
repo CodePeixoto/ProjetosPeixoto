@@ -1,0 +1,6 @@
+# Site em construção: a mídia atual ainda não é do João Lucas.
+# Bloqueio temporário de indexação.
+# REMOVER este arquivo quando as fotos e o vídeo reais entrarem no ar.
+
+User-agent: *
+Disallow: /
