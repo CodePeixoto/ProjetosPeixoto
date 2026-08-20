@@ -188,3 +188,21 @@ João (R$ 300 mais R$ 200) e ouviu sim. O travamento foi vencido uma vez.
   clientes. Recomendação registrada: duas semanas de foco no João
   primeiro, e nunca prospectar barbeiro na mesma região dele
 
+
+## 20/08/2026: ferramenta de prospecção em preparo
+
+Miguel começou a montar o **Hermes Agent** (agente próprio rodando em
+Docker) pra dar conta de tarefas repetitivas, e citou a **prospecção de
+clientes** como o caso de uso principal de trabalho. Fica em
+`C:\Users\Miguel\Documents\hermes\`, fora deste workspace, com contexto
+próprio.
+
+Isso mexe no item "em aberto" acima (quando começar a prospectar), mas
+não resolve. Duas coisas continuam valendo:
+
+- A recomendação de **duas semanas de foco no João** antes de prospectar,
+  e nunca prospectar barbeiro na mesma região dele
+- A ferramenta serve pra **pesquisar e organizar** lista, não pra
+  disparar mensagem. Disparo em massa por WhatsApp ou Instagram dá
+  bloqueio de conta e queima reputação, e num mercado local pequeno como
+  Sobradinho ele não tem margem pra isso. O contato final é dele, à mão

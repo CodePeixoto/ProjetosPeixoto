@@ -225,5 +225,10 @@ Ainda fora da operação:
 - [ ] Stripe / cobrança
 - [ ] Canva, Metricool, Firecrawl (uso esporádico, não assumir
       disponibilidade no fluxo de cliente)
+- [ ] **Hermes Agent** (Nous Research), agente próprio em Docker.
+      Montado em 20/08/2026 e **fora deste workspace**, em
+      `C:\Users\Miguel\Documents\hermes\`, com contexto próprio.
+      Uso previsto: automações do dia a dia e apoio à prospecção de
+      clientes. Ainda não em operação
 
 *(Marcar quando de fato entrarem na operação)*
