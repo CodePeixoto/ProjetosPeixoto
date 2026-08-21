@@ -206,3 +206,38 @@ não resolve. Duas coisas continuam valendo:
   disparar mensagem. Disparo em massa por WhatsApp ou Instagram dá
   bloqueio de conta e queima reputação, e num mercado local pequeno como
   Sobradinho ele não tem margem pra isso. O contato final é dele, à mão
+
+## 20 e 21/08/2026: o agendamento saiu do papel
+
+A tela de agendamento foi construída e testada em 20/08, e vive dentro do
+`clientes/joao-barber/site/index.html`. Fluxo completo: serviço, local,
+dia, horário, dados, confirmação, e o WhatsApp abrindo no fim com a
+mensagem pronta. Todos os botões do site passaram a apontar pra ela, com o
+WhatsApp virando alternativa em vez de porta única.
+
+Roda em **modo demonstração** enquanto o bloco `AGENDA` do site estiver sem
+URL e sem chave: calcula os horários no próprio navegador, não grava nada,
+e avisa isso na tela. Foi decisão consciente, o "construir primeiro,
+perguntar depois" de 19/08. Serve pra mostrar ao João e fechar a conversa
+que falta.
+
+**Correção de rota registrada:** a seção 4 do `projeto.md` dizia que a
+camada de agendamento seria a página pronta de "Horários de agendamento" do
+Google. O que foi construído é tela própria mais Apps Script, e os motivos
+estão escritos lá. O princípio de não escrever sistema de agenda do zero
+continua de pé: sem servidor, sem banco de dados, sem mensalidade.
+
+### Próximo passo, e depende do Miguel
+
+Criar a **conta Google dedicada ao projeto** (em criação em 21/08) e rodar
+o `clientes/joao-barber/agendamento/INSTALAR.md`, uns 20 minutos. Depois
+disso o site passa a ler a agenda de verdade sem precisar mexer em mais
+nada, é só preencher dois campos.
+
+Na conversa com o João que vem em seguida, pegar tudo de uma vez: dias e
+horários reais, duração de cada serviço, tempo de deslocamento do
+domicílio, preços, bairros, o número dele em dígitos, as fotos e o vídeo
+originais, e o logo JB. A lista completa está na seção 7 do `projeto.md`.
+
+E abrir o Google Meu Negócio cedo, que a verificação demora dias e o vídeo
+é ele que grava.

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>João Barber · Barbeiro em Sobradinho DF · Atendimento a domicílio</title>
-<meta name="description" content="João Lucas, barbeiro em Sobradinho DF. Corte, barba e acabamento a domicílio ou na Barbearia Rota 020. Agende pelo WhatsApp.">
+<meta name="description" content="João Lucas, barbeiro em Sobradinho DF. Corte, barba e acabamento a domicílio ou na Barbearia Rota 020. Agende seu horário online.">
 
 <!-- TEMPORÁRIO: a mídia atual ainda não é do João. Remover esta linha
      (e o robots.txt) quando as fotos e o vídeo reais entrarem. -->
@@ -13,7 +13,7 @@
 <!-- Open Graph: como o link aparece quando compartilhado no WhatsApp/Instagram -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="João Barber · Barbeiro em Sobradinho DF">
-<meta property="og:description" content="Corte, barba e acabamento a domicílio ou na Barbearia Rota 020. Agende pelo WhatsApp.">
+<meta property="og:description" content="Corte, barba e acabamento a domicílio ou na Barbearia Rota 020. Agende seu horário online.">
 <meta property="og:locale" content="pt_BR">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,10 +30,16 @@
   --claro:#FAFAF7;
   --muted:#A8A8A2;
   --linha:rgba(250,250,247,.12);
+  /* avisa o navegador que a página é escura, pra ele desenhar campo de
+     formulário e barra de rolagem no escuro também */
+  color-scheme:dark;
 }
 
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
+/* o atributo hidden tem que vencer qualquer display do CSS, senão o
+   passo escondido do agendamento aparece do mesmo jeito */
+[hidden]{display:none!important}
 
 body{
   background:var(--preto);
@@ -206,6 +212,8 @@ header .header-cta{margin-left:auto;padding:11px 16px;font-size:11px}
   text-shadow:0 2px 12px rgba(0,0,0,.65);
 }
 .hero-cta{display:flex;flex-wrap:wrap;gap:14px;justify-content:center}
+/* dupla de botões fora do hero (primário + alternativa) */
+.botoes{display:flex;flex-wrap:wrap;gap:14px}
 
 /* ---------- seções ---------- */
 section{padding:88px 0;border-bottom:1px solid var(--linha);scroll-margin-top:78px}
@@ -327,6 +335,159 @@ section{padding:88px 0;border-bottom:1px solid var(--linha);scroll-margin-top:78
   margin-top:12px;font-size:12px;font-weight:400;
   letter-spacing:.22em;text-transform:uppercase;color:var(--muted);
 }
+
+/* ---------- agendamento ----------
+   A tela de marcar horário. Mesmo vocabulário das outras seções:
+   preto e dourado, Oswald, cantos retos, borda fina. Nada de paleta
+   de aplicativo de agendamento. */
+#agendar{background:var(--preto)}
+
+.ag{
+  max-width:880px;margin:0 auto;
+  background:var(--carvao);border:1px solid var(--linha);
+  padding:26px 20px 30px;
+}
+
+/* aviso de modo demonstração. Some sozinho quando o motor entra */
+.ag-aviso{
+  margin:0 0 22px;padding:12px 14px;
+  border:1px solid rgba(201,162,39,.42);border-left-width:3px;
+  background:rgba(201,162,39,.07);
+  font-size:13.5px;line-height:1.55;color:rgba(250,250,247,.86);
+}
+.ag-semjs{font-size:15px;line-height:1.7}
+.ag-semjs a{color:var(--dourado)}
+
+/* trilha dos passos */
+.ag-trilha{list-style:none;display:flex;gap:8px;margin-bottom:26px}
+.ag-trilha li{
+  flex:1;padding-top:9px;border-top:2px solid var(--linha);
+  font-size:11px;font-weight:400;letter-spacing:.14em;text-transform:uppercase;
+  color:#6E6E68;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  transition:color .2s ease,border-color .2s ease;
+}
+.ag-trilha li.feito{border-top-color:rgba(201,162,39,.5);color:var(--muted)}
+.ag-trilha li.atual{border-top-color:var(--dourado);color:var(--dourado)}
+
+/* linha do que já foi escolhido */
+.ag-resumo{
+  display:flex;flex-wrap:wrap;gap:7px 12px;align-items:baseline;
+  margin-bottom:22px;padding-bottom:16px;border-bottom:1px solid var(--linha);
+  font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#6E6E68;
+}
+.ag-resumo b{color:var(--dourado);font-weight:400}
+
+.ag-titulo{font-size:18px;margin-bottom:8px}
+.ag-titulo:focus{outline:none}
+.ag-dica{font-size:14.5px;margin-bottom:20px}
+
+/* opções em cartão: serviço e local */
+.ag-opcoes{display:grid;gap:10px}
+.ag-op{
+  display:flex;align-items:center;justify-content:space-between;gap:14px;
+  width:100%;padding:15px 16px;text-align:left;cursor:pointer;
+  background:transparent;border:1px solid var(--linha);color:var(--claro);
+  font-family:'Oswald',sans-serif;
+  transition:border-color .15s ease,background .15s ease;
+}
+.ag-op:hover{border-color:rgba(201,162,39,.55)}
+.ag-op[aria-pressed="true"]{border-color:var(--dourado);background:rgba(201,162,39,.10)}
+.ag-op b{font-size:15.5px;font-weight:500;letter-spacing:.05em;text-transform:uppercase;display:block}
+.ag-op i{
+  display:block;margin-top:4px;font-style:normal;
+  font-size:13.5px;font-weight:300;line-height:1.5;color:var(--muted);
+}
+.ag-op em{
+  flex:none;font-style:normal;font-size:11.5px;font-weight:400;
+  letter-spacing:.14em;text-transform:uppercase;color:var(--dourado);
+}
+
+/* fita de dias */
+.ag-dias{
+  display:flex;gap:9px;overflow-x:auto;
+  padding-bottom:10px;scroll-snap-type:x proximity;
+}
+.ag-dia{
+  flex:none;scroll-snap-align:start;min-width:80px;padding:11px 12px;cursor:pointer;
+  background:transparent;border:1px solid var(--linha);color:var(--claro);
+  font-family:'Oswald',sans-serif;text-align:center;transition:.15s ease;
+}
+.ag-dia span{
+  display:block;font-size:11px;font-weight:400;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);
+}
+.ag-dia b{display:block;margin-top:4px;font-size:17px;font-weight:500;letter-spacing:.02em}
+.ag-dia:hover{border-color:rgba(201,162,39,.55)}
+.ag-dia[aria-pressed="true"]{border-color:var(--dourado);background:rgba(201,162,39,.10)}
+.ag-dia[aria-pressed="true"] span{color:var(--dourado)}
+.ag-dia[disabled]{opacity:.3;cursor:not-allowed}
+
+/* grade de horários */
+.ag-horas{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(84px,1fr));
+  gap:9px;margin-top:20px;
+}
+.ag-hora{
+  padding:13px 6px;cursor:pointer;background:transparent;
+  border:1px solid var(--linha);color:var(--claro);
+  font-family:'Oswald',sans-serif;font-size:15px;font-weight:400;letter-spacing:.06em;
+  transition:.15s ease;
+}
+.ag-hora:hover{border-color:var(--dourado);color:var(--dourado)}
+.ag-hora[aria-pressed="true"]{border-color:var(--dourado);background:var(--dourado);color:#120E04}
+
+/* formulário */
+.ag-campos{display:grid;gap:16px}
+.ag-campo label{
+  display:block;margin-bottom:7px;
+  font-size:11.5px;font-weight:400;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--muted);
+}
+.ag-campo input,.ag-campo select,.ag-campo textarea{
+  width:100%;padding:13px 14px;border-radius:0;
+  background:#0F0F0F;border:1px solid var(--linha);color:var(--claro);
+  font-family:'Oswald',sans-serif;font-size:15px;font-weight:300;
+}
+.ag-campo textarea{min-height:82px;resize:vertical;line-height:1.6}
+.ag-campo input::placeholder,.ag-campo textarea::placeholder{color:#5E5E58}
+.ag-campo input:focus,.ag-campo select:focus,.ag-campo textarea:focus{
+  outline:2px solid var(--dourado);outline-offset:1px;border-color:transparent;
+}
+.ag-campo input[aria-invalid="true"]{border-color:#C46A4A}
+.ag-op:focus-visible,.ag-dia:focus-visible,.ag-hora:focus-visible,.ag-voltar:focus-visible{
+  outline:2px solid var(--dourado);outline-offset:2px;
+}
+
+.ag-pe{display:flex;flex-wrap:wrap;align-items:center;gap:16px;margin-top:26px}
+.ag-voltar{
+  background:none;border:0;cursor:pointer;padding:6px 0;
+  font-family:'Oswald',sans-serif;font-size:12px;font-weight:400;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
+}
+.ag-voltar:hover{color:var(--dourado)}
+
+.ag-status{margin-top:16px;font-size:14.5px;line-height:1.6;color:var(--muted)}
+.ag-status.ruim{color:#E5A06E}
+.ag-privacidade{margin-top:20px;font-size:13px;color:#6E6E68}
+
+/* confirmação */
+.ag-ok{text-align:center;padding:10px 0}
+.ag-ok .selo{
+  width:58px;height:58px;border-radius:50%;margin:0 auto 20px;
+  border:1.5px solid var(--dourado);color:var(--dourado);
+  display:flex;align-items:center;justify-content:center;
+}
+.ag-ok .selo svg{
+  width:26px;height:26px;fill:none;stroke:currentColor;
+  stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
+}
+.ag-ok .quando{
+  font-size:20px;font-weight:500;letter-spacing:.03em;
+  color:var(--dourado);margin:14px 0 8px;
+}
+.ag-ok p{max-width:46ch;margin-left:auto;margin-right:auto}
+.ag-ok .btn{margin-top:26px}
+.ag-ok .ag-pe{justify-content:center}
 
 /* ---------- cta final ---------- */
 .final{position:relative;border:0;background-color:var(--preto);overflow:hidden}
@@ -455,6 +616,10 @@ html.anim .regua.on{animation:risco .9s cubic-bezier(.22,.7,.3,1) forwards}
   .dom-txt{display:flex;align-items:center;padding:96px 60px 96px 76px}
   .sobre-grid{grid-template-columns:1.25fr .75fr;gap:64px}
   .sobre-foto img{max-width:360px}
+  .ag{padding:40px 44px 46px}
+  .ag-opcoes{grid-template-columns:1fr 1fr}
+  .ag-campos{grid-template-columns:1fr 1fr}
+  .ag-campo.largo{grid-column:1 / -1}
   .galeria{grid-template-columns:repeat(4,1fr);gap:20px}
   .final-grid{grid-template-columns:1fr 1fr;gap:66px}
   .rod-grid{grid-template-columns:1fr 1fr 1fr;align-items:center;gap:40px}
@@ -494,7 +659,7 @@ html.anim .regua.on{animation:risco .9s cubic-bezier(.22,.7,.3,1) forwards}
       <a href="#contato">Contato</a>
     </nav>
 
-    <a class="btn btn-primary header-cta" href="https://wa.me/message/4J746DNCQC6ED1" target="_blank" rel="noopener">Agendar</a>
+    <a class="btn btn-primary header-cta" href="#agendar">Agendar</a>
 
     <button class="burger" id="burger" aria-expanded="false" aria-controls="menu-mobile" aria-label="Abrir menu">
       <span></span><span></span><span></span>
@@ -508,7 +673,7 @@ html.anim .regua.on{animation:risco .9s cubic-bezier(.22,.7,.3,1) forwards}
     <a href="#trabalhos">Trabalhos</a>
     <a href="#domicilio">A domicílio</a>
     <a href="#contato">Contato</a>
-    <a class="btn btn-primary" href="https://wa.me/message/4J746DNCQC6ED1" target="_blank" rel="noopener">Agendar no WhatsApp</a>
+    <a class="btn btn-primary" href="#agendar">Agendar horário</a>
   </div>
 </header>
 
@@ -548,9 +713,10 @@ html.anim .regua.on{animation:risco .9s cubic-bezier(.22,.7,.3,1) forwards}
       <p>Sem fila, sem sair de casa, sem perder a tarde. Levo a barbearia até você, ou te atendo na Rota 020. Você escolhe.</p>
 
       <div class="hero-cta">
-        <a class="btn btn-primary" href="https://wa.me/message/4J746DNCQC6ED1" target="_blank" rel="noopener">
+        <a class="btn btn-primary" href="#agendar">Agendar horário</a>
+        <a class="btn btn-ghost" href="https://wa.me/message/4J746DNCQC6ED1" target="_blank" rel="noopener">
           <svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.1-.7.2-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5 0-.2 0-.4 0-.5 0-.2-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5 4.5.7.3 1.2.5 1.7.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.4 1.3 4.9L2 22l5.2-1.3c1.4.8 3 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
-          Agendar no WhatsApp
+          Falar comigo
         </a>
       </div>
     </div>
@@ -758,10 +924,171 @@ html.anim .regua.on{animation:risco .9s cubic-bezier(.22,.7,.3,1) forwards}
           <h2 data-palavras style="margin-top:16px">Eu vou até você</h2>
           <p class="lead">Você marca a hora. Eu levo a barbearia.</p>
           <p class="corpo">Levo máquina, navalha, capa e produtos. Só preciso de uma tomada e de um canto com luz. Atendo em Sobradinho e região, inclusive fora do horário comercial, e dá pra atender mais de uma pessoa na mesma visita.</p>
-          <a class="btn btn-primary" href="https://wa.me/message/4J746DNCQC6ED1" target="_blank" rel="noopener">Agendar no WhatsApp</a>
+          <!-- data-local já deixa o domicílio marcado quando a pessoa chega
+               no agendamento por esse botão -->
+          <a class="btn btn-primary" href="#agendar" data-local="domicilio">Agendar a domicílio</a>
         </div>
       </div>
 
+    </div>
+  </section>
+
+  <!-- ============ AGENDAMENTO ============ -->
+  <!-- PROVISÓRIO: serviços, durações e expediente são um chute até o
+       João confirmar. A lista fica no bloco AGENDA do script, lá no fim
+       da página, e tem que ser igual à do agendamento/apps-script.gs.
+
+       Enquanto AGENDA.URL estiver vazia, a tela roda em demonstração:
+       calcula os horários no próprio navegador e não grava nada. Ver
+       agendamento/INSTALAR.md pra ligar o motor de verdade. -->
+  <section id="agendar">
+    <div class="wrap">
+      <div class="sec-head">
+        <span class="eyebrow">Agendamento</span>
+        <h2 data-palavras>Marque seu horário</h2>
+        <hr class="regua">
+      </div>
+
+      <div class="ag" id="ag">
+
+        <p class="ag-aviso" id="ag-demo" hidden></p>
+
+        <!-- sem JavaScript não existe agendamento. O caminho volta a ser o zap -->
+        <p class="ag-semjs" id="ag-semjs">
+          Pra marcar horário aqui pelo site é preciso ativar o JavaScript.
+          Sem ele, é só me
+          <a href="https://wa.me/message/4J746DNCQC6ED1" target="_blank" rel="noopener">chamar no WhatsApp</a>
+          que a gente acerta na conversa.
+        </p>
+
+        <ol class="ag-trilha" id="ag-trilha" hidden>
+          <li data-p="1">Serviço</li>
+          <li data-p="2">Onde</li>
+          <li data-p="3">Dia e hora</li>
+          <li data-p="4">Seus dados</li>
+        </ol>
+
+        <p class="ag-resumo" id="ag-resumo" hidden></p>
+
+        <!-- passo 1: serviço (os cartões são montados pelo script) -->
+        <div class="ag-passo" data-p="1" hidden>
+          <h3 class="ag-titulo" tabindex="-1">O que você quer fazer?</h3>
+          <p class="ag-dica">Escolhe o serviço. O detalhe do corte a gente acerta na cadeira.</p>
+          <div class="ag-opcoes" id="ag-servicos"></div>
+        </div>
+
+        <!-- passo 2: local -->
+        <div class="ag-passo" data-p="2" hidden>
+          <h3 class="ag-titulo" tabindex="-1">Onde você quer ser atendido?</h3>
+          <p class="ag-dica">Na barbearia ou na sua casa, você escolhe.</p>
+
+          <div class="ag-opcoes">
+            <button type="button" class="ag-op" data-local="barbearia" aria-pressed="false">
+              <span>
+                <b>Na barbearia</b>
+                <i>Rota 020 · Quadra 08, Bloco 19 · Sobradinho DF</i>
+              </span>
+            </button>
+            <button type="button" class="ag-op" data-local="domicilio" aria-pressed="false">
+              <span>
+                <b>Na minha casa</b>
+                <i>Eu levo a barbearia até você, em Sobradinho e região</i>
+              </span>
+              <!-- PROVISÓRIO: o tempo de deslocamento sai do DOMICILIO_EXTRA_MIN -->
+              <em id="ag-extra"></em>
+            </button>
+          </div>
+
+          <div class="ag-campo largo" id="ag-endereco-campo" hidden style="margin-top:18px">
+            <label for="ag-endereco">Endereço do atendimento</label>
+            <input type="text" id="ag-endereco" autocomplete="street-address"
+                   placeholder="Quadra, bloco, casa ou apto, e um ponto de referência">
+          </div>
+
+          <div class="ag-pe">
+            <button type="button" class="ag-voltar" data-voltar="1">Voltar</button>
+            <button type="button" class="btn btn-primary" id="ag-continuar" hidden>Continuar</button>
+          </div>
+        </div>
+
+        <!-- passo 3: dia e horário -->
+        <div class="ag-passo" data-p="3" hidden>
+          <h3 class="ag-titulo" tabindex="-1">Que dia fica bom?</h3>
+          <p class="ag-dica">Os horários que aparecem são os que estão livres de verdade.</p>
+          <div class="ag-dias" id="ag-dias"></div>
+          <div class="ag-horas" id="ag-horas"></div>
+          <p class="ag-status" id="ag-status-3" role="status"></p>
+          <div class="ag-pe">
+            <button type="button" class="ag-voltar" data-voltar="2">Voltar</button>
+          </div>
+        </div>
+
+        <!-- passo 4: dados do cliente -->
+        <div class="ag-passo" data-p="4" hidden>
+          <h3 class="ag-titulo" tabindex="-1">Só falta você se apresentar</h3>
+          <p class="ag-dica">É o que eu preciso pra confirmar o horário com você.</p>
+
+          <form id="ag-form" novalidate>
+            <div class="ag-campos">
+              <div class="ag-campo">
+                <label for="ag-nome">Seu nome</label>
+                <input type="text" id="ag-nome" autocomplete="name" required>
+              </div>
+              <div class="ag-campo">
+                <label for="ag-tel">WhatsApp</label>
+                <input type="tel" id="ag-tel" inputmode="numeric" autocomplete="tel"
+                       placeholder="(61) 9 9999-9999" required>
+              </div>
+              <div class="ag-campo">
+                <label for="ag-nasc">Aniversário (opcional)</label>
+                <input type="text" id="ag-nasc" inputmode="numeric" maxlength="5" placeholder="dia/mês">
+              </div>
+              <div class="ag-campo">
+                <label for="ag-origem">Como você me achou?</label>
+                <select id="ag-origem">
+                  <option value="">Prefiro não dizer</option>
+                  <option>Instagram</option>
+                  <option>Google</option>
+                  <option>Indicação de amigo</option>
+                  <option>Já sou cliente</option>
+                  <option>Outro</option>
+                </select>
+              </div>
+              <div class="ag-campo largo">
+                <label for="ag-obs">Alguma observação? (opcional)</label>
+                <textarea id="ag-obs" placeholder="Ex: não curto a lateral muito curta"></textarea>
+              </div>
+            </div>
+
+            <p class="ag-status" id="ag-status-4" role="status"></p>
+
+            <div class="ag-pe">
+              <button type="button" class="ag-voltar" data-voltar="3">Voltar</button>
+              <button type="submit" class="btn btn-primary" id="ag-enviar">Confirmar horário</button>
+            </div>
+          </form>
+
+          <p class="ag-privacidade">Seu contato fica só comigo, pra confirmar o horário e te lembrar.</p>
+        </div>
+
+        <!-- passo 5: confirmação -->
+        <div class="ag-passo ag-ok" data-p="5" hidden>
+          <span class="selo" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4.5 12.6 9.8 18 19.5 6.4"/></svg>
+          </span>
+          <h3 class="ag-titulo" tabindex="-1">Horário reservado</h3>
+          <p class="quando" id="ag-quando"></p>
+          <p id="ag-detalhe"></p>
+          <a class="btn btn-primary" id="ag-zap" href="#" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.1-.7.2-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5 0-.2 0-.4 0-.5 0-.2-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5 4.5.7.3 1.2.5 1.7.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.4 1.3 4.9L2 22l5.2-1.3c1.4.8 3 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
+            Avisar no WhatsApp
+          </a>
+          <div class="ag-pe">
+            <button type="button" class="ag-voltar" id="ag-denovo">Marcar outro horário</button>
+          </div>
+        </div>
+
+      </div>
     </div>
   </section>
 
@@ -779,9 +1106,9 @@ html.anim .regua.on{animation:risco .9s cubic-bezier(.22,.7,.3,1) forwards}
       </div>
 
       <div class="contato">
-        <span class="eyebrow">Bora marcar</span>
-        <h2 data-palavras style="margin-top:16px">Me chama e a gente acerta o horário</h2>
-        <p class="corpo">Resposta rápida pelo WhatsApp. Só falar o dia e onde você prefere: na barbearia ou na sua casa.</p>
+        <span class="eyebrow">Falar comigo</span>
+        <h2 data-palavras style="margin-top:16px">Dúvida, preço ou detalhe do corte</h2>
+        <p class="corpo">Se você já sabe o que quer, marcar pelo site leva menos de um minuto. Se preferir conversar antes, sobre preço, sobre o atendimento em casa ou sobre o que dá pra fazer no seu cabelo, é só me chamar.</p>
 
         <div class="linhas">
           <div><b>WhatsApp:</b> <a href="https://wa.me/message/4J746DNCQC6ED1" target="_blank" rel="noopener">Chamar agora</a></div>
@@ -793,10 +1120,13 @@ html.anim .regua.on{animation:risco .9s cubic-bezier(.22,.7,.3,1) forwards}
           </div>
         </div>
 
-        <a class="btn btn-primary" href="https://wa.me/message/4J746DNCQC6ED1" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.1-.7.2-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5 0-.2 0-.4 0-.5 0-.2-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5 4.5.7.3 1.2.5 1.7.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.4 1.3 4.9L2 22l5.2-1.3c1.4.8 3 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
-          Agendar no WhatsApp
-        </a>
+        <div class="botoes">
+          <a class="btn btn-primary" href="https://wa.me/message/4J746DNCQC6ED1" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.1-.7.2-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5 0-.2 0-.4 0-.5 0-.2-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5 4.5.7.3 1.2.5 1.7.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.4 1.3 4.9L2 22l5.2-1.3c1.4.8 3 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
+            Chamar no WhatsApp
+          </a>
+          <a class="btn btn-ghost" href="#agendar">Marcar pelo site</a>
+        </div>
 
       </div>
     </div>
@@ -830,7 +1160,7 @@ html.anim .regua.on{animation:risco .9s cubic-bezier(.22,.7,.3,1) forwards}
 
         <div class="rod-centro">
           <p class="tagline" data-palavras>Seu corte onde você estiver</p>
-          <a class="btn btn-primary" href="https://wa.me/message/4J746DNCQC6ED1" target="_blank" rel="noopener">Agendar no WhatsApp</a>
+          <a class="btn btn-primary" href="#agendar">Agendar horário</a>
         </div>
 
         <div class="rod-contato">
@@ -844,7 +1174,7 @@ html.anim .regua.on{animation:risco .9s cubic-bezier(.22,.7,.3,1) forwards}
       <div class="rod-base">
         <span>© 2026 João Lucas · Barbeiro</span>
         <span>Barbearia Espaço Rota 020 · Sobradinho DF</span>
-        <span>Agendamento pelo WhatsApp</span>
+        <span>Agendamento pelo site</span>
       </div>
     </div>
   </div>
@@ -988,6 +1318,8 @@ if (!semAnimacao) {
   preparar('#trabalhos .gal', 70, 120);
   preparar('#domicilio .dom-foto', 0, 0);
   preparar('#domicilio .dom-in > *', 80, 120);
+  preparar('#agendar .sec-head > *', 70, 0);
+  preparar('#agendar .ag', 0, 140);
   preparar('#contato .mapa', 0, 0);
   preparar('#contato .contato > *', 80, 120);
   preparar('footer .rod-grid > *', 120, 0);
@@ -1008,6 +1340,537 @@ if (!semAnimacao) {
     .forEach(function(el){ olho.observe(el); });
 
 }
+
+
+/* =================== AGENDAMENTO ===================
+   A tela funciona em dois modos, decididos pelo bloco AGENDA logo abaixo.
+
+   Sem URL do motor: modo demonstração. Os horários são calculados aqui
+   mesmo, no navegador, a partir da cópia de SERVICOS e EXPEDIENTE, e nada
+   é gravado em lugar nenhum. Serve pra mostrar a tela funcionando antes de
+   existir conta Google.
+
+   Com URL: quem responde é o Apps Script que roda na conta do João. Ele lê
+   a agenda de verdade, cria o evento e grava a linha na planilha. O passo a
+   passo pra ligar está em agendamento/INSTALAR.md.
+
+   Trocar de um modo pro outro é só preencher URL e CHAVE. Nada mais muda. */
+
+(function(){
+
+  var AGENDA = {
+    URL:      '',   // URL do app da Web do Apps Script, termina em /exec
+    CHAVE:    '',   // a mesma CHAVE que está no apps-script.gs
+    WHATSAPP: ''    // PROVISÓRIO: número do João, só dígitos, com 55 e DDD
+  };
+
+  var ZAP  = 'https://wa.me/message/4J746DNCQC6ED1';
+  var FUSO = 'America/Sao_Paulo';
+
+  /* ---- cópia PROVISÓRIA do CONFIG do agendamento/apps-script.gs ----
+     Enquanto o João não confirmar serviços, durações e expediente, os dois
+     lados carregam o mesmo chute. Quando ele confirmar, mudar aqui E lá,
+     senão o site oferece horário que o motor recusa. */
+  var SERVICOS = {
+    corte:       {nome:'Corte',                minutos:40, texto:'Do clássico ao degradê, decidido na conversa'},
+    barba:       {nome:'Barba',                minutos:30, texto:'Desenho, navalha e toalha quente'},
+    combo:       {nome:'Corte + barba',        minutos:70, texto:'Os dois na mesma sessão'},
+    acabamento:  {nome:'Acabamento / pezinho', minutos:20, texto:'Manutenção rápida entre um corte e outro'},
+    sobrancelha: {nome:'Sobrancelha',          minutos:15, texto:'Limpeza e alinhamento'}
+  };
+  var DOMICILIO_EXTRA_MIN = 45;   // deslocamento, além da duração do serviço
+  var EXPEDIENTE = {              // 0 = domingo, 6 = sábado
+    0: [],
+    1: [['09:00','12:00'], ['13:30','19:00']],
+    2: [['09:00','12:00'], ['13:30','19:00']],
+    3: [['09:00','12:00'], ['13:30','19:00']],
+    4: [['09:00','12:00'], ['13:30','19:00']],
+    5: [['09:00','12:00'], ['13:30','20:00']],
+    6: [['08:00','17:00']]
+  };
+  var PASSO_MIN = 15;
+  var ANTECEDENCIA_MIN_HORAS = 2;
+  var JANELA_DIAS = 21;
+
+  /* ---------- o mínimo de DOM ---------- */
+  var caixa = document.getElementById('ag');
+  if (!caixa) return;
+
+  function id(x){ return document.getElementById(x); }
+
+  var passos = {};
+  caixa.querySelectorAll('.ag-passo').forEach(function(el){
+    passos[el.getAttribute('data-p')] = el;
+  });
+
+  var trilha    = id('ag-trilha');
+  var resumo    = id('ag-resumo');
+  var elDias    = id('ag-dias');
+  var elHoras   = id('ag-horas');
+  var recado3   = id('ag-status-3');
+  var recado4   = id('ag-status-4');
+  var form      = id('ag-form');
+  var enviarBtn = id('ag-enviar');
+  var campoEnd  = id('ag-endereco-campo');
+  var inputEnd  = id('ag-endereco');
+  var continuar = id('ag-continuar');
+
+  var ligado = !!(AGENDA.URL && AGENDA.CHAVE);
+  var estado = {servico:null, local:null, endereco:'', data:null, hora:null};
+  var preferido = null;   // local já escolhido no botão que trouxe a pessoa
+
+  /* ---------- datas ----------
+     Tudo é calculado a partir do dia do calendário (texto aaaa-mm-dd) e do
+     fuso de Brasília, nunca do relógio do celular de quem abriu a página.
+     O -03:00 é fixo de propósito: Brasília não tem mais horário de verão. */
+
+  function dois(n){ return (n < 10 ? '0' : '') + n; }
+  function digitos(t){ return (t || '').replace(/\D+/g, ''); }
+
+  function noDia(dia){
+    var p = dia.split('-');
+    return new Date(+p[0], +p[1] - 1, +p[2]);
+  }
+  function hoje(){
+    return new Date().toLocaleDateString('en-CA', {timeZone: FUSO});
+  }
+  function somarDias(dia, n){
+    var d = noDia(dia);
+    d.setDate(d.getDate() + n);
+    return d.getFullYear() + '-' + dois(d.getMonth() + 1) + '-' + dois(d.getDate());
+  }
+  function instante(dia, hora){
+    return new Date(dia + 'T' + hora + ':00-03:00').getTime();
+  }
+  function relogio(ms){
+    return new Date(ms).toLocaleTimeString('pt-BR', {timeZone:FUSO, hour:'2-digit', minute:'2-digit'});
+  }
+  function rotulo(dia){                    // "ter, 26/08"
+    var d = noDia(dia);
+    return d.toLocaleDateString('pt-BR', {weekday:'short'}).replace('.', '')
+      + ', ' + dois(d.getDate()) + '/' + dois(d.getMonth() + 1);
+  }
+  function porExtenso(dia, hora){          // "terça-feira, 26 de agosto às 09:00"
+    return noDia(dia).toLocaleDateString('pt-BR', {weekday:'long', day:'numeric', month:'long'})
+      + ' às ' + hora;
+  }
+
+  /* ---------- horários no modo demonstração ---------- */
+
+  function duracao(){
+    return SERVICOS[estado.servico].minutos
+      + (estado.local === 'domicilio' ? DOMICILIO_EXTRA_MIN : 0);
+  }
+
+  /* Finge que dois blocos do dia já foram tomados, pra a grade não parecer
+     uma agenda vazia. É sempre o mesmo resultado pro mesmo dia, então a tela
+     não muda a cada clique. Isso some quando o motor de verdade entra. */
+  function ocupadoNaDemo(dia, minuto, dur){
+    var semente = 0;
+    for (var i = 0; i < dia.length; i++) semente = (semente * 31 + dia.charCodeAt(i)) % 9973;
+    return [9 * 60 + (semente % 12) * 15, 14 * 60 + (semente % 17) * 15].some(function(b){
+      return minuto < b + 60 && minuto + dur > b;
+    });
+  }
+
+  function horariosDaDemo(dia){
+    var dur = duracao();
+    var minimo = Date.now() + ANTECEDENCIA_MIN_HORAS * 3600000;
+    var zero = instante(dia, '00:00');
+    var livres = [];
+
+    (EXPEDIENTE[noDia(dia).getDay()] || []).forEach(function(faixa){
+      var cursor = instante(dia, faixa[0]);
+      var limite = instante(dia, faixa[1]);
+      while (cursor + dur * 60000 <= limite) {
+        if (cursor >= minimo && !ocupadoNaDemo(dia, (cursor - zero) / 60000, dur)) {
+          livres.push(relogio(cursor));
+        }
+        cursor += PASSO_MIN * 60000;
+      }
+    });
+    return livres;
+  }
+
+  function diasDaDemo(){
+    var lista = [], base = hoje();
+    for (var i = 0; i < JANELA_DIAS; i++) {
+      var dia = somarDias(base, i);
+      if (!(EXPEDIENTE[noDia(dia).getDay()] || []).length) continue;
+      lista.push({data: dia, vagas: horariosDaDemo(dia).length});
+    }
+    return lista;
+  }
+
+  /* ---------- conversa com o motor ---------- */
+
+  function consultar(params){
+    params.chave = AGENDA.CHAVE;
+    var q = Object.keys(params).map(function(k){
+      return encodeURIComponent(k) + '=' + encodeURIComponent(params[k]);
+    }).join('&');
+
+    return fetch(AGENDA.URL + '?' + q)
+      .then(function(r){ return r.json(); })
+      .then(function(r){
+        if (r.erro) throw new Error(r.erro);
+        return r;
+      });
+  }
+
+  function buscarDias(){
+    if (!ligado) return Promise.resolve(diasDaDemo());
+    return consultar({acao:'dias', servico:estado.servico, local:estado.local})
+      .then(function(r){ return r.dias; });
+  }
+
+  function buscarHorarios(dia){
+    if (!ligado) return Promise.resolve(horariosDaDemo(dia));
+    return consultar({acao:'horarios', servico:estado.servico, local:estado.local, data:dia})
+      .then(function(r){ return r.horarios; });
+  }
+
+  function enviar(dados){
+    if (!ligado) {
+      // demonstração: não grava nada, só devolve o mesmo formato do motor
+      return Promise.resolve({
+        ok: true,
+        quando: porExtenso(estado.data, estado.hora),
+        whatsapp: linkDoZap(dados)
+      });
+    }
+    return fetch(AGENDA.URL, {
+      method: 'POST',
+      /* de propósito sem cabeçalho Content-Type: assim o corpo sai como
+         text/plain e o navegador não pede preflight de CORS, que o Apps
+         Script não sabe responder */
+      body: JSON.stringify(dados)
+    }).then(function(r){ return r.json(); });
+  }
+
+  function linkDoZap(d){
+    var onde = d.local === 'domicilio'
+      ? 'A domicílio: ' + (d.endereco || 'endereço a confirmar')
+      : 'Barbearia Rota 020';
+
+    var msg = 'Opa João! Acabei de agendar pelo site.\n\n'
+      + 'Nome: ' + d.nome + '\n'
+      + 'Serviço: ' + SERVICOS[d.servico].nome + '\n'
+      + 'Quando: ' + rotulo(estado.data) + ' às ' + estado.hora + '\n'
+      + 'Onde: ' + onde;
+
+    /* sem o número do João configurado, sobra o link curto do perfil dele,
+       que não aceita mensagem pronta */
+    return AGENDA.WHATSAPP
+      ? 'https://wa.me/' + AGENDA.WHATSAPP + '?text=' + encodeURIComponent(msg)
+      : ZAP;
+  }
+
+  /* ---------- navegação entre os passos ---------- */
+
+  function irPara(n, focar){
+    Object.keys(passos).forEach(function(k){ passos[k].hidden = (+k !== n); });
+
+    Array.prototype.forEach.call(trilha.children, function(li){
+      var p = +li.getAttribute('data-p');
+      li.classList.toggle('atual', p === n);
+      li.classList.toggle('feito', p < n);
+    });
+
+    desenharResumo(n);
+
+    if (focar !== false) {
+      var titulo = passos[n].querySelector('.ag-titulo');
+      if (titulo) titulo.focus({preventScroll:true});
+    }
+  }
+
+  function desenharResumo(n){
+    var partes = [];
+    if (estado.servico && n > 1) partes.push(SERVICOS[estado.servico].nome);
+    if (estado.local && n > 2) partes.push(estado.local === 'domicilio' ? 'A domicílio' : 'Na barbearia');
+    if (estado.data && estado.hora && n > 3) partes.push(rotulo(estado.data) + ' às ' + estado.hora);
+
+    resumo.hidden = (!partes.length || n === 5);
+    resumo.innerHTML = partes.map(function(p){ return '<b>' + p + '</b>'; }).join(' · ');
+  }
+
+  // sem o segundo argumento, desmarca todos
+  function marcar(seletor, escolhido){
+    caixa.querySelectorAll(seletor).forEach(function(el){
+      el.setAttribute('aria-pressed', (escolhido && el.matches(escolhido)) ? 'true' : 'false');
+    });
+  }
+
+  function avisar(onde, txt){
+    onde.textContent = txt;
+    onde.classList.add('ruim');
+  }
+  function limpar(onde, txt){
+    onde.textContent = txt || '';
+    onde.classList.remove('ruim');
+  }
+
+  /* ---------- passo 1: serviço ---------- */
+
+  Object.keys(SERVICOS).forEach(function(chave){
+    var s = SERVICOS[chave];
+    var b = document.createElement('button');
+    b.type = 'button';
+    b.className = 'ag-op';
+    b.setAttribute('data-servico', chave);
+    b.setAttribute('aria-pressed', 'false');
+    b.innerHTML = '<span><b>' + s.nome + '</b><i>' + s.texto + '</i></span>'
+                + '<em>' + s.minutos + ' min</em>';
+    b.addEventListener('click', function(){ escolherServico(chave); });
+    id('ag-servicos').appendChild(b);
+  });
+
+  function escolherServico(chave){
+    estado.servico = chave;
+    estado.data = estado.hora = null;
+    marcar('[data-servico]', '[data-servico="' + chave + '"]');
+    irPara(2);
+
+    // quem chegou pelo botão "Agendar a domicílio" já entra com o local marcado
+    if (preferido === 'domicilio') escolherLocal('domicilio');
+    preferido = null;
+  }
+
+  /* ---------- passo 2: local ---------- */
+
+  caixa.querySelectorAll('.ag-op[data-local]').forEach(function(b){
+    b.addEventListener('click', function(){ escolherLocal(b.getAttribute('data-local')); });
+  });
+
+  function escolherLocal(local){
+    estado.local = local;
+    estado.data = estado.hora = null;
+    marcar('.ag-op[data-local]', '.ag-op[data-local="' + local + '"]');
+
+    campoEnd.hidden  = (local !== 'domicilio');
+    continuar.hidden = (local !== 'domicilio');
+
+    if (local === 'domicilio') {
+      inputEnd.focus({preventScroll:true});
+    } else {
+      estado.endereco = '';
+      irPara(3);
+      carregarDias();
+    }
+  }
+
+  continuar.addEventListener('click', function(){
+    var end = inputEnd.value.trim();
+    if (end.length < 6) {
+      inputEnd.setAttribute('aria-invalid', 'true');
+      inputEnd.focus();
+      return;
+    }
+    inputEnd.removeAttribute('aria-invalid');
+    estado.endereco = end;
+    irPara(3);
+    carregarDias();
+  });
+
+  /* ---------- passo 3: dia e horário ---------- */
+
+  function carregarDias(){
+    elDias.innerHTML = '';
+    elHoras.innerHTML = '';
+    limpar(recado3, 'Procurando os horários livres...');
+
+    buscarDias().then(function(dias){
+      limpar(recado3);
+      var comVaga = (dias || []).filter(function(d){ return d.vagas > 0; });
+
+      if (!comVaga.length) {
+        avisar(recado3, 'Não achei horário livre nos próximos dias. Me chama no WhatsApp que a gente dá um jeito.');
+        return;
+      }
+
+      comVaga.forEach(function(d){
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'ag-dia';
+        b.setAttribute('data-dia', d.data);
+        b.setAttribute('aria-pressed', 'false');
+        // o rótulo é montado aqui, e não no motor, pra não depender do
+        // idioma configurado na conta Google
+        var partes = rotulo(d.data).split(', ');
+        b.innerHTML = '<span>' + partes[0] + '</span><b>' + partes[1] + '</b>';
+        b.addEventListener('click', function(){ escolherDia(d.data); });
+        elDias.appendChild(b);
+      });
+
+      escolherDia(comVaga[0].data);
+    }).catch(function(){
+      avisar(recado3, 'Não consegui falar com a agenda agora. Tenta de novo daqui a pouco ou me chama no WhatsApp.');
+    });
+  }
+
+  function escolherDia(dia){
+    estado.data = dia;
+    estado.hora = null;
+    marcar('.ag-dia', '.ag-dia[data-dia="' + dia + '"]');
+    elHoras.innerHTML = '';
+    limpar(recado3, 'Carregando os horários...');
+
+    buscarHorarios(dia).then(function(horas){
+      limpar(recado3);
+      if (!(horas || []).length) {
+        avisar(recado3, 'Esse dia lotou. Escolhe outro aí em cima.');
+        return;
+      }
+      horas.forEach(function(h){
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'ag-hora';
+        b.setAttribute('aria-pressed', 'false');
+        b.textContent = h;
+        b.addEventListener('click', function(){
+          estado.hora = h;
+          marcar('.ag-hora');
+          b.setAttribute('aria-pressed', 'true');
+          irPara(4);
+        });
+        elHoras.appendChild(b);
+      });
+    }).catch(function(){
+      avisar(recado3, 'Não consegui carregar os horários desse dia. Tenta outro ou me chama no WhatsApp.');
+    });
+  }
+
+  /* ---------- passo 4: dados e envio ---------- */
+
+  id('ag-tel').addEventListener('input', function(){
+    var d = digitos(this.value).slice(0, 11);
+    if (d.length <= 2)       this.value = d;
+    else if (d.length <= 6)  this.value = '(' + d.slice(0,2) + ') ' + d.slice(2);
+    else if (d.length <= 10) this.value = '(' + d.slice(0,2) + ') ' + d.slice(2,6) + '-' + d.slice(6);
+    else                     this.value = '(' + d.slice(0,2) + ') ' + d.slice(2,3) + ' ' + d.slice(3,7) + '-' + d.slice(7);
+  });
+
+  id('ag-nasc').addEventListener('input', function(){
+    var d = digitos(this.value).slice(0, 4);
+    this.value = d.length > 2 ? d.slice(0,2) + '/' + d.slice(2) : d;
+  });
+
+  form.addEventListener('submit', function(e){
+    e.preventDefault();
+
+    var nome = id('ag-nome').value.trim();
+    var tel  = id('ag-tel').value.trim();
+
+    if (nome.length < 2)          return recusar('ag-nome', 'Coloca teu nome pra eu saber quem chega.');
+    if (digitos(tel).length < 10) return recusar('ag-tel', 'Falta o número com DDD, é por ali que eu confirmo.');
+
+    var dados = {
+      chave:       AGENDA.CHAVE,
+      servico:     estado.servico,
+      local:       estado.local,
+      endereco:    estado.endereco,
+      inicio:      estado.data + 'T' + estado.hora + ':00-03:00',
+      nome:        nome,
+      telefone:    tel,
+      aniversario: id('ag-nasc').value.trim(),
+      origem:      id('ag-origem').value,
+      observacao:  id('ag-obs').value.trim()
+    };
+
+    enviarBtn.disabled = true;
+    limpar(recado4, 'Reservando teu horário...');
+
+    enviar(dados).then(function(r){
+      enviarBtn.disabled = false;
+
+      if (r && r.erro === 'ocupado') {
+        avisar(recado4, r.mensagem || 'Esse horário acabou de ser preenchido.');
+        irPara(3);
+        carregarDias();
+        return;
+      }
+      if (!r || !r.ok) {
+        avisar(recado4, 'Não consegui gravar agora. Tenta de novo, ou me chama no WhatsApp que eu marco na mão.');
+        return;
+      }
+
+      limpar(recado4);
+      confirmar(r);
+    }).catch(function(){
+      enviarBtn.disabled = false;
+      avisar(recado4, 'Não consegui falar com a agenda. Tenta de novo, ou me chama no WhatsApp que eu marco na mão.');
+    });
+  });
+
+  function recusar(campo, txt){
+    var el = id(campo);
+    el.setAttribute('aria-invalid', 'true');
+    el.focus();
+    avisar(recado4, txt);
+  }
+
+  ['ag-nome','ag-tel'].forEach(function(c){
+    id(c).addEventListener('input', function(){
+      this.removeAttribute('aria-invalid');
+      limpar(recado4);
+    });
+  });
+
+  /* ---------- passo 5: confirmação ---------- */
+
+  function confirmar(r){
+    // igual ao rótulo dos dias: o texto é montado aqui, e não no motor,
+    // pra não depender do idioma configurado na conta Google
+    id('ag-quando').textContent = porExtenso(estado.data, estado.hora);
+
+    id('ag-detalhe').textContent = SERVICOS[estado.servico].nome + ' · '
+      + (estado.local === 'domicilio' ? 'Na sua casa: ' + estado.endereco : 'Na Barbearia Rota 020')
+      + (ligado
+          ? '. Já entrou na minha agenda. Se precisar mudar, é só me chamar.'
+          : '. Modo demonstração: esse horário não foi gravado em lugar nenhum.');
+
+    id('ag-zap').href = r.whatsapp || ZAP;
+    irPara(5);
+  }
+
+  id('ag-denovo').addEventListener('click', function(){
+    estado = {servico:null, local:null, endereco:'', data:null, hora:null};
+    marcar('[data-servico]');
+    marcar('.ag-op[data-local]');
+    campoEnd.hidden = true;
+    continuar.hidden = true;
+    inputEnd.value = '';
+    elDias.innerHTML = '';
+    elHoras.innerHTML = '';
+    limpar(recado3);
+    form.reset();
+    limpar(recado4);
+    irPara(1);
+  });
+
+  /* ---------- ligar tudo ---------- */
+
+  caixa.querySelectorAll('[data-voltar]').forEach(function(b){
+    b.addEventListener('click', function(){ irPara(+b.getAttribute('data-voltar')); });
+  });
+
+  // botões de fora que já trazem o local escolhido
+  document.querySelectorAll('a[href="#agendar"][data-local]').forEach(function(a){
+    a.addEventListener('click', function(){ preferido = a.getAttribute('data-local'); });
+  });
+
+  if (!ligado) {
+    id('ag-demo').hidden = false;
+    id('ag-demo').textContent = 'Modo demonstração: os horários abaixo são de exemplo e ainda não caem numa agenda de verdade.';
+  }
+
+  id('ag-extra').textContent = '+' + DOMICILIO_EXTRA_MIN + ' min';
+  id('ag-semjs').remove();
+  trilha.hidden = false;
+  irPara(1, false);
+
+})();
 </script>
 
 </body>

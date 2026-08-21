@@ -225,3 +225,86 @@ foto e o vídeo reais dele, que é o que trava a publicação.
 Agora existe skill pra isso: `/publicar-site`. Sobe a pasta `site/` pro
 Netlify e devolve link público de graça, no mesmo endereço toda vez que
 atualizar. O passo do Netlify Drop manual descrito acima virou plano B.
+
+---
+
+## Agendamento pelo site (feito em 20/08/2026)
+
+A seção `#agendar` fica entre a de domicílio e a de contato. É o pedido
+número 1 do João ("um agendamento, organizar mais essa parte") e o buraco
+que existia no meio do projeto: o motor estava escrito em
+`../agendamento/apps-script.gs` e não tinha tela nenhuma pra falar com ele.
+
+### Dois modos, um código só
+
+Tudo é decidido pelo bloco `AGENDA`, no começo do script de agendamento
+(procurar por `var AGENDA` no `index.html`):
+
+```js
+var AGENDA = {
+  URL:      '',   // URL do app da Web do Apps Script, termina em /exec
+  CHAVE:    '',   // a mesma CHAVE do apps-script.gs
+  WHATSAPP: ''    // número do João, só dígitos, com 55 e DDD
+};
+```
+
+- **Com `URL` e `CHAVE` vazias** (é o estado de hoje): modo demonstração.
+  Os horários são calculados no próprio navegador e **nada é gravado em
+  lugar nenhum**. Um aviso em dourado explica isso na tela, e a
+  confirmação repete. Serve pra mostrar a tela funcionando pro João antes
+  de existir conta Google
+- **Com as duas preenchidas:** quem responde é o Apps Script na conta do
+  João. Ele lê a agenda de verdade, cria o evento e grava a linha na
+  planilha. O passo a passo está em `../agendamento/INSTALAR.md`
+
+Trocar de um modo pro outro é só preencher os dois campos. Nada mais muda.
+
+### O fluxo
+
+Serviço, depois local, depois dia e horário, depois nome e WhatsApp.
+Confirmação com resumo e botão que abre a conversa com a mensagem pronta.
+
+Detalhes que valem lembrar:
+
+- **Domicílio** abre campo de endereço e soma `DOMICILIO_EXTRA_MIN` de
+  deslocamento, então oferece menos horários que a barbearia. É proposital
+- **Aniversário** é opcional, e é o campo que alimenta o brinde de
+  aniversário mais pra frente
+- **"Como você me achou"** responde sozinho, com o tempo, uma das
+  perguntas em aberto do `projeto.md`: de onde vêm os clientes novos
+- Sem JavaScript a seção mostra um recado e manda pro WhatsApp
+
+### O que é PROVISÓRIO e precisa bater com o motor
+
+Serviços, durações, expediente e tempo de deslocamento estão **copiados**
+do `CONFIG` do `apps-script.gs`. São um chute até o João confirmar.
+
+> Quando ele confirmar, mudar **nos dois lugares**. Se o site oferecer um
+> horário que o motor não reconhece, o cliente leva erro na cara.
+
+### Os botões mudaram
+
+Todos os CTAs passaram a apontar pra `#agendar`. O WhatsApp continua no
+site, mas como alternativa: botão secundário no hero, seção de contato
+inteira, rodapé e o link do fim do agendamento. O preço continua fora do
+site de propósito, então quem quer saber valor ainda chama no WhatsApp, e
+é lá que o João fecha.
+
+O botão da seção de domicílio leva `data-local="domicilio"`: quem chega
+por ele já encontra o domicílio marcado.
+
+### Testado em 20/08/2026
+
+Fluxo inteiro dirigido por script no Chrome, 28 verificações, todas
+passando: troca de dia, marcação única, formulário vazio recusado,
+máscara de telefone e de aniversário, confirmação e recomeço. Layout
+conferido em 390px e em 1280px.
+
+### O que falta (depende do João)
+
+1. Dias e horários reais que ele atende, na barbearia e a domicílio
+2. Duração real de cada serviço, e se falta algum
+3. Quanto tempo reservar de deslocamento
+4. O número de WhatsApp dele em dígitos, pra mensagem já ir escrita
+   (hoje, sem ele, o botão cai no link curto do perfil, que não aceita
+   texto pronto)

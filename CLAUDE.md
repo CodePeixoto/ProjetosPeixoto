@@ -171,6 +171,11 @@ Pasta em `clientes/joao-barber/`: `projeto.md` (tudo sobre o projeto),
 `conversa-dialogo.md` (transcrição), `identidade.md`, `site/` e
 `agendamento/`.
 
+Estado em 21/08/2026: site pronto e **fora do ar** (a mídia ainda é de
+terceiros), com a **tela de agendamento funcionando em modo demonstração**
+dentro do próprio site. Falta ligar o motor numa conta Google dedicada, em
+criação.
+
 ## Como trabalho
 
 Ainda sem processo formal. Primeira vez captando e entregando pra
@@ -215,7 +220,10 @@ Entraram na operação em agosto/2026, por causa do case do João Barber:
       sobe e devolve o link, sem ninguém abrir navegador. Token pessoal
       em `.claude/.netlify-token`, fora do Git
 - [x] **Google Agenda + Planilhas + Apps Script**, o motor do
-      agendamento. Roda de graça dentro da conta Google do cliente
+      agendamento. Roda de graça dentro da conta Google do cliente. Pro
+      João, o script está escrito e **ainda não foi instalado**: espera a
+      conta dedicada ao projeto, em criação em 21/08/2026, que vai ser
+      entregue a ele por senha em vez de migrada depois
 - [x] **Google Meu Negócio**, perfil do cliente
 
 Ainda fora da operação:

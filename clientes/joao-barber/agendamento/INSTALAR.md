@@ -1,9 +1,17 @@
 # Instalar o agendamento
 
 > Passo a passo pra ligar o motor. Uns 20 minutos, uma vez só.
-> **Tem que ser feito na conta Google do João**, não na do Miguel. Se for
-> feito na conta errada, no dia em que vocês se separarem ele perde a
-> agenda e a base inteira.
+>
+> **Tem que rodar numa conta Google que no fim das contas seja do João.**
+> Decidido em 20/08/2026: o Miguel cria uma conta nova dedicada ao projeto
+> e entrega por senha quando o João assumir. Assim não tem migração de
+> agenda nem de planilha depois, e nada fica misturado com a conta pessoal
+> do Miguel. Na conta errada, no dia em que os dois se separarem, o João
+> perde a agenda e a base inteira.
+>
+> **A tela do site já existe e já funciona sem isso aqui**, em modo
+> demonstração (ver `../site/NOTAS.md`). O que este passo a passo faz é
+> trocar os horários de mentira pelos de verdade.
 
 ---
 
@@ -94,12 +102,31 @@ nome da aba.
 
 ## Passo 5: ligar no site
 
-No `site/index.html`, no bloco de configuração do agendamento, preencher:
+No `site/index.html`, procurar por `var AGENDA` (fica no começo do bloco de
+agendamento, perto do fim do arquivo) e preencher os três campos:
 
 ```js
-const AGENDA_URL   = 'https://script.google.com/macros/s/.../exec';
-const AGENDA_CHAVE = 'a mesma chave que está no script';
+var AGENDA = {
+  URL:      'https://script.google.com/macros/s/.../exec',
+  CHAVE:    'a mesma CHAVE que está no script',
+  WHATSAPP: '5561999999999'
+};
 ```
+
+Enquanto `URL` e `CHAVE` estiverem vazias, a tela roda em demonstração:
+calcula os horários no próprio navegador, não grava nada, e mostra um aviso
+em dourado explicando isso pro visitante. Preencher as duas é o que liga o
+motor de verdade, e o aviso some sozinho.
+
+O `WHATSAPP` é separado de propósito: é ele que faz a mensagem de
+confirmação já ir escrita. Sem ele, o botão do fim cai no link curto do
+perfil, que não aceita texto pronto.
+
+**Antes de testar, conferir se os dois lados dizem a mesma coisa.** O site
+tem uma cópia de `SERVICOS`, `EXPEDIENTE` e `DOMICILIO_EXTRA_MIN`, que é o
+que permite a demonstração funcionar sozinha. Se as duas listas
+divergirem, o site oferece horário que o motor recusa, e o cliente leva
+erro na cara.
 
 Publicar o site (`/publicar-site`) e testar marcando um horário de
 verdade. Depois é só apagar o evento de teste da agenda e a linha da

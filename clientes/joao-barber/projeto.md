@@ -2,13 +2,19 @@
 
 > Arquivo único do cliente. Junta o que antes estava espalhado em
 > `briefing.md`, `analise-conversa.md`, `plano-de-acao.md` e
-> `conversa-com-joao.md`. Atualizado em 19/08/2026.
+> `conversa-com-joao.md`. Atualizado em 21/08/2026.
 >
 > Fonte bruta: `conversa-dialogo.md` (transcrição de 29 min, 17/08).
 > Identidade visual: `identidade.md`. Documentação do site: `site/NOTAS.md`.
 > Motor do agendamento: `agendamento/`.
 >
 > **Site não está no ar.** Publicação é sob demanda, com `/publicar-site`.
+>
+> **Onde a construção está (21/08/2026):** a tela de agendamento existe e
+> funciona de ponta a ponta dentro do site, em modo demonstração (horários
+> calculados no navegador, nada gravado). Falta ligar o motor numa conta
+> Google, o que troca os horários de mentira pelos de verdade sem mexer em
+> mais nada. Ver `site/NOTAS.md` e `agendamento/INSTALAR.md`.
 
 ---
 
@@ -89,7 +95,8 @@ Fechou a conversa com **"então fecha nós aí"**. Já disse sim.
 ### Agora (as quatro que importam)
 
 **1. Agendamento pelo site.** É o coração, e tudo o mais pendura nele.
-Ver a arquitetura na seção 4.
+Ver a arquitetura na seção 4. **Tela pronta em 20/08/2026**, rodando com
+dados provisórios até o João confirmar serviços, durações e expediente.
 
 **2. Recall de 15 dias.** Lista de quem passou do prazo desde o último
 corte. Ele abre uma vez por dia e chama, um por um, do número dele.
@@ -137,9 +144,9 @@ Google do João**, pra passar no filtro do "vai junto com ele".
 CAMADA 1  Site publico (Netlify, estatico)
           quem ele e, o que faz, onde trabalha, prova social, botao Agendar
                     |
-CAMADA 2  Agendamento (Horarios de agendamento do Google Agenda)
+CAMADA 2  Agendamento (tela no proprio site + Apps Script)
           horarios reais que ele definiu, cai na agenda dele,
-          confirmacao automatica por email
+          e devolve a conversa ja escrita no WhatsApp
                     |
 CAMADA 3  Base + painel (Google Sheets alimentado por Apps Script)
           le a agenda dele, monta a lista de clientes,
@@ -149,24 +156,37 @@ CAMADA 4  WhatsApp (manual, com texto pronto)
           ele chama, um a um, do numero dele
 ```
 
-### Camada 2: horários reais, sem construir nada
+### Camada 2: horários reais, na cara da marca dele
 
-O Miguel perguntou se dá pra mostrar os horários disponíveis de verdade.
-Dá, e é mais fácil do que parece, **porque a gente não constrói isso**.
+> **Correção de rota, registrada em 21/08.** Esta seção dizia, até aqui,
+> que a camada 2 seriam os "Horários de agendamento" do Google Agenda,
+> embutidos no site. O que foi construído em 19 e 20/08 é diferente:
+> **tela própria dentro do site, conversando com um Apps Script** que roda
+> na conta Google dele. O documento estava atrás do código.
 
-Os **Horários de agendamento do Google Agenda** já fazem: o João marca
-quais dias e faixas ele atende, o Google gera uma página pública, o
-cliente escolhe um horário que existe, o evento entra na agenda dele e o
-cliente recebe confirmação sozinho. Grátis na conta comum, e a página
-pode ser embutida dentro do site.
+O princípio de não escrever um sistema de agenda do zero continua valendo,
+e continua sendo respeitado: **não tem servidor, não tem banco de dados,
+não tem mensalidade.** Quem guarda o horário é a Agenda do João, quem
+guarda o histórico é a Planilha, e quem costura os dois é um script de 300
+linhas dentro da conta dele. Custo zero.
 
-O erro seria escrever um sistema de agenda do zero. Isso é banco de dados,
-servidor, conflito de horário, fuso, cancelamento. Custa dinheiro e
-manutenção pra sempre, e entrega o que o Google entrega de graça.
+O que a página pronta do Google não entregava, e pesou na decisão:
 
-Plano B, se a página do Google apertar (poucos campos personalizados, ou
-precisar de webhook): **Cal.com**, grátis, conecta na mesma agenda do
-Google, permite perguntas extras e cores da marca.
+- **A planilha.** A camada 3 (recall de 15 dias, aniversário) precisa de
+  uma base que se preencha sozinha. O Apps Script grava a linha no mesmo
+  movimento em que cria o evento. Com a página do Google, ia ser preciso
+  escrever um script assim mesmo, só que depois e por fora
+- **Tempo de deslocamento.** Domicílio ocupa a duração do serviço mais o
+  trajeto. Isso é regra por serviço e por local, e a conta Google gratuita
+  é limitada em página de agendamento
+- **A marca.** A pessoa não sai do site nem cai numa tela do Google. É
+  preto e dourado do começo ao fim
+- **O fim do fluxo é o WhatsApp dele.** Confirmou, abre a conversa com a
+  mensagem já escrita. É onde ele fecha e onde ele é bom
+
+Plano B, se o Apps Script apertar: **Cal.com**, grátis, conecta na mesma
+agenda do Google, permite perguntas extras e cores da marca. E a página do
+Google segue existindo como plano C, para o caso de tudo dar errado.
 
 ### Camada 3: o painel, no lugar da planilha crua
 
@@ -272,6 +292,14 @@ não existe "antes e depois" e o case vira favor:
 - [ ] De onde vêm os clientes novos hoje
 - [ ] Fotos e vídeo reais dele trabalhando (o site ainda usa material de
       terceiros e não pode ir pro ar assim)
+- [ ] **Duração real de cada serviço**, e se falta algum na lista (hoje o
+      site e o motor carregam o mesmo chute: corte 40, barba 30, combo 70,
+      acabamento 20, sobrancelha 15)
+- [ ] **Quanto tempo reservar de deslocamento** no domicílio (hoje 45 min)
+- [ ] **O número de WhatsApp dele em dígitos**, com 55 e DDD, pra mensagem
+      de confirmação já ir escrita. O link curto do perfil não aceita texto
+      pronto
+- [ ] Logo JB em PNG com fundo transparente, ou SVG
 
 ---
 
