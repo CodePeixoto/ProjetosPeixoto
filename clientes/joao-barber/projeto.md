@@ -48,16 +48,12 @@
 >   planilha. Depois do POST, os horários 18:45/19:00/19:15 sumiram da
 >   lista, confirmando que a escrita caiu na agenda. OK.
 >
-> **Pendência de limpeza (só o Miguel faz, precisa da conta
-> `joaobarber.agenda@gmail.com`):**
-> 1. Abrir a Agenda e apagar o evento **"Corte · TESTE MazyOS - apagar"**
->    de 28/08 às 19:15
-> 2. Abrir a Planilha (aba `Agendamentos`) e apagar a linha do TESTE
->    MazyOS
-> 3. Conferir de passagem que o evento e a linha tinham mesmo os dados
->    certos antes de apagar
+> Limpeza feita em 27/08: o Miguel apagou o evento de teste da agenda e
+> a linha da planilha. Confirmado pelo motor — os horários
+> 18:45/19:00/19:15 de 28/08 voltaram pra lista (34 horários livres de
+> novo). **Site publicado e agendamento validado de ponta a ponta.**
 >
-> **Outras pendências:**
+> **Pendências:**
 > - Dados de serviço, expediente e **WhatsApp seguem fictícios** até o
 >   João confirmar os reais (seção 7). O número `5561999999999` está nos
 >   dois lados (site e `apps-script.gs`)
@@ -67,7 +63,6 @@
 > - O token antigo da Netlify (`Hospedagem de sites de cliente`, criado
 >   19/08) **expira em 18/09/2026** — renomear pra identificar a máquina
 >   ou revogar depois que os novos estiverem funcionando
-> - `.netlify-site-id` ainda não foi commitado
 
 ---
 
