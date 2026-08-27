@@ -15,6 +15,59 @@
 > calculados no navegador, nada gravado). Falta ligar o motor numa conta
 > Google, o que troca os horários de mentira pelos de verdade sem mexer em
 > mais nada. Ver `site/NOTAS.md` e `agendamento/INSTALAR.md`.
+>
+> **Atualização 26/08/2026:** conta Google dedicada criada,
+> `joaobarber.agenda@gmail.com` (só o email fica aqui, senha não).
+> Planilha criada (`SHEET_ID` já preenchido no `apps-script.gs`), `CHAVE`
+> gerada e replicada nos dois lados (site e script), script colado,
+> testado (agenda e planilha acessíveis) e publicado (Passo 4). `URL` do
+> app da Web preenchida no bloco `AGENDA` do site: **o motor de verdade
+> está ligado, modo demonstração desativado.** Dados de serviço,
+> expediente e WhatsApp seguem **fictícios** até o João confirmar os
+> reais (seção 7). Falta testar marcando um horário real no site
+> publicado e apagar o evento/linha de teste depois (Passo 5 do
+> `INSTALAR.md`).
+>
+> **Atualização 27/08/2026 (tarde): site no ar e motor testado de ponta
+> a ponta.** O site foi publicado na Netlify em
+> **https://joao-barber-aqz.netlify.app** (protegido por `noindex` +
+> `robots.txt`, não aparece no Google). Projeto Netlify
+> `joao-barber-aqz`, id em `clientes/joao-barber/.netlify-site-id`
+> (esse arquivo mantém o endereço estável, não apagar).
+>
+> O token novo da Netlify já estava criado no `setx` (escopo User) mas
+> não valia na sessão do Claude ainda; foi lido direto do ambiente do
+> Windows pra publicar sem precisar reiniciar.
+>
+> Teste de integração feito contra o endpoint real do Apps Script
+> (mesmo que o site chama):
+> - `GET acao=dias` e `GET acao=horarios`: devolvem horários reais lidos
+>   da agenda do João. OK.
+> - `POST` de agendamento: criou o evento **"Corte · TESTE MazyOS -
+>   apagar"** em **28/08/2026 às 19:15** na agenda e gravou a linha na
+>   planilha. Depois do POST, os horários 18:45/19:00/19:15 sumiram da
+>   lista, confirmando que a escrita caiu na agenda. OK.
+>
+> **Pendência de limpeza (só o Miguel faz, precisa da conta
+> `joaobarber.agenda@gmail.com`):**
+> 1. Abrir a Agenda e apagar o evento **"Corte · TESTE MazyOS - apagar"**
+>    de 28/08 às 19:15
+> 2. Abrir a Planilha (aba `Agendamentos`) e apagar a linha do TESTE
+>    MazyOS
+> 3. Conferir de passagem que o evento e a linha tinham mesmo os dados
+>    certos antes de apagar
+>
+> **Outras pendências:**
+> - Dados de serviço, expediente e **WhatsApp seguem fictícios** até o
+>   João confirmar os reais (seção 7). O número `5561999999999` está nos
+>   dois lados (site e `apps-script.gs`)
+> - Fazer o mesmo processo de token da Netlify (criar um novo, nomeado
+>   pra essa máquina, `setx NETLIFY_AUTH_TOKEN`) no PC quando for mexer
+>   por lá
+> - O token antigo da Netlify (`Hospedagem de sites de cliente`, criado
+>   19/08) **expira em 18/09/2026** — renomear pra identificar a máquina
+>   ou revogar depois que os novos estiverem funcionando
+> - `.netlify-site-id` ainda não foi commitado
 
 ---
 

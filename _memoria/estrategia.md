@@ -234,6 +234,18 @@ o `clientes/joao-barber/agendamento/INSTALAR.md`, uns 20 minutos. Depois
 disso o site passa a ler a agenda de verdade sem precisar mexer em mais
 nada, é só preencher dois campos.
 
+**Atualizado em 27/08/2026:** o `INSTALAR.md` foi rodado, motor real
+ligado (fora do modo demonstração). O site foi publicado na Netlify
+(**joao-barber-aqz.netlify.app**, com `noindex`) e o agendamento foi
+testado de ponta a ponta contra o endpoint real: consulta de horários e
+POST de agendamento criaram evento na agenda e linha na planilha do
+João. Falta só o Miguel apagar o evento/linha de teste (precisa da conta
+`joaobarber.agenda@gmail.com`) e, na conversa com o João, trocar os
+dados fictícios (serviços, expediente, WhatsApp) pelos reais. Detalhe no
+topo do `clientes/joao-barber/projeto.md`. Nesse mesmo dia mudou também
+a política de token da Netlify pra variável de ambiente por máquina, ver
+`CLAUDE.md` da raiz.
+
 Na conversa com o João que vem em seguida, pegar tudo de uma vez: dias e
 horários reais, duração de cada serviço, tempo de deslocamento do
 domicílio, preços, bairros, o número dele em dígitos, as fotos e o vídeo

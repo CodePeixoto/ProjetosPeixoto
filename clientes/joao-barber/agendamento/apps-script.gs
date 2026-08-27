@@ -23,18 +23,19 @@ var CONFIG = {
   CALENDAR_ID: '',
 
   // ID da planilha. Está na URL, entre /d/ e /edit.
-  SHEET_ID: 'COLE_O_ID_DA_PLANILHA_AQUI',
+  SHEET_ID: '1gYhv0o2NJMmlnX1avw72y2ofrjJDH6r-9zx_fDsrkAU',
   SHEET_NOME: 'Agendamentos',
 
   // WhatsApp do João, só números, com país e DDD.
-  WHATSAPP: '5561999999999',   // <<< TROCAR
+  // PROVISÓRIO: número fictício até o João confirmar o real.
+  WHATSAPP: '5561999999999',
 
   FUSO: 'America/Sao_Paulo',
 
   // Chave que o site manda junto. Serve pra ninguém de fora ficar
   // criando evento na agenda dele. Trocar por qualquer texto longo,
   // e repetir o mesmo valor no site.
-  CHAVE: 'TROCAR_POR_UM_TEXTO_LONGO_E_UNICO',
+  CHAVE: 'jb-fdded1b286dc138fe9dab196',
 
   // Serviços. A duração é o que reserva o espaço na agenda.
   // >>> CONFIRMAR OS TEMPOS REAIS COM O JOÃO <<<

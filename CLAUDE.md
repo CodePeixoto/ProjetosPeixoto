@@ -217,8 +217,11 @@ Entraram na operação em agosto/2026, por causa do case do João Barber:
       de terceiro
 - [x] **Netlify**, hospedagem dos sites. O Claude publica direto pela
       linha de comando com a skill `/publicar-site`: cria o projeto,
-      sobe e devolve o link, sem ninguém abrir navegador. Token pessoal
-      em `.claude/.netlify-token`, fora do Git
+      sobe e devolve o link, sem ninguém abrir navegador. Token guardado
+      numa variável de ambiente do Windows (`NETLIFY_AUTH_TOKEN`),
+      **um token diferente por máquina** (notebook e PC), porque essa
+      pasta é sincronizada pelo OneDrive e um arquivo aqui dentro
+      apareceria nas duas. Decidido em 27/08/2026
 - [x] **Google Agenda + Planilhas + Apps Script**, o motor do
       agendamento. Roda de graça dentro da conta Google do cliente. Pro
       João, o script está escrito e **ainda não foi instalado**: espera a

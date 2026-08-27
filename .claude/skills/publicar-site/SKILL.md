@@ -14,25 +14,41 @@ o mesmo endereço, então o link que o cliente já tem nunca muda.
 
 ---
 
-## Pré-requisito: o token (uma vez na vida)
+## Pré-requisito: o token (uma vez por máquina)
+
+**O token vive fora da pasta do projeto, nunca dentro dela.** Essa pasta
+está sincronizada pelo OneDrive: qualquer arquivo salvo aqui aparece
+sozinho nas duas máquinas do Miguel (notebook e PC), não tem como um
+arquivo local "existir só numa delas". Por isso o token mora numa
+**variável de ambiente do Windows**, que o OneDrive não sincroniza, e o
+recomendado é **um token diferente por máquina** (assim, se uma delas for
+perdida ou tiver a sessão comprometida, revoga só aquele token no painel
+da Netlify, sem afetar a outra máquina).
 
 ```bash
-test -s .claude/.netlify-token && echo "TOKEN OK" || echo "SEM TOKEN"
+test -n "$NETLIFY_AUTH_TOKEN" && echo "TOKEN OK (variável de ambiente)" \
+  || (test -s .claude/.netlify-token && echo "TOKEN OK (arquivo antigo, considerar migrar)") \
+  || echo "SEM TOKEN"
 ```
 
 Se aparecer `SEM TOKEN`, **parar** e passar isso pro usuário:
 
 > 1. Abre https://app.netlify.com/user/applications
-> 2. Em **Personal access tokens**, clica em **New access token**, dá um
->    nome (`MazyOS`) e copia o código
-> 3. Cola no teu PowerShell, dentro da pasta do projeto:
+> 2. Em **Personal access tokens**, clica em **New access token**. Dê um
+>    nome que identifique a máquina (ex: `MazyOS-Notebook` ou
+>    `MazyOS-PC`), não reaproveite o mesmo token nas duas
+> 3. Copia o código e cola **no PowerShell dessa máquina** (não precisa
+>    estar na pasta do projeto):
 >    ```powershell
->    'O_TOKEN_AQUI' | Out-File -NoNewline -Encoding ascii .claude\.netlify-token
+>    setx NETLIFY_AUTH_TOKEN "O_TOKEN_AQUI"
 >    ```
-> 4. Me avisa que tá pronto
+> 4. Fecha e abre o terminal de novo (o `setx` só vale pra sessões
+>    novas), e me avisa que tá pronto
 
 Não pedir o token no chat. Não repetir o valor dele em resposta nenhuma.
-O arquivo já está no `.gitignore`.
+Se ainda existir um `.claude/.netlify-token` de uma configuração antiga,
+ele serve só de reserva: migrar pra variável de ambiente quando der e
+apagar o arquivo depois.
 
 ---
 
@@ -43,7 +59,7 @@ Descobrir de qual cliente se trata. A pasta é `clientes/<cliente>/site`.
 ### 1. Conferir a pasta e carregar o token
 
 ```bash
-export NETLIFY_AUTH_TOKEN=$(cat .claude/.netlify-token)
+test -z "$NETLIFY_AUTH_TOKEN" && export NETLIFY_AUTH_TOKEN=$(cat .claude/.netlify-token 2>/dev/null)
 ls clientes/<cliente>/site/index.html
 ```
 
