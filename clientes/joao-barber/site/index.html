@@ -488,6 +488,31 @@ section{padding:88px 0;border-bottom:1px solid var(--linha);scroll-margin-top:78
 .ag-ok p{max-width:46ch;margin-left:auto;margin-right:auto}
 .ag-ok .btn{margin-top:26px}
 .ag-ok .ag-pe{justify-content:center}
+.ag-ok .ag-codigo{
+  font-size:15px;color:var(--claro);margin:14px auto 0;
+}
+.ag-ok .ag-codigo b{
+  color:var(--dourado);letter-spacing:.22em;font-weight:600;
+}
+.ag-ok .ag-obrig{
+  margin:18px auto 0;font-size:14.5px;line-height:1.65;
+  color:#E5C98A;max-width:42ch;
+}
+
+/* desmarcar */
+.ag-cancelar{
+  margin-top:34px;padding-top:20px;border-top:1px solid var(--linha);
+}
+.ag-cancelar summary{
+  cursor:pointer;font-size:12px;font-weight:400;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
+  list-style:none;
+}
+.ag-cancelar summary::-webkit-details-marker{display:none}
+.ag-cancelar summary:hover{color:var(--dourado)}
+.ag-cancelar[open] summary{color:var(--dourado);margin-bottom:16px}
+.ag-cancelar .ag-campo{margin-top:12px;max-width:220px}
+.ag-cancelar .btn{margin-top:16px}
 
 /* ---------- cta final ---------- */
 .final{position:relative;border:0;background-color:var(--preto);overflow:hidden}
@@ -1064,7 +1089,7 @@ html.anim .regua.on{animation:risco .9s cubic-bezier(.22,.7,.3,1) forwards}
 
             <div class="ag-pe">
               <button type="button" class="ag-voltar" data-voltar="3">Voltar</button>
-              <button type="submit" class="btn btn-primary" id="ag-enviar">Confirmar horário</button>
+              <button type="submit" class="btn btn-primary" id="ag-enviar">Confirmar e avisar o João</button>
             </div>
           </form>
 
@@ -1079,14 +1104,29 @@ html.anim .regua.on{animation:risco .9s cubic-bezier(.22,.7,.3,1) forwards}
           <h3 class="ag-titulo" tabindex="-1">Horário reservado</h3>
           <p class="quando" id="ag-quando"></p>
           <p id="ag-detalhe"></p>
+          <p class="ag-codigo" id="ag-codigo" hidden></p>
+          <p class="ag-obrig" id="ag-obrig"></p>
           <a class="btn btn-primary" id="ag-zap" href="#" target="_blank" rel="noopener">
             <svg viewBox="0 0 24 24"><path d="M17.5 14.4c-.3-.2-1.7-.9-2-1-.3-.1-.5-.1-.7.2-.2.3-.7.9-.9 1.1-.2.2-.3.2-.6.1-.3-.2-1.2-.5-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.2-.3 0-.5.1-.6l.5-.5c.1-.2.2-.3.3-.5 0-.2 0-.4 0-.5 0-.2-.7-1.6-.9-2.2-.2-.6-.5-.5-.7-.5h-.6c-.2 0-.5.1-.8.4-.3.3-1 1-1 2.5s1.1 2.9 1.2 3.1c.1.2 2.1 3.2 5 4.5.7.3 1.2.5 1.7.6.7.2 1.3.2 1.8.1.6-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.4 1.3 4.9L2 22l5.2-1.3c1.4.8 3 1.2 4.8 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
-            Avisar no WhatsApp
+            Enviar confirmação no WhatsApp
           </a>
           <div class="ag-pe">
             <button type="button" class="ag-voltar" id="ag-denovo">Marcar outro horário</button>
           </div>
         </div>
+
+        <!-- desmarcar: fica sempre visível, pra quem volta ao site depois -->
+        <details class="ag-cancelar" id="ag-cancelar" hidden>
+          <summary>Precisa desmarcar um horário?</summary>
+          <p class="ag-dica">Digite o código que apareceu quando você agendou.</p>
+          <div class="ag-campo">
+            <label for="ag-cod">Código do agendamento</label>
+            <input type="text" id="ag-cod" maxlength="4" autocomplete="off"
+                   style="text-transform:uppercase" placeholder="Ex: K7QP">
+          </div>
+          <p class="ag-status" id="ag-cancelar-msg" role="status"></p>
+          <button type="button" class="btn btn-ghost" id="ag-cancelar-btn">Desmarcar</button>
+        </details>
 
       </div>
     </div>
@@ -1361,16 +1401,17 @@ if (!semAnimacao) {
   var AGENDA = {
     URL:      'https://script.google.com/macros/s/AKfycbz8Ru6MWqpabFjvHY5SEs31NTsEoYjG4ZCY74xlQNxRtIqlzY2RY-YXisGvulgbTerErQ/exec',
     CHAVE:    'jb-fdded1b286dc138fe9dab196',   // a mesma CHAVE que está no apps-script.gs
-    WHATSAPP: '5561999999999'    // PROVISÓRIO: número fictício até o João confirmar o real
+    WHATSAPP: '5561981607166'    // CONFERIR: número do João (ele passou 61 8160-7166, faltava o 9)
   };
 
   var ZAP  = 'https://wa.me/message/4J746DNCQC6ED1';
   var FUSO = 'America/Sao_Paulo';
 
-  /* ---- cópia PROVISÓRIA do CONFIG do agendamento/apps-script.gs ----
-     Enquanto o João não confirmar serviços, durações e expediente, os dois
-     lados carregam o mesmo chute. Quando ele confirmar, mudar aqui E lá,
-     senão o site oferece horário que o motor recusa. */
+  /* ---- fallback de serviços e expediente ----
+     Com o motor ligado, a lista de serviços e o extra de domicílio vêm da
+     planilha (acao=config), então essa cópia só é usada no modo demonstração
+     ou se o motor não responder. O expediente abaixo é só da demonstração:
+     o motor calcula os horários reais a partir da aba Expediente. */
   var SERVICOS = {
     corte:       {nome:'Corte',                minutos:40, texto:'Do clássico ao degradê, decidido na conversa'},
     barba:       {nome:'Barba',                minutos:30, texto:'Desenho, navalha e toalha quente'},
@@ -1518,6 +1559,13 @@ if (!semAnimacao) {
       });
   }
 
+  /* Pega serviços e extra de domicílio da planilha. Se o motor for antigo
+     (sem acao=config) ou estiver fora do ar, devolve null e o site segue com
+     a cópia embutida acima. */
+  function buscarConfig(){
+    return consultar({acao:'config'}).catch(function(){ return null; });
+  }
+
   function buscarDias(){
     if (!ligado) return Promise.resolve(diasDaDemo());
     return consultar({acao:'dias', servico:estado.servico, local:estado.local})
@@ -1613,18 +1661,22 @@ if (!semAnimacao) {
 
   /* ---------- passo 1: serviço ---------- */
 
-  Object.keys(SERVICOS).forEach(function(chave){
-    var s = SERVICOS[chave];
-    var b = document.createElement('button');
-    b.type = 'button';
-    b.className = 'ag-op';
-    b.setAttribute('data-servico', chave);
-    b.setAttribute('aria-pressed', 'false');
-    b.innerHTML = '<span><b>' + s.nome + '</b><i>' + s.texto + '</i></span>'
-                + '<em>' + s.minutos + ' min</em>';
-    b.addEventListener('click', function(){ escolherServico(chave); });
-    id('ag-servicos').appendChild(b);
-  });
+  function montarServicos(){
+    var alvo = id('ag-servicos');
+    alvo.innerHTML = '';
+    Object.keys(SERVICOS).forEach(function(chave){
+      var s = SERVICOS[chave];
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.className = 'ag-op';
+      b.setAttribute('data-servico', chave);
+      b.setAttribute('aria-pressed', 'false');
+      b.innerHTML = '<span><b>' + s.nome + '</b><i>' + (s.texto || '') + '</i></span>'
+                  + '<em>' + s.minutos + ' min</em>';
+      b.addEventListener('click', function(){ escolherServico(chave); });
+      alvo.appendChild(b);
+    });
+  }
 
   function escolherServico(chave){
     estado.servico = chave;
@@ -1826,13 +1878,68 @@ if (!semAnimacao) {
 
     id('ag-detalhe').textContent = SERVICOS[estado.servico].nome + ' · '
       + (estado.local === 'domicilio' ? 'Na sua casa: ' + estado.endereco : 'Na Barbearia Rota 020')
-      + (ligado
-          ? '. Já entrou na minha agenda. Se precisar mudar, é só me chamar.'
-          : '. Modo demonstração: esse horário não foi gravado em lugar nenhum.');
+      + (ligado ? '.' : '. Modo demonstração: esse horário não foi gravado em lugar nenhum.');
 
-    id('ag-zap').href = r.whatsapp || ZAP;
+    var elCod = id('ag-codigo');
+    if (ligado && r && r.codigo) {
+      elCod.hidden = false;
+      elCod.innerHTML = 'Teu código: <b>' + r.codigo + '</b> — guarda pra desmarcar se precisar.';
+    } else {
+      elCod.hidden = true;
+    }
+
+    id('ag-obrig').textContent = ligado
+      ? 'Falta um passo: me manda a confirmação no WhatsApp. Sem essa mensagem eu não fico sabendo do teu horário.'
+      : 'Modo demonstração: nada foi gravado. No site de verdade, aqui abre o WhatsApp com a mensagem pronta.';
+
+    var zap = (r && r.whatsapp) || ZAP;
+    id('ag-zap').href = zap;
     irPara(5);
+
+    // confirmação obrigatória: abre a conversa com o João já escrita.
+    // se o navegador bloquear o pop-up, o botão dourado continua ali.
+    if (ligado) { try { window.open(zap, '_blank'); } catch(e){} }
   }
+
+  /* ---------- desmarcar pelo código ---------- */
+
+  (function(){
+    var bloco = id('ag-cancelar');
+    if (!bloco) return;
+    if (!ligado) { bloco.hidden = true; return; }
+    bloco.hidden = false;
+
+    var campo = id('ag-cod');
+    var msg   = id('ag-cancelar-msg');
+    var botao = id('ag-cancelar-btn');
+
+    botao.addEventListener('click', function(){
+      var cod = (campo.value || '').trim().toUpperCase();
+      if (cod.length < 4) { avisar(msg, 'Digite as 4 letras do código.'); campo.focus(); return; }
+
+      botao.disabled = true;
+      limpar(msg, 'Procurando teu agendamento...');
+
+      enviar({acao:'cancelar', chave:AGENDA.CHAVE, codigo:cod}).then(function(r){
+        botao.disabled = false;
+
+        if (r && r.ok) {
+          limpar(msg, 'Pronto, desmarquei. Abri o WhatsApp pra você me avisar.');
+          if (r.whatsapp) { try { window.open(r.whatsapp, '_blank'); } catch(e){} }
+          return;
+        }
+        if (r && r.erro === 'tarde') {
+          avisar(msg, r.mensagem || 'Já está em cima da hora, me chama no WhatsApp.');
+          if (r.whatsapp) { try { window.open(r.whatsapp, '_blank'); } catch(e){} }
+          return;
+        }
+        avisar(msg, (r && r.mensagem) || 'Não consegui desmarcar. Me chama no WhatsApp.');
+      }).catch(function(){
+        botao.disabled = false;
+        avisar(msg, 'Não consegui falar com a agenda agora. Tenta de novo ou me chama no WhatsApp.');
+      });
+    });
+  })();
 
   id('ag-denovo').addEventListener('click', function(){
     estado = {servico:null, local:null, endereco:'', data:null, hora:null};
@@ -1860,15 +1967,34 @@ if (!semAnimacao) {
     a.addEventListener('click', function(){ preferido = a.getAttribute('data-local'); });
   });
 
+  function iniciar(){
+    montarServicos();
+    id('ag-extra').textContent = '+' + DOMICILIO_EXTRA_MIN + ' min';
+    id('ag-semjs').remove();
+    trilha.hidden = false;
+    irPara(1, false);
+  }
+
   if (!ligado) {
     id('ag-demo').hidden = false;
     id('ag-demo').textContent = 'Modo demonstração: os horários abaixo são de exemplo e ainda não caem numa agenda de verdade.';
+    iniciar();
+  } else {
+    // com o motor ligado, serviços e extra de domicílio vêm da planilha.
+    // se a config não voltar em 4s, o site abre com a cópia embutida.
+    var pronto = false;
+    var comConfig = function(cfg){
+      if (pronto) return;
+      pronto = true;
+      if (cfg && cfg.servicos && Object.keys(cfg.servicos).length) {
+        SERVICOS = cfg.servicos;
+        if (typeof cfg.domicilioExtra === 'number') DOMICILIO_EXTRA_MIN = cfg.domicilioExtra;
+      }
+      iniciar();
+    };
+    buscarConfig().then(comConfig);
+    setTimeout(function(){ comConfig(null); }, 4000);
   }
-
-  id('ag-extra').textContent = '+' + DOMICILIO_EXTRA_MIN + ' min';
-  id('ag-semjs').remove();
-  trilha.hidden = false;
-  irPara(1, false);
 
 })();
 </script>

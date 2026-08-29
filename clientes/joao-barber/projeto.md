@@ -53,16 +53,43 @@
 > 18:45/19:00/19:15 de 28/08 voltaram pra lista (34 horários livres de
 > novo). **Site publicado e agendamento validado de ponta a ponta.**
 >
+> **Atualização 29/08/2026: agendamento v2 (config na planilha,
+> confirmação obrigatória, cancelamento por código).** Miguel pediu, na
+> fase de montar a ideia pra mostrar ao João:
+> 1. **Config na planilha:** serviços, expediente e regras saíram do
+>    código pra 5 abas (Config, Serviços, Expediente, Agendamentos,
+>    Clientes). O João edita a planilha, sem tocar em código. O site pega
+>    a lista via `acao=config`. Modelos das abas em
+>    `agendamento/planilha-modelo/`, índice de todo dado em
+>    `agendamento/INDICE.md`
+> 2. **Aba Clientes** que se preenche sozinha: uma linha por pessoa que
+>    atualiza a cada visita (nome, aniversário, primeira vez, última
+>    visita, nº de visitas, observações acumuladas). É a "ficha do
+>    cliente" do projeto começando a existir, sem encher a planilha
+> 3. **Confirmação obrigatória:** ao confirmar, o site abre o WhatsApp do
+>    João já escrito, sem botão opcional
+> 4. **Cancelamento pelo site:** cada marcação gera um código de 4
+>    letras; o cliente desmarca sozinho até X horas antes (parâmetro na
+>    Config). Apaga o evento, marca a linha como Cancelado, avisa o João
+>    por WhatsApp e email
+>
+> **O site já está atualizado e publicado** (roda com o motor v1 antigo
+> sem quebrar: cai no fallback embutido enquanto o `acao=config` não
+> existir). O `apps-script.gs` novo está pronto mas **o Miguel precisa
+> colar e reimplantar na conta do João e recriar a planilha com as 5
+> abas** (`agendamento/INSTALAR.md`, seção "Migrar da v1").
+>
+> **Número do João:** ele passou `61 8160-7166` (8 dígitos após o DDD,
+> falta 1). Site e modelo estão com `5561981607166`. **Confirmar.**
+>
 > **Pendências:**
-> - Dados de serviço, expediente e **WhatsApp seguem fictícios** até o
->   João confirmar os reais (seção 7). O número `5561999999999` está nos
->   dois lados (site e `apps-script.gs`)
-> - Fazer o mesmo processo de token da Netlify (criar um novo, nomeado
->   pra essa máquina, `setx NETLIFY_AUTH_TOKEN`) no PC quando for mexer
->   por lá
+> - Miguel: deployar o motor v2 e montar a planilha de 5 abas na conta do João
+> - Dados reais de serviço, expediente e WhatsApp (agora é preencher a
+>   planilha, não mexer em código) — seção 7
+> - Fazer o mesmo processo de token da Netlify (`setx NETLIFY_AUTH_TOKEN`)
+>   no PC quando for mexer por lá
 > - O token antigo da Netlify (`Hospedagem de sites de cliente`, criado
->   19/08) **expira em 18/09/2026** — renomear pra identificar a máquina
->   ou revogar depois que os novos estiverem funcionando
+>   19/08) **expira em 18/09/2026** — renomear ou revogar
 
 ---
 

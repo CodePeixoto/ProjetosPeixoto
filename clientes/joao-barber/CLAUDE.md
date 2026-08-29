@@ -14,7 +14,7 @@ real: o que for contexto do projeto entra no `projeto.md`.
 | `conversa-dialogo.md` | Transcrição bruta da conversa de 17/08. Fonte, não se edita |
 | `identidade.md` | Identidade visual dele. Separado porque é consultado a cada peça |
 | `site/NOTAS.md` | Documentação técnica do site, incluindo a tela de agendamento |
-| `agendamento/` | Apps Script do agendamento e o passo a passo de instalação |
+| `agendamento/` | Apps Script, passo a passo de instalação (`INSTALAR.md`), índice de todos os dados (`INDICE.md`) e modelos das abas (`planilha-modelo/`) |
 
 Mídia bruta fica em `midia-original/` (fora do Git). Carrossel em
 `carrossel/`. Quando o site for publicado, aparece um `.netlify-site-id`
@@ -47,9 +47,16 @@ que é a marca do Miguel.
   bloqueio, os dois marcados com comentário pra remover na hora certa
 - **A tela de agendamento vive dentro do `site/index.html`**, não em
   arquivo separado. Procurar por `var AGENDA` pra achar a configuração
-- **Serviços, durações e expediente estão copiados em dois lugares:** o
-  bloco `AGENDA` do site e o `CONFIG` do `agendamento/apps-script.gs`.
-  Mexeu num, mexe no outro. Se divergirem, o site oferece horário que o
-  motor recusa e o cliente leva erro na cara
+- **Agendamento v2 (29/08/2026):** serviços, expediente e regras moram na
+  **planilha** (abas Config, Serviços, Expediente), não mais no código.
+  O motor lê de lá e o site pega a lista via `acao=config`. A cópia no
+  `index.html` (bloco "fallback de serviços e expediente") só vale no
+  modo demonstração. Índice completo dos dados em
+  `agendamento/INDICE.md`
+- O motor roda na conta Google do João: **mudança no `apps-script.gs`
+  exige o Miguel colar e reimplantar lá**, e recriar as 5 abas da
+  planilha. Modelos em `agendamento/planilha-modelo/`
 - Com `URL` e `CHAVE` vazias no bloco `AGENDA`, o site roda em modo
-  demonstração e avisa isso na tela. É o estado de hoje (21/08/2026)
+  demonstração e avisa isso na tela. Hoje está ligado (motor real)
+- Cada agendamento gera um **código** de 4 letras; o cliente desmarca
+  pelo site com ele, até o limite de horas da aba Config

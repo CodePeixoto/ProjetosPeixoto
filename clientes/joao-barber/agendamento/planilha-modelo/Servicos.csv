@@ -1,0 +1,6 @@
+chave,nome,minutos,descrição,ativo
+corte,Corte,40,Do classico ao degrade decidido na conversa,sim
+barba,Barba,30,Desenho navalha e toalha quente,sim
+combo,Corte + barba,70,Os dois na mesma sessao,sim
+acabamento,Acabamento / pezinho,20,Manutencao rapida entre um corte e outro,sim
+sobrancelha,Sobrancelha,15,Limpeza e alinhamento,sim

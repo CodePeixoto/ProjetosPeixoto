@@ -242,13 +242,17 @@ Tudo é decidido pelo bloco `AGENDA`, no começo do script de agendamento
 
 ```js
 var AGENDA = {
-  URL:      '',   // URL do app da Web do Apps Script, termina em /exec
-  CHAVE:    '',   // a mesma CHAVE do apps-script.gs
-  WHATSAPP: ''    // número do João, só dígitos, com 55 e DDD
+  URL:      '.../exec',          // app da Web do Apps Script
+  CHAVE:    'jb-...',            // a mesma CHAVE do apps-script.gs
+  WHATSAPP: '5561981607166'      // fallback, se o motor não devolver a config
 };
 ```
 
-- **Com `URL` e `CHAVE` vazias** (é o estado de hoje): modo demonstração.
+Estado em 29/08/2026: **as três preenchidas, motor ligado.** O
+`WHATSAPP` aqui virou fallback: o número que vale vem da aba Config da
+planilha (`acao=config`).
+
+- **Com `URL` e `CHAVE` vazias**: modo demonstração.
   Os horários são calculados no próprio navegador e **nada é gravado em
   lugar nenhum**. Um aviso em dourado explica isso na tela, e a
   confirmação repete. Serve pra mostrar a tela funcionando pro João antes
@@ -262,25 +266,41 @@ Trocar de um modo pro outro é só preencher os dois campos. Nada mais muda.
 ### O fluxo
 
 Serviço, depois local, depois dia e horário, depois nome e WhatsApp.
-Confirmação com resumo e botão que abre a conversa com a mensagem pronta.
+Confirmação com resumo, o **código do agendamento**, e a abertura
+automática do WhatsApp com a mensagem pronta.
 
 Detalhes que valem lembrar:
 
-- **Domicílio** abre campo de endereço e soma `DOMICILIO_EXTRA_MIN` de
-  deslocamento, então oferece menos horários que a barbearia. É proposital
-- **Aniversário** é opcional, e é o campo que alimenta o brinde de
-  aniversário mais pra frente
-- **"Como você me achou"** responde sozinho, com o tempo, uma das
-  perguntas em aberto do `projeto.md`: de onde vêm os clientes novos
+- **Confirmação obrigatória (29/08/2026):** ao confirmar, o site abre a
+  conversa com o João já escrita, sem botão opcional. A tela diz que sem
+  essa mensagem o João não fica sabendo. Se o navegador bloquear o
+  pop-up, o botão dourado continua ali
+- **Código:** cada marcação recebe um código de 4 letras. Aparece na
+  tela, na mensagem de WhatsApp e no email. Com ele o cliente desmarca
+  pelo próprio site, no bloco "Precisa desmarcar um horário?" (sempre
+  visível na seção, some no modo demonstração)
+- **Domicílio** abre campo de endereço e soma o extra de deslocamento,
+  então oferece menos horários que a barbearia. É proposital
+- **Aniversário** é opcional, e alimenta o brinde de aniversário mais
+  pra frente (vai pra aba Clientes da planilha)
+- **"Como você me achou"** responde sozinho, com o tempo, de onde vêm os
+  clientes novos
 - Sem JavaScript a seção mostra um recado e manda pro WhatsApp
 
-### O que é PROVISÓRIO e precisa bater com o motor
+### Config vem da planilha, não mais do código (v2, 29/08/2026)
 
-Serviços, durações, expediente e tempo de deslocamento estão **copiados**
-do `CONFIG` do `apps-script.gs`. São um chute até o João confirmar.
+Com o motor ligado, o site pede `acao=config` e recebe a lista de
+serviços e o extra de domicílio da **planilha** (abas Config, Serviços,
+Expediente, que o João edita). A cópia embutida no `index.html` (bloco
+"fallback de serviços e expediente") só é usada no modo demonstração ou
+se o motor não responder em 4 segundos.
 
-> Quando ele confirmar, mudar **nos dois lugares**. Se o site oferecer um
-> horário que o motor não reconhece, o cliente leva erro na cara.
+O expediente real nunca é enviado pro site: quem calcula horário livre é
+sempre o motor, lendo a agenda de verdade. A cópia de `EXPEDIENTE` no
+site é só da demonstração.
+
+> Estrutura completa da planilha e de todos os campos:
+> `../agendamento/INDICE.md`.
 
 ### Os botões mudaram
 
@@ -302,9 +322,13 @@ conferido em 390px e em 1280px.
 
 ### O que falta (depende do João)
 
-1. Dias e horários reais que ele atende, na barbearia e a domicílio
-2. Duração real de cada serviço, e se falta algum
-3. Quanto tempo reservar de deslocamento
-4. O número de WhatsApp dele em dígitos, pra mensagem já ir escrita
-   (hoje, sem ele, o botão cai no link curto do perfil, que não aceita
-   texto pronto)
+Agora tudo isso é campo na planilha (abas Config, Serviços, Expediente),
+não é mais mexer em código:
+
+1. Dias e horários reais que ele atende, na barbearia e a domicílio → aba Expediente
+2. Duração real de cada serviço, e se falta algum → aba Serviços
+3. Quanto tempo reservar de deslocamento → Config, "Extra domicílio"
+4. **O número de WhatsApp dele em dígitos.** Ele passou `61 8160-7166`,
+   que tem um dígito a menos que o padrão (celular no DF tem 9 dígitos).
+   O site e o modelo da planilha estão com `5561981607166` (com o 9),
+   marcado pra CONFERIR
