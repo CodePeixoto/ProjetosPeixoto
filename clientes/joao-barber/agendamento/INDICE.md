@@ -118,13 +118,42 @@ duplica.** É a ficha do cliente do `projeto.md` começando a existir.
 | Coluna | Como é preenchida |
 |---|---|
 | WhatsApp | chave da linha. Só dígitos, com `'` na frente |
-| Nome | do primeiro agendamento (não sobrescreve depois) |
-| Aniversário | preenchido na primeira vez que o cliente informar |
+| Nome | do primeiro agendamento (só preenche se estiver vazio) |
+| Aniversário | na primeira vez que o cliente informar |
 | Como me achou | do primeiro agendamento |
 | Primeira vez | data do primeiro agendamento |
 | Última visita | atualizada a cada novo agendamento |
 | Visitas | contador, +1 a cada agendamento |
-| Observações | acumula: `2026-09-02: não curto a lateral curta \| 2026-10-01: ...` |
+| Observações | **acumula**: `2026-09-02: não curto a lateral curta \| 2026-10-01: ...` |
+
+#### Como o motor sabe que é a mesma pessoa
+
+Pelo **telefone, nunca pelo nome.** Dois Mateus com números diferentes
+são duas linhas, sempre.
+
+O problema é que a mesma pessoa digita o número de jeito diferente a
+cada vez. Por isso a comparação não é no texto cru: o motor reduz o
+número a uma **chave de DDD + os 8 últimos dígitos** (`chaveTelefone()`),
+que é a parte que não muda:
+
+| O que a pessoa digitou | Chave | Resultado |
+|---|---|---|
+| `5561981607166` | `6181607166` | linha do Mateus |
+| `61981607166` | `6181607166` | **mesma** linha, atualiza |
+| `6181607166` (sem o 9) | `6181607166` | **mesma** linha, atualiza |
+| `(61) 9 8160-7166` | `6181607166` | **mesma** linha, atualiza |
+| `61999887766` | `6199887766` | **outro** Mateus, linha nova |
+| `11981607166` | `1181607166` | outro DDD, linha nova |
+
+Dois clientes distintos com o mesmo DDD e os mesmos 8 dígitos finais não
+existem: seria o mesmo telefone.
+
+#### O que sobrescreve e o que não
+
+Numa visita seguinte, o motor só atualiza **Última visita** e **Visitas**.
+Nome, aniversário e origem só são gravados **se a célula estiver vazia**,
+então o que o João corrigir à mão na planilha fica de pé. Observação é a
+exceção: acumula, porque cada visita traz uma nova.
 
 ---
 

@@ -131,6 +131,30 @@ function num(v, padrao) {
 
 function soDigitos(v) { return String(v).replace(/\D+/g, ''); }
 
+/**
+ * Chave de identidade do cliente, pra achar quem já veio antes.
+ *
+ * O mesmo cliente digita o número de jeitos diferentes: com e sem o 9,
+ * com e sem o 55, com e sem DDD. Sem normalizar, o mesmo Mateus vira
+ * três linhas. A chave é DDD + os 8 últimos dígitos, que é a parte que
+ * não muda nunca:
+ *
+ *   5561981607166 → 6181607166
+ *     61981607166 → 6181607166
+ *      6181607166 → 6181607166   (mesmo cliente, mesma linha)
+ *     61999887766 → 6199887766   (outro número, linha nova)
+ *
+ * Dois clientes diferentes com o mesmo DDD e os mesmos 8 dígitos finais
+ * não existem: seria o mesmo telefone.
+ */
+function chaveTelefone(v) {
+  var d = soDigitos(v);
+  if (d.length > 11 && d.indexOf('55') === 0) d = d.slice(2);   // tira o país
+  if (d.length < 10) return d;                                  // incompleto, usa como veio
+  var ddd = d.slice(0, 2);
+  return ddd + d.slice(-8);
+}
+
 function verdadeiro(v) {
   var s = String(v).trim().toLowerCase();
   return s === '' || s === 'sim' || s === 's' || s === 'x' || s === 'true' || s === '1';
@@ -420,16 +444,23 @@ function upsertCliente(ss, d, inicio) {
     a.setFrozenRows(1);
   }
 
-  var tel = soDigitos(d.telefone);
+  var chave = chaveTelefone(d.telefone);
   var hojeTxt = Utilities.formatDate(inicio, NUCLEO.FUSO, 'yyyy-MM-dd');
   var dados = a.getDataRange().getValues();
 
+  // Já veio antes? Atualiza a linha dele em vez de criar outra.
   for (var i = 1; i < dados.length; i++) {
-    if (soDigitos(dados[i][0]) !== tel) continue;
+    if (chaveTelefone(dados[i][0]) !== chave) continue;
 
     a.getRange(i + 1, 6).setValue(hojeTxt);                          // última visita
     a.getRange(i + 1, 7).setValue((Number(dados[i][6]) || 0) + 1);   // visitas
-    if (!dados[i][2] && d.aniversario) a.getRange(i + 1, 3).setValue(d.aniversario);
+
+    // só preenche o que estava vazio: o que o João editou à mão fica de pé
+    if (!dados[i][1] && d.nome)              a.getRange(i + 1, 2).setValue(d.nome);
+    if (!dados[i][2] && d.aniversario)       a.getRange(i + 1, 3).setValue(d.aniversario);
+    if (!dados[i][3] && d.origem)            a.getRange(i + 1, 4).setValue(d.origem);
+
+    // observação é a exceção: acumula, porque cada visita traz uma nova
     if (d.observacao) {
       a.getRange(i + 1, 8).setValue(
         (dados[i][7] ? dados[i][7] + ' | ' : '') + hojeTxt + ': ' + d.observacao);
@@ -437,8 +468,9 @@ function upsertCliente(ss, d, inicio) {
     return;
   }
 
+  // Primeira vez dessa pessoa.
   a.appendRow([
-    "'" + tel,
+    "'" + soDigitos(d.telefone),
     d.nome,
     d.aniversario || '',
     d.origem || '',
