@@ -14,7 +14,7 @@ real: o que for contexto do projeto entra no `projeto.md`.
 | `conversa-dialogo.md` | Transcrição bruta da conversa de 17/08. Fonte, não se edita |
 | `identidade.md` | Identidade visual dele. Separado porque é consultado a cada peça |
 | `site/NOTAS.md` | Documentação técnica do site, incluindo a tela de agendamento |
-| `agendamento/` | Apps Script, passo a passo de instalação (`INSTALAR.md`), índice de todos os dados (`INDICE.md`) e modelos das abas (`planilha-modelo/`) |
+| `agendamento/` | Apps Script (`apps-script.gs`), instalação (`INSTALAR.md`), índice dos dados (`INDICE.md`), modelos das abas (`planilha-modelo/`), e o fluxo por terminal: `CLASP.md` + `publicar-motor.ps1` + `appsscript.json` |
 
 Mídia bruta fica em `midia-original/` (fora do Git). Carrossel em
 `carrossel/`. Quando o site for publicado, aparece um `.netlify-site-id`
@@ -53,9 +53,17 @@ que é a marca do Miguel.
   `index.html` (bloco "fallback de serviços e expediente") só vale no
   modo demonstração. Índice completo dos dados em
   `agendamento/INDICE.md`
-- O motor roda na conta Google do João: **mudança no `apps-script.gs`
-  exige o Miguel colar e reimplantar lá**, e recriar as 5 abas da
-  planilha. Modelos em `agendamento/planilha-modelo/`
+- O motor roda na conta Google do João. Mudança no `apps-script.gs` vai
+  pra lá com `clasp`: `agendamento/publicar-motor.ps1` faz `push` + nova
+  versão do App da Web sem abrir o editor (setup e checklist de entrega em
+  `agendamento/CLASP.md`). Caminho manual pelo editor continua em
+  `INSTALAR.md`. As 5 abas da planilha ainda são feitas à mão (modelos em
+  `agendamento/planilha-modelo/`)
+- `clasp` roda logado na conta do João. Quando ele assumir, seguir a
+  seção "Entrega pro João" do `CLASP.md`: `clasp logout`, apagar
+  `.clasprc.json` / `.clasp.json`, revogar o acesso em
+  myaccount.google.com/connections. `.clasprc.json` e `.clasp.json` estão
+  no `.gitignore` da raiz
 - Com `URL` e `CHAVE` vazias no bloco `AGENDA`, o site roda em modo
   demonstração e avisa isso na tela. Hoje está ligado (motor real)
 - Cada agendamento gera um **código** de 4 letras; o cliente desmarca

@@ -1,0 +1,6 @@
+# O clasp só sobe o que NÃO estiver aqui.
+# Tudo é ignorado por padrão; as duas linhas com ! liberam o que vai pro projeto.
+**/**
+
+!appsscript.json
+!apps-script.gs

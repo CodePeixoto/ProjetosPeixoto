@@ -34,3 +34,11 @@ clientes/*/midia-original/
 
 # Local Netlify folder
 .netlify
+
+# clasp (Apps Script CLI): o token e o scriptId ficam presos à conta do
+# cliente. O .deployment-id NÃO entra aqui: ele é o endereço público do
+# App da Web (o mesmo pedaço que já aparece na URL do site), e versionar
+# é o que garante que toda máquina atualize o mesmo deployment em vez de
+# criar um novo.
+.clasprc.json
+**/.clasp.json

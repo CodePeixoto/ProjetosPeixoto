@@ -13,6 +13,11 @@
 > trocar os horários de mentira pelos de verdade.
 >
 > **Já rodou a v1?** As mudanças da v2 estão no fim, em "Migrar da v1".
+>
+> **Atalho pelo terminal:** os passos 2 (colar o script) e 4 (publicar) dá
+> pra fazer sem abrir o editor, com o `clasp`. Ver `CLASP.md` nesta pasta.
+> Este passo a passo continua valendo como caminho manual e como
+> referência do que cada peça faz.
 
 ---
 
@@ -137,6 +142,9 @@ Agendamentos e Clientes.
 **No script (código):** toda vez que editar, tem que **implantar de novo**:
 **Implantar** → **Gerenciar implantações** → lápis → Versão: **Nova versão**
 → **Implantar**. A URL não muda.
+
+> Pelo terminal isso é um comando só: `./publicar-motor.ps1 -Nota "..."`
+> na pasta `agendamento/` (faz `clasp push` + nova versão). Ver `CLASP.md`.
 
 **Na planilha (serviços, horário, regras):** nada a fazer. O motor relê a
 config sozinho, no máximo 2 minutos depois (é o cache). O site pega a lista
