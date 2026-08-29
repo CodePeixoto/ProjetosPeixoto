@@ -44,25 +44,43 @@ nas abas Config, Serviços e Expediente. O João edita lá, sem abrir o código.
 
 ## Passo 1: a planilha (5 abas)
 
+Só é preciso criar a planilha e copiar o id. **As abas o próprio motor
+monta**, com a função `montarPlanilha` (ver abaixo).
+
 1. Logado na conta do João, criar uma planilha em https://sheets.new
 2. Nomear como **João Barber · Agendamentos**
-3. Criar **5 abas** com estes nomes exatos (com acento):
-   `Config`, `Serviços`, `Expediente`, `Agendamentos`, `Clientes`
-4. Preencher as três primeiras a partir dos modelos em
-   `planilha-modelo/` (dá pra abrir o CSV e copiar, ou importar em
-   Arquivo → Importar → Substituir aba atual):
-   - `Config.csv` → aba Config
-   - `Servicos.csv` → aba Serviços
-   - `Expediente.csv` → aba Expediente
-5. As abas `Agendamentos` e `Clientes` podem ficar vazias: o motor cria o
-   cabeçalho sozinho na primeira marcação. Se quiser deixar bonito, importar
-   `Agendamentos.csv` e `Clientes.csv` (e apagar a linha de exemplo depois).
-6. Na aba **Expediente**, marcar as colunas de hora como **texto**
-   (Formatar → Número → Texto simples), senão o Google converte "09:00" e o
-   motor pode ler errado.
-7. Na aba **Config**, conferir o **WhatsApp do João** (só dígitos, com 55 e
-   DDD). É por esse número que a mensagem de confirmação abre.
-8. Copiar o **ID da planilha**, na URL entre `/d/` e `/edit`.
+3. Copiar o **ID da planilha**, na URL entre `/d/` e `/edit`, e colar no
+   `SHEET_ID` do bloco `NUCLEO` do `apps-script.gs`
+
+### As abas: deixe o motor montar
+
+Depois que o script estiver na conta (passo 2), rodar **uma vez** a função
+`montarPlanilha` — no editor, ou por `clasp run montarPlanilha`. Ela:
+
+- cria as 5 abas com os nomes certos, na ordem certa
+- preenche `Config`, `Serviços` e `Expediente` com os valores de partida
+- formata as colunas de hora do Expediente como **texto** antes de
+  escrever (é o detalhe que mais quebra quando se faz à mão: o Google
+  converte "09:00" em hora de verdade e o motor lê outra coisa)
+- cria o cabeçalho de `Agendamentos` e `Clientes`
+- se a aba `Agendamentos` for a da v1 (sem a coluna `Código`), guarda ela
+  como **`Agendamentos (v1)`** e começa uma limpa, porque as colunas
+  mudaram de ordem
+
+**É seguro rodar de novo:** aba que já tem conteúdo não é tocada, e nada
+é apagado. O log diz exatamente o que foi feito em cada aba.
+
+Depois disso, só uma coisa precisa de olho humano: na aba **Config**,
+conferir o **WhatsApp do João** (só dígitos, com 55 e DDD). É por esse
+número que a mensagem de confirmação abre.
+
+### Se preferir fazer à mão
+
+Os modelos estão em `planilha-modelo/` (`Config.csv`, `Servicos.csv`,
+`Expediente.csv`, `Agendamentos.csv`, `Clientes.csv`), pra importar em
+Arquivo → Importar → Substituir aba atual. Nesse caminho, **lembrar de
+formatar as colunas de hora do Expediente como texto** (Formatar →
+Número → Texto simples) antes de colar.
 
 ---
 

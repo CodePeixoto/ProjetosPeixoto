@@ -550,3 +550,133 @@ function testar() {
   Logger.log('Expediente hoje: ' + JSON.stringify(cfg.expediente[new Date().getDay()]));
   Logger.log('Horários livres hoje pra corte: ' + horariosLivres(cfg, hoje, 'corte', 'barbearia'));
 }
+
+/* ==================================================================
+   MONTAR A PLANILHA
+   Cria e preenche as 5 abas sozinho, no lugar de fazer na mão.
+   Rodar uma vez, no editor ou com  clasp run montarPlanilha.
+
+   É seguro rodar de novo: só mexe no que está faltando ou vazio.
+   Nunca apaga dado. Se a aba Agendamentos ainda for a da v1 (sem a
+   coluna Código), ela é RENOMEADA pra "Agendamentos (v1)" e uma nova
+   entra no lugar, porque as colunas mudaram de ordem.
+   ================================================================== */
+
+function montarPlanilha() {
+  var ss = SpreadsheetApp.openById(NUCLEO.SHEET_ID);
+  var feito = [];
+
+  function pegarOuCriar(nome) {
+    var a = ss.getSheetByName(nome);
+    if (!a) { a = ss.insertSheet(nome); feito.push('aba "' + nome + '" criada'); }
+    return a;
+  }
+
+  // Escreve só se a aba estiver vazia, pra não passar por cima do que
+  // o João já ajustou.
+  function preencherSeVazia(a, linhas) {
+    if (a.getLastRow() > 0) { feito.push('"' + a.getName() + '" já tinha conteúdo, não mexi'); return false; }
+    a.getRange(1, 1, linhas.length, linhas[0].length).setValues(linhas);
+    a.setFrozenRows(1);
+    feito.push(linhas.length > 1
+      ? '"' + a.getName() + '" preenchida (' + (linhas.length - 1) + ' linhas)'
+      : '"' + a.getName() + '" cabeçalho criado, pronta pra receber dados');
+    return true;
+  }
+
+  /* ---------- Config ---------- */
+  preencherSeVazia(pegarOuCriar(NUCLEO.ABA_CONFIG), [
+    ['Parâmetro', 'Valor', 'Ajuda'],
+    ['WhatsApp do João', '5561981607166', 'só números, com 55 e DDD. É por aqui que a confirmação abre. CONFERIR com o João'],
+    ['Email de aviso', '', 'recebe aviso de cada marcação e cancelamento. Vazio = não recebe'],
+    ['Antecedência mínima', 2, 'horas. Não deixa marcar em cima da hora'],
+    ['Janela de agenda', 21, 'dias pra frente que a agenda abre'],
+    ['Passo dos horários', 15, 'minutos entre um horário e o próximo na lista'],
+    ['Extra domicílio', 45, 'minutos de deslocamento, além da duração do serviço'],
+    ['Cancelar pelo site até', 6, 'horas antes do horário. 0 desliga o cancelamento pelo site']
+  ]);
+
+  /* ---------- Serviços ---------- */
+  preencherSeVazia(pegarOuCriar(NUCLEO.ABA_SERVICOS), [
+    ['chave', 'nome', 'minutos', 'descrição', 'ativo'],
+    ['corte',       'Corte',                40, 'Do clássico ao degradê, decidido na conversa', 'sim'],
+    ['barba',       'Barba',                30, 'Desenho, navalha e toalha quente',             'sim'],
+    ['combo',       'Corte + barba',        70, 'Os dois na mesma sessão',                      'sim'],
+    ['acabamento',  'Acabamento / pezinho', 20, 'Manutenção rápida entre um corte e outro',     'sim'],
+    ['sobrancelha', 'Sobrancelha',          15, 'Limpeza e alinhamento',                        'sim']
+  ]);
+
+  /* ---------- Expediente ----------
+     As colunas de hora viram TEXTO antes de receber valor. Sem isso o
+     Google converte "09:00" em hora de verdade e o motor lê outra coisa. */
+  var exp = pegarOuCriar(NUCLEO.ABA_EXPED);
+  if (exp.getLastRow() === 0) {
+    exp.getRange(1, 2, 20, 4).setNumberFormat('@');
+    preencherSeVazia(exp, [
+      ['dia', 'abre', 'fecha', 'abre 2', 'fecha 2'],
+      ['Domingo', '',      '',      '',      ''],
+      ['Segunda', '09:00', '12:00', '13:30', '19:00'],
+      ['Terça',   '09:00', '12:00', '13:30', '19:00'],
+      ['Quarta',  '09:00', '12:00', '13:30', '19:00'],
+      ['Quinta',  '09:00', '12:00', '13:30', '19:00'],
+      ['Sexta',   '09:00', '12:00', '13:30', '20:00'],
+      ['Sábado',  '08:00', '17:00', '',      '']
+    ]);
+  } else {
+    feito.push('"' + NUCLEO.ABA_EXPED + '" já tinha conteúdo, não mexi');
+  }
+
+  /* ---------- Agendamentos ----------
+     A v1 tinha outras colunas. Se o cabeçalho não tem "Código", essa
+     aba é da v1: renomeia e começa uma limpa. */
+  var CAB_AGEND = ['Agendado em', 'Código', 'Status', 'Data do corte', 'Hora', 'Nome',
+                   'WhatsApp', 'Serviço', 'Local', 'Compareceu', 'ID do evento'];
+
+  var precisaCabecalho = true;
+  var ag = ss.getSheetByName(NUCLEO.ABA_AGEND);
+
+  if (ag && ag.getLastRow() > 0) {
+    var cab = ag.getRange(1, 1, 1, ag.getLastColumn()).getValues()[0];
+    if (cab.indexOf('Código') === -1) {
+      // é a aba da v1: guarda com outro nome e deixa o campo livre
+      var arquivo = 'Agendamentos (v1)';
+      var n = 2;
+      while (ss.getSheetByName(arquivo)) { arquivo = 'Agendamentos (v' + (n++) + ')'; }
+      ag.setName(arquivo);
+      feito.push('aba antiga guardada como "' + arquivo + '" (era da v1, colunas diferentes)');
+    } else {
+      feito.push('"' + NUCLEO.ABA_AGEND + '" já está no formato v2, não mexi');
+      precisaCabecalho = false;
+    }
+  }
+
+  // cobre os três casos: aba não existia, existia vazia, ou acabou de ser
+  // renomeada. Sem isso, uma aba vazia ficava sem cabeçalho.
+  if (precisaCabecalho) {
+    preencherSeVazia(pegarOuCriar(NUCLEO.ABA_AGEND), [CAB_AGEND]);
+  }
+
+  /* ---------- Clientes ---------- */
+  preencherSeVazia(pegarOuCriar(NUCLEO.ABA_CLIENTES), [
+    ['WhatsApp', 'Nome', 'Aniversário', 'Como me achou',
+     'Primeira vez', 'Última visita', 'Visitas', 'Observações']
+  ]);
+
+  /* ---------- ordem das abas, só pra ficar legível ---------- */
+  [NUCLEO.ABA_CONFIG, NUCLEO.ABA_SERVICOS, NUCLEO.ABA_EXPED,
+   NUCLEO.ABA_AGEND, NUCLEO.ABA_CLIENTES].forEach(function (nome, i) {
+    var a = ss.getSheetByName(nome);
+    if (a) { ss.setActiveSheet(a); ss.moveActiveSheet(i + 1); }
+  });
+
+  // A config muda, então o cache velho não serve mais.
+  CacheService.getScriptCache().remove('config');
+
+  Logger.log('== montarPlanilha ==');
+  feito.forEach(function (l) { Logger.log('  - ' + l); });
+  Logger.log('Planilha: ' + ss.getName());
+  Logger.log('Abas agora: ' + ss.getSheets().map(function (s) { return s.getName(); }).join(', '));
+  Logger.log('\nAgora rode  testar  pra conferir que o motor lê tudo.');
+
+  return feito;
+}

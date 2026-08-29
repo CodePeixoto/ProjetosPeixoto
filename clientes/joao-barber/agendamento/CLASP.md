@@ -15,13 +15,17 @@
 
 | Resolve | Não resolve |
 |---|---|
-| Subir o `apps-script.gs` pro projeto | Criar a planilha e as 5 abas (é feito na mão, ver `INSTALAR.md` passo 1) |
-| Publicar nova versão do App da Web (URL `/exec` fixa) | Preencher `Config`, `Serviços`, `Expediente` |
-| Ver quem está logado e listar deployments | A autorização de escopos na 1ª execução (tela do Google, uma vez) |
-| Baixar o código de volta (`clasp pull`) se editarem pelo navegador | Ligar `URL` e `CHAVE` no `site/index.html` (isso é edição de arquivo + `/publicar-site`) |
+| Subir o `apps-script.gs` pro projeto | O `clasp login` (OAuth no navegador, uma vez por máquina) |
+| Publicar nova versão do App da Web (URL `/exec` fixa) | A autorização de escopos na 1ª execução (tela do Google, uma vez) |
+| Montar e preencher as 5 abas, com `clasp run montarPlanilha` | Criar o arquivo da planilha em si, e copiar o `SHEET_ID` |
+| Ver quem está logado e listar deployments | Ligar `URL` e `CHAVE` no `site/index.html` (isso é edição de arquivo + `/publicar-site`) |
+| Baixar o código de volta (`clasp pull`) se editarem pelo navegador | |
 
-Planilha continua manual. Se um dia valer a pena, dá pra escrever uma
-função no próprio motor que monta as abas sozinha — não é o caso agora.
+**Por que a planilha precisa do motor pra ser montada:** o Claude não
+alcança a conta do João. Os conectores do Google dele são das contas do
+Miguel, e a planilha vive na `joaobarber.agenda@gmail.com`. Quem tem o
+braço lá dentro é o próprio Apps Script — por isso a função
+`montarPlanilha` mora no motor, e não numa ferramenta externa.
 
 ---
 
@@ -95,12 +99,25 @@ conta). Se precisar recriar à mão, copie `.clasp.json.exemplo` pra
 > pra trazer o certo de volta antes de publicar.
 
 ```powershell
-# 4. conferir o NUCLEO no apps-script.gs: SHEET_ID (da planilha nova de 5
-#    abas) e CHAVE (a mesma que está no site)
+# 4. conferir o NUCLEO no apps-script.gs: SHEET_ID (o da planilha) e
+#    CHAVE (a mesma que está no site)
 
 # 5. publicar: sobe o código e aponta o deployment que já está no ar
 ./publicar-motor.ps1 -Nota "motor v2: config na planilha, cancelamento"
+
+# 6. montar as 5 abas da planilha (uma vez; seguro rodar de novo)
+clasp run montarPlanilha
 ```
+
+O passo 6 é o que substitui criar aba por aba e colar CSV. Ele preenche
+`Config`, `Serviços` e `Expediente`, formata as horas como texto, cria os
+cabeçalhos de `Agendamentos` e `Clientes`, e guarda a aba antiga como
+`Agendamentos (v1)` se ela ainda estiver no formato velho. Detalhe em
+`INSTALAR.md`, passo 1.
+
+Se o `clasp run` reclamar de credencial (é comum na primeira vez, ele
+exige um projeto GCP próprio), roda a função pelo editor:
+`clasp open-script` → escolher `montarPlanilha` → **Executar**.
 
 ### Por que não tem `-PrimeiraVez` aqui
 
