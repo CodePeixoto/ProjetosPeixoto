@@ -48,11 +48,37 @@ do João nem a do Miguel.
 
 ```powershell
 npm install -g @google/clasp
-clasp --version
 ```
 
 Vale pro notebook e pro PC separadamente (a pasta é sincronizada pelo
 OneDrive, mas o clasp é global, fora dela).
+
+### Liberar a execução de scripts (uma vez por máquina)
+
+No Windows o `clasp` é um `.ps1`, e por padrão o PowerShell recusa rodar
+qualquer script. O sintoma é:
+
+```
+clasp : O arquivo ...\clasp.ps1 não pode ser carregado porque a execução
+de scripts foi desabilitada neste sistema.
+```
+
+O `publicar-motor.ps1` esbarra no mesmo muro, então resolva de uma vez:
+
+```powershell
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned
+```
+
+`RemoteSigned`: script feito na própria máquina roda, script baixado da
+internet só com assinatura. Vale só pro teu usuário, não pede
+administrador, e reverte com `-ExecutionPolicy Undefined`.
+
+Conferir:
+
+```powershell
+Get-ExecutionPolicy -List
+clasp --version
+```
 
 ---
 
@@ -67,25 +93,45 @@ OneDrive, mas o clasp é global, fora dela).
 
 Tudo isso na pasta `clientes/joao-barber/agendamento/`.
 
+> **Um comando de cada vez.** Colar o bloco inteiro de uma vez não
+> funciona: o terceiro comando precisa de um id que só aparece no
+> segundo.
+
+**1. Entrar na pasta:**
+
 ```powershell
 cd clientes/joao-barber/agendamento
+```
 
-# 1. logar NA CONTA DO JOÃO (abre o navegador). Confira o email na tela.
+**2. Logar NA CONTA DO JOÃO** (abre o navegador; confira o email na tela):
+
+```powershell
 clasp login
-clasp show-authorized-user      # tem que dizer joaobarber.agenda@gmail.com
+```
 
-# 2. achar o scriptId do motor que já existe
+```powershell
+clasp show-authorized-user
+```
+
+Tem que responder `joaobarber.agenda@gmail.com`. Se vier outra conta,
+`clasp logout` e repita.
+
+**3. Achar o `scriptId` do motor que já existe:**
+
+```powershell
 clasp list-scripts
 ```
 
-O `scriptId` também está na URL do editor: abra
-https://script.google.com logado na conta do João, entre no projeto
-**João Barber · Agendamento**, e o id é o pedaço da URL entre
-`/projects/` e `/edit`.
+Ele também está na URL do editor: em https://script.google.com, logado
+na conta do João, abrir o projeto **João Barber · Agendamento**; o id é o
+pedaço da URL entre `/projects/` e `/edit`.
+
+**4. Trazer o projeto pra esta pasta.** Troque `COLE_O_ID_AQUI` pelo id
+do passo 3 — sem `<` nem `>`, que o PowerShell trata como operador e
+recusa a linha:
 
 ```powershell
-# 3. trazer o projeto existente pra esta pasta
-clasp clone <SCRIPT_ID> --rootDir .
+clasp clone COLE_O_ID_AQUI --rootDir .
 ```
 
 O `clone` gera o `.clasp.json` com o `scriptId` e **baixa o código que
@@ -248,6 +294,8 @@ João. Pra mexer no motor de novo, é refazer o Passo 2 (login).
 | `User has not enabled the Apps Script API` | Passo 0.2: ligar em script.google.com/home/usersettings |
 | `clasp push` sobe arquivo demais | conferir o `.claspignore` desta pasta (só `appsscript.json` e `apps-script.gs` sobem) |
 | `clasp: command not found` | `npm install -g @google/clasp`; reabrir o terminal |
+| `clasp.ps1 não pode ser carregado porque a execução de scripts foi desabilitada` | `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned` (ver Passo 1). Atinge o `publicar-motor.ps1` também |
+| `Operador '<' reservado para uso futuro` | colou um comando com `<SCRIPT_ID>` literal. Substitua pelo id de verdade, sem os sinais `<` `>` |
 | Publiquei mas o site não mudou | o site lê `acao=config` com cache de 120s; e mudança de código exige o `create-deployment` (o `publicar-motor.ps1` já faz) |
 | `clasp create` reclama que já existe `.clasp.json` | apagar o `.clasp.json` ou usar `clasp clone <scriptId>` |
 | Publiquei e apareceu uma URL `/exec` diferente | usaram `create` ou `-PrimeiraVez` num projeto que já existia. O motor certo é o do `.deployment-id`; apagar o deployment/script extra em `clasp list-deployments` / `clasp list-scripts` |
