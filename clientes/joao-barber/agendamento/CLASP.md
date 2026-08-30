@@ -187,6 +187,19 @@ novos (o `send_mail` do aviso por email não existia na v1). É a conta do
 João autorizando o próprio script. Tela "app não verificado" é normal:
 **Avançado → Acessar (não seguro)**.
 
+Desde 30/08/2026 (camada 3 de relacionamento) o motor usa mais dois
+escopos: `script.scriptapp` (criar gatilho de tempo) e `userinfo.email`.
+Autorização também é manual, pelo editor:
+
+```powershell
+# depois de publicar, uma vez:
+clasp open-script            # rodar montarPlanilha (cria abas Mensagens/Datas)
+clasp run instalarGatilhos   # cria os 2 gatilhos: resumoSemanal e confirmacoesDoDia
+```
+
+Se `clasp run` reclamar de credencial, roda as duas funções pelo editor.
+Detalhe do que cada gatilho faz: `RELACIONAMENTO.md`.
+
 ### Testar o motor antes de ligar no site
 
 ```powershell
@@ -220,6 +233,11 @@ cd clientes/joao-barber/agendamento
 O script faz `clasp push` + publica **nova versão** do App da Web. A URL
 `/exec` **não muda**. É o que substitui o "Implantar → Gerenciar
 implantações → Nova versão" do editor.
+
+Mudou o texto de alguma mensagem, um serviço, uma regra? Nada disso: é
+tudo na planilha, o motor relê sozinho. Só editou `apps-script.gs` de
+verdade é que precisa republicar. E se acrescentou escopo (raro), roda
+qualquer função pelo editor uma vez pra reautorizar.
 
 Mudou só a planilha (serviços, horário, regras)? Nada a fazer — o motor
 relê sozinho em até 2 min.

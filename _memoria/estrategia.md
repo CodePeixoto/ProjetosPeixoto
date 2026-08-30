@@ -303,3 +303,61 @@ relevante: o que falta é conteúdo e informação dele.
 4. **Recall de 15 dias** (camada 3), que se alimenta da aba Clientes que
    já está sendo preenchida sozinha
 5. Cobrança começa por volta de 19/09/2026
+
+---
+
+# 30/08/2026: camada 3 no ar, parte técnica fechada
+
+A **camada 3 de relacionamento foi construída, publicada e testada**.
+Mora no mesmo motor (`apps-script.gs`), detalhe em
+`clientes/joao-barber/agendamento/RELACIONAMENTO.md`.
+
+**O que faz:** dois gatilhos de tempo mandam email pro João com link de
+WhatsApp pronto por pessoa. Nada dispara mensagem sozinho, ele envia um a
+um, do número dele.
+
+- `resumoSemanal` (segunda de manhã): aniversariantes da semana, recall
+  (15 a 60 dias sem cortar e sem horário marcado), data comemorativa da
+  semana e a agenda dos próximos 7 dias
+- `confirmacoesDoDia` (todo fim de tarde): quem tem horário amanhã, com
+  texto de confirmação. Não manda email se amanhã está vazio
+
+Abas novas na planilha: `Mensagens` (textos, o João edita) e `Datas`
+(calendário comemorativo). Parâmetros novos na `Config`: recall, dia e
+horas dos emails. **Janela de agenda encurtada de 21 pra 14 dias** a
+pedido do Miguel, pra deixar margem de imprevisto.
+
+**Por que não é automático no WhatsApp:** só a API oficial da Meta
+dispara sem derrubar o número. O caminho pra migrar um dia (número
+dedicado, templates aprovados, custo, gatilho) está mapeado no
+`RELACIONAMENTO.md`. Hoje não vale.
+
+## Estado da parte técnica: FECHADA
+
+Site, agendamento, cancelamento e camada 3 funcionam de ponta a ponta.
+Fechamento feito em 30/08: gatilhos instalados, célula "Antecedência
+mínima" corrigida na Config, dados de teste apagados, aba
+`Agendamentos (v1)` removida, idioma da conta do João pra português.
+
+**Discussão registrada:** o cunhado do Miguel perguntou por que o backend
+não roda local em vez de no Apps Script. Decisão mantida: Apps Script é
+certo pro João (custo zero, zero manutenção, tudo dentro da conta Google
+dele, passa no filtro do "vai junto com ele"). Um backend self-hosted só
+faria sentido se o Miguel escalar pra vários clientes, ou no Hermes.
+
+## O que falta (nada é código)
+
+- **João:** número do WhatsApp em dígitos, lista de contatos antigos na
+  aba Clientes (destrava recall/aniversário), mídia real, dados reais,
+  números da linha de base
+- **Google Meu Negócio:** cadastro dá pra começar já, verificação precisa
+  do vídeo do João
+- **Mensagem de ausência do WhatsApp Business:** config no app, telefone
+  do João
+
+## Próxima fase: ajustes de design e escrita
+
+Combinado com o Miguel em 30/08: só entrar nos ajustes finos (layout,
+tipografia, microcopy do site, textos) **depois** da parte técnica
+fechada. Agora está fechada. A próxima sessão começa por aí, ou pelos
+"erros" que o Miguel for listar.

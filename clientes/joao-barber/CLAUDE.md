@@ -14,7 +14,7 @@ real: o que for contexto do projeto entra no `projeto.md`.
 | `conversa-dialogo.md` | Transcrição bruta da conversa de 17/08. Fonte, não se edita |
 | `identidade.md` | Identidade visual dele. Separado porque é consultado a cada peça |
 | `site/NOTAS.md` | Documentação técnica do site, incluindo a tela de agendamento |
-| `agendamento/` | Apps Script (`apps-script.gs`), instalação (`INSTALAR.md`), índice dos dados (`INDICE.md`), e o fluxo por terminal: `CLASP.md` + `publicar-motor.ps1` + `appsscript.json` |
+| `agendamento/` | Apps Script (`apps-script.gs`), instalação (`INSTALAR.md`), índice dos dados (`INDICE.md`), relacionamento/recall (`RELACIONAMENTO.md`), e o fluxo por terminal: `CLASP.md` + `publicar-motor.ps1` + `appsscript.json` |
 
 Mídia bruta fica em `midia-original/` (fora do Git). Carrossel em
 `carrossel/`. Quando o site for publicado, aparece um `.netlify-site-id`
@@ -76,3 +76,16 @@ que é a marca do Miguel.
   demonstração e avisa isso na tela. Hoje está ligado (motor real)
 - Cada agendamento gera um **código** de 4 letras; o cliente desmarca
   pelo site com ele, até o limite de horas da aba Config
+- **Camada 3 de relacionamento (30/08/2026):** dois gatilhos de tempo no
+  motor (`resumoSemanal`, `confirmacoesDoDia`) mandam email pro João com
+  link de WhatsApp pronto por pessoa: recall, aniversário, datas
+  comemorativas e confirmação do dia seguinte. Nada dispara sozinho, o
+  João envia um por um. Abas novas: `Mensagens` (textos) e `Datas`
+  (calendário). Ligado por `instalarGatilhos` (uma vez). Detalhe e o
+  caminho pra API oficial do WhatsApp em `agendamento/RELACIONAMENTO.md`
+- **Janela de agenda: 14 dias** (aba Config), curta de propósito pra
+  deixar margem de imprevisto. Default do código já é 14; numa planilha
+  antiga o valor tem que ser trocado à mão
+- Escopos do motor agora incluem `script.scriptapp` e `userinfo.email`
+  (camada 3). Escopo novo = reautorizar pelo editor, como diz o item
+  acima sobre autorização manual

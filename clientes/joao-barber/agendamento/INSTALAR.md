@@ -156,6 +156,30 @@ Agendamentos e Clientes.
 
 ---
 
+## Passo 6: ligar os lembretes (camada 3)
+
+Recall, aniversário, datas comemorativas e confirmação do dia seguinte.
+Tudo por email pro João, com link de WhatsApp pronto por pessoa. Nada
+dispara mensagem sozinho. Passo a passo completo e o porquê de não ser
+automático no WhatsApp: **`RELACIONAMENTO.md`** nesta pasta.
+
+Resumo:
+
+1. `montarPlanilha` de novo (cria as abas `Mensagens` e `Datas`,
+   acrescenta os parâmetros novos na `Config`)
+2. autorizar os escopos novos pelo editor (`script.scriptapp` e
+   `userinfo.email`)
+3. `instalarGatilhos` uma vez, pra criar os dois gatilhos de tempo
+4. conferir a `Config`: **"Janela de agenda"** deve ficar em **14** dias
+   (curto de propósito, deixa margem pra imprevisto). O `montarPlanilha`
+   não mexe em valor já existente, então essa é à mão
+
+O recall só rende com base de clientes. A aba `Clientes` se preenche
+sozinha daqui pra frente; pra primeira leva, o João joga os contatos
+antigos na aba (colunas WhatsApp, Nome, Aniversário, Última visita).
+
+---
+
 ## Quando mudar alguma coisa
 
 **No script (código):** toda vez que editar, tem que **implantar de novo**:

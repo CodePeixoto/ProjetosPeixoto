@@ -20,6 +20,7 @@ Miguel está no início da carreira como freelancer de marketing digital. Vendeu
 
 - **Site completo** em `clientes/joao-barber/site/`: página única em HTML, CSS e JS puros, sem framework nem build. Seis blocos (hero, sobre, serviços, trabalhos, a domicílio, contato) mais rodapé, mais a tela de agendamento. **Mostrado ao João em 19/08.** No ar desde 27/08 em `joao-barber-aqz.netlify.app`, escondido do Google
 - **Agendamento funcionando de ponta a ponta** (v2, 29/08): tela no site, motor em Apps Script na conta `joaobarber.agenda@gmail.com`, horários lidos da agenda real, evento criado, planilha alimentada, código de cancelamento e confirmação obrigatória no WhatsApp
+- **Camada 3 de relacionamento** (30/08): recall, aniversário, datas comemorativas e confirmação do dia seguinte. Dois gatilhos de tempo no motor mandam email pro João com link de WhatsApp pronto por pessoa, ele envia um a um. Nada dispara sozinho (disparo automático só na API paga da Meta). Abas `Mensagens` e `Datas` na planilha. Detalhe em `clientes/joao-barber/agendamento/RELACIONAMENTO.md`. **Com isso a parte técnica do case fechou.**
 - **Identidade visual dele** em `clientes/joao-barber/identidade.md`: dourado `#C9A227` sobre preto `#0E0E0E`, fonte Oswald, estilo editorial. Separada da Barbearia Rota 020, onde ele trabalha
 
 Pendente pra abrir o site de verdade: fotos e vídeo reais do João (o material atual é de exemplo e não é dele), retrato dele pra seção Sobre, e o logo JB. Os dados de serviço, horário e preço agora se resolvem editando a planilha, não o código.

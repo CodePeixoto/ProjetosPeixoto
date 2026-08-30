@@ -1,7 +1,8 @@
 # Índice do agendamento: todo dado que entra e sai
 
 > Mapa completo do motor (`apps-script.gs`) e do que ele troca com o site.
-> Serve pra montar e entender a planilha. Atualizado em 29/08/2026 (v2).
+> Serve pra montar e entender a planilha. Atualizado em 30/08/2026 (v2
+> + camada 3 de relacionamento, ver `RELACIONAMENTO.md`).
 
 ---
 
@@ -49,25 +50,36 @@ cliente, Outro.
 
 ---
 
-## 3. As 5 abas da planilha
+## 3. As 7 abas da planilha
 
 Nomes exatos (com acento). Se renomear uma aba, tem que ajustar o `NUCLEO`
-no `apps-script.gs`.
+no `apps-script.gs`. As duas últimas (`Mensagens`, `Datas`) são da camada
+3 de relacionamento; detalhe em `RELACIONAMENTO.md`.
 
 ### 3.1 `Config` — parâmetro / valor  *(o João edita)*
 
 | Parâmetro | Exemplo | O que faz |
 |---|---|---|
 | WhatsApp do João | `5561981607166` | número que recebe a confirmação. Só dígitos, com 55 e DDD |
-| Email de aviso | *(vazio)* | recebe email a cada marcação e cancelamento. Vazio = não recebe |
+| Email de aviso | *(vazio)* | recebe email a cada marcação e cancelamento, e as listas da camada 3. Vazio = cai no email da própria conta |
 | Antecedência mínima | `2` | horas. Bloqueia marcação em cima da hora |
-| Janela de agenda | `21` | dias pra frente que a agenda abre |
+| Janela de agenda | `14` | dias pra frente que a agenda abre. Curto de propósito, deixa margem pra imprevisto |
 | Passo dos horários | `15` | minutos entre um horário e o próximo na lista |
 | Extra domicílio | `45` | minutos de deslocamento, somados à duração do serviço |
 | Cancelar pelo site até | `6` | horas antes do horário. `0` desliga o cancelamento pelo site |
+| Recall a partir de | `15` | dias desde o último corte pra entrar no recall |
+| Recall ignora após | `60` | dias. Acima disso, fora do recall automático |
+| Dia do resumo | `Segunda` | dia da semana em que a lista da semana chega por email |
+| Hora do resumo | `8` | hora aproximada da lista da semana |
+| Hora da confirmação | `18` | hora aproximada do email de confirmação do dia seguinte |
 
 O motor casa pelo começo do texto (`whatsapp`, `email`, `anteced`, `janela`,
-`passo`, `domic`, `cancel`), então a redação exata do rótulo não trava nada.
+`passo`, `domic`, `cancel`, `recall`, `recall ignora`, `dia do resumo`,
+`hora do resumo`, `hora da confirm`), então a redação exata do rótulo não
+trava nada.
+
+Mudou `Dia do resumo` ou uma das horas? Rodar `instalarGatilhos` de novo:
+o gatilho de tempo é criado no código e não relê a planilha sozinho.
 
 ### 3.2 `Serviços` — tabela  *(o João edita)*
 
@@ -155,6 +167,30 @@ Nome, aniversário e origem só são gravados **se a célula estiver vazia**,
 então o que o João corrigir à mão na planilha fica de pé. Observação é a
 exceção: acumula, porque cada visita traz uma nova.
 
+### 3.6 `Mensagens` — textos da camada 3  *(o João edita)*
+
+Uma linha por tipo. O motor troca os curingas na hora de montar o link.
+
+| chave | curingas | usado em |
+|---|---|---|
+| `recall` | `{nome}`, `{dias}` | lista da semana, bloco recall |
+| `aniversario` | `{nome}` | lista da semana, bloco aniversário |
+| `confirmacao` | `{nome}`, `{hora}`, `{servico}`, `{local}` | email de confirmação de amanhã |
+
+Linha apagada = o motor usa o texto embutido (`PADRAO_MSG` no código).
+
+### 3.7 `Datas` — calendário comemorativo  *(o João edita)*
+
+| Coluna | Exemplo | Nota |
+|---|---|---|
+| data (dd/mm) | `15/09` | formatar como texto. O motor também aceita se virar data |
+| nome | `Dia do Cliente` | aparece na lista da semana |
+| mensagem | `Fala {nome}! ...` | texto sugerido, o João manda pra quem quiser |
+| ativo | `sim` | `não` desliga sem apagar |
+
+Datas móveis (Dia dos Pais, Páscoa) o João cadastra com a data daquele
+ano quando chegar perto.
+
 ---
 
 ## 4. O que vai pro evento da Google Agenda
@@ -217,3 +253,22 @@ Cache do Apps Script (120s)
 O expediente **não** é enviado pro site: quem calcula horário livre é sempre
 o motor, lendo a agenda de verdade. A cópia de expediente no site só serve
 pro modo demonstração.
+
+---
+
+## 8. Camada 3: relacionamento (não passa pelo site)
+
+Dois gatilhos de tempo no próprio motor, criados por `instalarGatilhos`.
+Nada dispara mensagem: cada um monta um email pro João com link `wa.me`
+pronto por pessoa. Detalhe e o caminho pra API oficial do WhatsApp em
+`RELACIONAMENTO.md`.
+
+| Função | Quando | O que manda |
+|---|---|---|
+| `resumoSemanal` | 1x/semana (`Dia do resumo` + `Hora do resumo`) | aniversariantes dos próximos 7 dias, recall (entre `Recall a partir de` e `Recall ignora após` dias, sem horário futuro), data comemorativa da semana, e a agenda dos próximos 7 dias |
+| `confirmacoesDoDia` | todo dia (`Hora da confirmação`) | horários marcados pra **amanhã**, com texto de confirmação. Não manda email se amanhã está vazio |
+
+Lê das abas `Clientes` (recall, aniversário), `Agendamentos` (agenda e
+confirmação), `Mensagens` (textos) e `Datas` (calendário). Escopos novos
+no motor por causa disso: `script.scriptapp` (criar gatilho) e
+`userinfo.email` (achar o email da conta se a Config não tiver).

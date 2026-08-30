@@ -37,11 +37,13 @@ var NUCLEO = {
   CALENDAR_ID: '',
 
   // Nomes das abas. Mudou o nome da aba na planilha? Muda aqui também.
-  ABA_CONFIG:   'Config',
-  ABA_SERVICOS: 'Serviços',
-  ABA_EXPED:    'Expediente',
-  ABA_AGEND:    'Agendamentos',
-  ABA_CLIENTES: 'Clientes',
+  ABA_CONFIG:    'Config',
+  ABA_SERVICOS:  'Serviços',
+  ABA_EXPED:     'Expediente',
+  ABA_AGEND:     'Agendamentos',
+  ABA_CLIENTES:  'Clientes',
+  ABA_MENSAGENS: 'Mensagens',
+  ABA_DATAS:     'Datas',
 
   // Segundos que a config lida da planilha fica guardada em cache.
   // O João edita a planilha e a mudança passa a valer em, no máximo,
@@ -64,10 +66,15 @@ function lerConfig() {
     whatsapp: '',
     emailAviso: '',
     antecedenciaHoras: 2,
-    janelaDias: 21,
+    janelaDias: 14,
     passoMin: 15,
     domicilioExtra: 45,
     cancelarAteHoras: 6,
+    recallDias: 15,
+    recallLimiteDias: 60,
+    resumoDia: 'Segunda',
+    resumoHora: 8,
+    confirmarHora: 18,
     servicos: {},
     expediente: { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [] }
   };
@@ -77,13 +84,18 @@ function lerConfig() {
     var chave = String(r[0]).trim().toLowerCase();
     var val = r[1];
     if (!chave) return;
-    if (chave.indexOf('whatsapp') === 0)       cfg.whatsapp = soDigitos(val);
-    else if (chave.indexOf('email') === 0)     cfg.emailAviso = String(val).trim();
-    else if (chave.indexOf('anteced') === 0)   cfg.antecedenciaHoras = num(val, cfg.antecedenciaHoras);
-    else if (chave.indexOf('janela') === 0)    cfg.janelaDias = num(val, cfg.janelaDias);
-    else if (chave.indexOf('passo') === 0)     cfg.passoMin = num(val, cfg.passoMin);
-    else if (chave.indexOf('domic') === 0)     cfg.domicilioExtra = num(val, 0);
-    else if (chave.indexOf('cancel') === 0)    cfg.cancelarAteHoras = num(val, 0);
+    if (chave.indexOf('whatsapp') === 0)             cfg.whatsapp = soDigitos(val);
+    else if (chave.indexOf('email') === 0)           cfg.emailAviso = String(val).trim();
+    else if (chave.indexOf('anteced') === 0)         cfg.antecedenciaHoras = num(val, cfg.antecedenciaHoras);
+    else if (chave.indexOf('janela') === 0)          cfg.janelaDias = num(val, cfg.janelaDias);
+    else if (chave.indexOf('passo') === 0)           cfg.passoMin = num(val, cfg.passoMin);
+    else if (chave.indexOf('domic') === 0)           cfg.domicilioExtra = num(val, 0);
+    else if (chave.indexOf('cancel') === 0)          cfg.cancelarAteHoras = num(val, 0);
+    else if (chave.indexOf('recall ignora') === 0)   cfg.recallLimiteDias = num(val, cfg.recallLimiteDias);
+    else if (chave.indexOf('recall') === 0)          cfg.recallDias = num(val, cfg.recallDias);
+    else if (chave.indexOf('dia do resumo') === 0)   cfg.resumoDia = String(val).trim() || cfg.resumoDia;
+    else if (chave.indexOf('hora do resumo') === 0)  cfg.resumoHora = num(val, cfg.resumoHora);
+    else if (chave.indexOf('hora da confirm') === 0) cfg.confirmarHora = num(val, cfg.confirmarHora);
   });
 
   // --- aba Serviços: chave | nome | minutos | descrição | ativo ---
@@ -536,6 +548,340 @@ function json(obj) {
 }
 
 /* ==================================================================
+   RELACIONAMENTO: recall, aniversário, datas e confirmação
+   ------------------------------------------------------------------
+   Nada dispara mensagem sozinho. O motor monta a LISTA da semana e a
+   lista de confirmações de amanhã e manda por EMAIL pro João, com um
+   link de WhatsApp pronto por pessoa. Ele abre, confere o texto e
+   envia, um a um, do número dele.
+
+   Por que não é automático no WhatsApp: só a API oficial da Meta
+   (paga, exige CNPJ verificado e aprovação de modelo de mensagem)
+   dispara sem risco. Biblioteca não oficial derruba o número, e o
+   número do João é a agenda inteira dele. O caminho pra migrar pra
+   API oficial, quando fizer sentido, está em RELACIONAMENTO.md.
+
+   Ligado por dois gatilhos de tempo, criados por instalarGatilhos
+   (rodar uma vez; ver CLASP.md).
+   ================================================================== */
+
+var PADRAO_MSG = {
+  recall:      'Fala {nome}, tudo certo? Vi aqui que já faz {dias} dias desde o teu último corte. Bora marcar? Me manda um dia que fica bom pra ti.',
+  aniversario: 'Opa {nome}! Passando pra te desejar um feliz aniversário. Quando quiser marcar o corte é só chamar. Abraço!',
+  confirmacao: 'Oi {nome}, tudo bem? Confirmando o teu horário de amanhã às {hora} ({servico}, {local}). Posso confirmar?'
+};
+
+function lerMensagens() {
+  var cache = CacheService.getScriptCache();
+  var guardado = cache.get('mensagens');
+  if (guardado) return JSON.parse(guardado);
+
+  var out = {};
+  var a = SpreadsheetApp.openById(NUCLEO.SHEET_ID).getSheetByName(NUCLEO.ABA_MENSAGENS);
+  if (a && a.getLastRow() > 1) {
+    a.getDataRange().getValues().slice(1).forEach(function (r) {
+      var k = String(r[0]).trim().toLowerCase();
+      if (k && String(r[1] || '').trim()) out[k] = String(r[1]).trim();
+    });
+  }
+  cache.put('mensagens', JSON.stringify(out), NUCLEO.CACHE_SEG);
+  return out;
+}
+
+// Monta o texto final trocando {nome}, {dias}, {hora}, {servico}, {local}.
+function textoMsg(chave, dados) {
+  var msgs = lerMensagens();
+  var tpl = msgs[chave] || PADRAO_MSG[chave] || '';
+  return String(tpl).replace(/\{(\w+)\}/g, function (_, k) {
+    return (dados[k] === undefined || dados[k] === null) ? '' : String(dados[k]);
+  });
+}
+
+function lerDatas() {
+  var a = SpreadsheetApp.openById(NUCLEO.SHEET_ID).getSheetByName(NUCLEO.ABA_DATAS);
+  if (!a || a.getLastRow() < 2) return [];
+  return a.getDataRange().getValues().slice(1).map(function (r) {
+    return {
+      data: ddmm(r[0]),                          // "15/09", mesmo se o Sheets virou data
+      nome: String(r[1] || '').trim(),
+      mensagem: String(r[2] || '').trim(),
+      ativo: verdadeiro(r[3])
+    };
+  }).filter(function (d) { return d.data && d.ativo; });
+}
+
+// Devolve "dd/MM" de uma célula que pode ser texto "15/09" ou um Date
+// (o Sheets converte "15/09" em data sozinho, dependendo do formato).
+function ddmm(v) {
+  if (v instanceof Date) return Utilities.formatDate(v, NUCLEO.FUSO, 'dd/MM');
+  return String(v || '').trim();
+}
+
+// Número no formato que o wa.me aceita: 55 + DDD + 9 dígitos.
+// Assume celular (adiciona o 9 se vier sem). Fixo de cliente é raro aqui.
+function numeroInternacional(v) {
+  var d = soDigitos(v);
+  if (d.indexOf('55') === 0 && d.length >= 12) d = d.slice(2);   // tira país e renormaliza
+  if (d.length === 10) d = d.slice(0, 2) + '9' + d.slice(2);     // celular sem o 9
+  return '55' + d;
+}
+
+function linkClienteWhats(telefone, texto) {
+  return 'https://wa.me/' + numeroInternacional(telefone) + '?text=' + encodeURIComponent(texto);
+}
+
+// Lê célula de data: aceita Date, "yyyy-MM-dd" ou "dd/mm/aaaa".
+function comoData(v) {
+  if (v instanceof Date) return new Date(v.getFullYear(), v.getMonth(), v.getDate());
+  var s = String(v || '').trim();
+  var m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+  if (m) return new Date(+m[1], +m[2] - 1, +m[3]);
+  m = s.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2,4})/);
+  if (m) { var ano = +m[3]; if (ano < 100) ano += 2000; return new Date(ano, +m[2] - 1, +m[1]); }
+  return null;
+}
+
+// Próxima ocorrência de uma data anual (aniversário, feriado) a partir
+// de hoje (inclusive). Aceita "dd/mm", "dd/mm/aaaa" ou um Date.
+function proximaDataAnual(txt, ref) {
+  var dia, mes;
+  if (txt instanceof Date) {
+    dia = txt.getDate(); mes = txt.getMonth() + 1;
+  } else {
+    var m = String(txt || '').match(/(\d{1,2})[\/\-.](\d{1,2})/);
+    if (!m) return null;
+    dia = +m[1]; mes = +m[2];
+  }
+  if (!dia || !mes || mes > 12 || dia > 31) return null;
+  var base = new Date(ref.getFullYear(), ref.getMonth(), ref.getDate());
+  var alvo = new Date(base.getFullYear(), mes - 1, dia);
+  if (alvo < base) alvo = new Date(base.getFullYear() + 1, mes - 1, dia);
+  return alvo;
+}
+
+function isoData(v) {
+  if (v instanceof Date) return Utilities.formatDate(v, NUCLEO.FUSO, 'yyyy-MM-dd');
+  return String(v).trim().slice(0, 10);
+}
+
+// Dia da semana em português. O EEEE do formatDate sai no idioma da conta
+// Google, que na conta do projeto está em inglês ("Monday").
+function diaSemanaPt(d) {
+  return ['domingo', 'segunda-feira', 'terça-feira', 'quarta-feira',
+          'quinta-feira', 'sexta-feira', 'sábado'][d.getDay()];
+}
+
+// Agendamentos de hoje pra frente, não cancelados. Serve pra não
+// mandar recall pra quem já tem horário marcado, e pra listar a agenda.
+function agendamentosPorVir() {
+  var ss = SpreadsheetApp.openById(NUCLEO.SHEET_ID);
+  var linhas = aba(ss, NUCLEO.ABA_AGEND).getDataRange().getValues();
+  if (linhas.length < 2) return { temChave: {}, lista: [] };
+
+  var cab = linhas[0];
+  var c = {
+    status: cab.indexOf('Status'), data: cab.indexOf('Data do corte'),
+    hora: cab.indexOf('Hora'), nome: cab.indexOf('Nome'),
+    tel: cab.indexOf('WhatsApp'), serv: cab.indexOf('Serviço'), local: cab.indexOf('Local')
+  };
+  var hojeTxt = Utilities.formatDate(new Date(), NUCLEO.FUSO, 'yyyy-MM-dd');
+  var temChave = {}, lista = [];
+
+  for (var i = 1; i < linhas.length; i++) {
+    var r = linhas[i];
+    if (String(r[c.status]).trim().toLowerCase().indexOf('cancel') === 0) continue;
+    var dataTxt = isoData(r[c.data]);
+    if (dataTxt < hojeTxt) continue;
+    temChave[chaveTelefone(r[c.tel])] = true;
+    lista.push({
+      dataTxt: dataTxt, hora: hhmm(r[c.hora]), nome: String(r[c.nome] || 'cliente'),
+      tel: r[c.tel], servico: String(r[c.serv] || ''), local: String(r[c.local] || '')
+    });
+  }
+  return { temChave: temChave, lista: lista };
+}
+
+/* ==================================================================
+   resumoSemanal  ·  gatilho: uma vez por semana, de manhã
+   Aniversários da semana + recall + data comemorativa + agenda dos
+   próximos 7 dias. Um email só, com link de WhatsApp por pessoa.
+   ================================================================== */
+function resumoSemanal() {
+  var cfg = lerConfig();
+  var ss = SpreadsheetApp.openById(NUCLEO.SHEET_ID);
+  var hoje = new Date();
+  var hojeDia = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+  var fim = new Date(hojeDia.getTime() + 7 * 86400000);
+  var fimTxt = Utilities.formatDate(fim, NUCLEO.FUSO, 'yyyy-MM-dd');
+
+  var futuros = agendamentosPorVir();
+
+  var clientes = aba(ss, NUCLEO.ABA_CLIENTES).getDataRange().getValues();
+  var cab = clientes[0];
+  var c = {
+    tel: cab.indexOf('WhatsApp'), nome: cab.indexOf('Nome'),
+    aniv: cab.indexOf('Aniversário'), ult: cab.indexOf('Última visita')
+  };
+
+  var aniversario = [], recall = [];
+
+  for (var i = 1; i < clientes.length; i++) {
+    var r = clientes[i];
+    if (!r[c.tel]) continue;
+    var nome = String(r[c.nome] || 'cliente');
+    var chave = chaveTelefone(r[c.tel]);
+
+    var aniv = proximaDataAnual(r[c.aniv], hoje);
+    if (aniv && aniv >= hojeDia && aniv < fim) {
+      aniversario.push({
+        nome: nome, quando: diaSemanaPt(aniv) + ', ' + formatar(aniv, 'dd/MM'),
+        link: linkClienteWhats(r[c.tel], textoMsg('aniversario', { nome: nome }))
+      });
+    }
+
+    var ult = comoData(r[c.ult]);
+    if (ult && !futuros.temChave[chave]) {
+      var dias = Math.round((hojeDia - ult) / 86400000);
+      if (dias >= cfg.recallDias && dias <= cfg.recallLimiteDias) {
+        recall.push({
+          nome: nome, dias: dias, ult: formatar(ult, 'dd/MM'),
+          link: linkClienteWhats(r[c.tel], textoMsg('recall', { nome: nome, dias: dias }))
+        });
+      }
+    }
+  }
+
+  recall.sort(function (a, b) { return b.dias - a.dias; });
+
+  var datas = lerDatas().filter(function (d) {
+    var prox = proximaDataAnual(d.data, hoje);
+    return prox && prox >= hojeDia && prox < fim;
+  });
+
+  var agenda7 = futuros.lista
+    .filter(function (a) { return a.dataTxt < fimTxt; })
+    .sort(function (a, b) { return (a.dataTxt + a.hora).localeCompare(b.dataTxt + b.hora); });
+
+  var L = [];
+  L.push('Bom dia, João.');
+  L.push('Lista da semana, ' + formatar(hojeDia, 'dd/MM') + ' a ' + formatar(new Date(fim.getTime() - 86400000), 'dd/MM') + '.');
+  L.push('Toca no link de cada um, lê o texto e manda. Um por um, do teu número.');
+  L.push('');
+
+  L.push('== ANIVERSÁRIO (' + aniversario.length + ') ==');
+  if (!aniversario.length) L.push('  ninguém essa semana');
+  aniversario.forEach(function (a) {
+    L.push('  ' + a.nome + '  ·  ' + a.quando);
+    L.push('  ' + a.link);
+    L.push('');
+  });
+
+  L.push('== RECALL, passou de ' + cfg.recallDias + ' dias sem cortar (' + recall.length + ') ==');
+  if (!recall.length) L.push('  ninguém no ponto');
+  recall.forEach(function (x) {
+    L.push('  ' + x.nome + '  ·  ' + x.dias + ' dias (último ' + x.ult + ')');
+    L.push('  ' + x.link);
+    L.push('');
+  });
+
+  if (datas.length) {
+    L.push('== DATA DA SEMANA ==');
+    datas.forEach(function (d) {
+      L.push('  ' + d.nome + '  ·  ' + d.data);
+      if (d.mensagem) L.push('  Texto (troca o {nome}): ' + d.mensagem);
+      L.push('  Manda pra quem faz sentido, não precisa ser a base toda.');
+      L.push('');
+    });
+  }
+
+  L.push('== JÁ AGENDADOS, próximos 7 dias (' + agenda7.length + ') ==');
+  if (!agenda7.length) L.push('  nada marcado ainda');
+  agenda7.forEach(function (a) {
+    L.push('  ' + a.dataTxt.split('-').reverse().slice(0, 2).join('/') + ' ' + a.hora
+      + '  ·  ' + a.nome + '  ·  ' + a.servico + '  ·  ' + a.local);
+  });
+  L.push('');
+  L.push('---');
+  L.push('Quem sumiu faz mais de ' + cfg.recallLimiteDias + ' dias não entra no recall pra não virar spam. Pra reativar esses, me fala.');
+
+  enviarLista(cfg, 'Lista da semana · ' + formatar(hojeDia, 'dd/MM'), L.join('\n'));
+}
+
+/* ==================================================================
+   confirmacoesDoDia  ·  gatilho: todo dia, fim da tarde
+   Lista os horários de amanhã pro João confirmar hoje.
+   ================================================================== */
+function confirmacoesDoDia() {
+  var cfg = lerConfig();
+  var amanha = new Date(Date.now() + 86400000);
+  var amanhaTxt = Utilities.formatDate(amanha, NUCLEO.FUSO, 'yyyy-MM-dd');
+
+  var doDia = agendamentosPorVir().lista.filter(function (a) { return a.dataTxt === amanhaTxt; });
+  if (!doDia.length) return;   // amanhã sem ninguém: não enche a caixa de email
+
+  doDia.sort(function (a, b) { return a.hora.localeCompare(b.hora); });
+
+  var L = [];
+  L.push('João, confirmações pra amanhã, ' + diaSemanaPt(amanha) + ', ' + formatar(amanha, 'dd/MM') + ' (' + doDia.length + ').');
+  L.push('Manda agora. Quem não responder até de manhã, tu decide segurar ou liberar o horário.');
+  L.push('');
+  doDia.forEach(function (a) {
+    L.push('  ' + a.hora + '  ·  ' + a.nome + '  ·  ' + a.servico + '  ·  ' + a.local);
+    L.push('  ' + linkClienteWhats(a.tel, textoMsg('confirmacao', {
+      nome: a.nome, hora: a.hora, servico: a.servico, local: a.local
+    })));
+    L.push('');
+  });
+
+  enviarLista(cfg, 'Confirmar amanhã · ' + doDia.length + ' horário(s)', L.join('\n'));
+}
+
+function enviarLista(cfg, assunto, corpo) {
+  var para = cfg.emailAviso || Session.getEffectiveUser().getEmail();
+  if (!para) { Logger.log('Sem email de destino: preencha "Email de aviso" na aba Config.'); return; }
+  MailApp.sendEmail(para, 'João Barber · ' + assunto, corpo);
+}
+
+/* ==================================================================
+   instalarGatilhos  ·  rodar UMA vez, e de novo se mudar dia/hora
+   na aba Config. Cria os dois gatilhos de tempo.
+   ================================================================== */
+function instalarGatilhos() {
+  var cfg = lerConfig();
+
+  ScriptApp.getProjectTriggers().forEach(function (t) {
+    var f = t.getHandlerFunction();
+    if (f === 'resumoSemanal' || f === 'confirmacoesDoDia') ScriptApp.deleteTrigger(t);
+  });
+
+  var DIAS = {
+    'domingo': ScriptApp.WeekDay.SUNDAY, 'segunda': ScriptApp.WeekDay.MONDAY,
+    'terca': ScriptApp.WeekDay.TUESDAY, 'terça': ScriptApp.WeekDay.TUESDAY,
+    'quarta': ScriptApp.WeekDay.WEDNESDAY, 'quinta': ScriptApp.WeekDay.THURSDAY,
+    'sexta': ScriptApp.WeekDay.FRIDAY, 'sabado': ScriptApp.WeekDay.SATURDAY,
+    'sábado': ScriptApp.WeekDay.SATURDAY
+  };
+  var dia = DIAS[String(cfg.resumoDia).trim().toLowerCase()] || ScriptApp.WeekDay.MONDAY;
+
+  ScriptApp.newTrigger('resumoSemanal').timeBased()
+    .onWeekDay(dia).atHour(faixaHora(cfg.resumoHora)).create();
+
+  ScriptApp.newTrigger('confirmacoesDoDia').timeBased()
+    .everyDays(1).atHour(faixaHora(cfg.confirmarHora)).create();
+
+  Logger.log('Gatilhos criados:');
+  Logger.log('  resumoSemanal     -> toda ' + cfg.resumoDia + ', por volta de ' + faixaHora(cfg.resumoHora) + 'h');
+  Logger.log('  confirmacoesDoDia -> todo dia, por volta de ' + faixaHora(cfg.confirmarHora) + 'h');
+  Logger.log('Mudou dia/hora na aba Config? Rode instalarGatilhos de novo.');
+}
+
+function faixaHora(n) {
+  n = Number(n);
+  if (isNaN(n)) return 8;
+  return Math.max(0, Math.min(23, Math.round(n)));
+}
+
+/* ==================================================================
    TESTE
    Rodar essa função no editor pra conferir se planilha, abas e
    agenda estão acessíveis, antes de ligar o site.
@@ -546,20 +892,25 @@ function testar() {
   var hoje = Utilities.formatDate(new Date(), NUCLEO.FUSO, 'yyyy-MM-dd');
   Logger.log('Agenda: ' + agenda().getName());
   Logger.log('WhatsApp na Config: ' + (cfg.whatsapp || '(vazio!)'));
+  Logger.log('Janela de agenda: ' + cfg.janelaDias + ' dias');
   Logger.log('Serviços ativos: ' + Object.keys(cfg.servicos).join(', '));
   Logger.log('Expediente hoje: ' + JSON.stringify(cfg.expediente[new Date().getDay()]));
   Logger.log('Horários livres hoje pra corte: ' + horariosLivres(cfg, hoje, 'corte', 'barbearia'));
+  var gs = ScriptApp.getProjectTriggers().map(function (t) { return t.getHandlerFunction(); });
+  Logger.log('Gatilhos instalados: ' + (gs.length ? gs.join(', ') : '(nenhum, rode instalarGatilhos)'));
 }
 
 /* ==================================================================
    MONTAR A PLANILHA
-   Cria e preenche as 5 abas sozinho, no lugar de fazer na mão.
+   Cria e preenche as 7 abas sozinho, no lugar de fazer na mão.
    Rodar uma vez, no editor ou com  clasp run montarPlanilha.
 
    É seguro rodar de novo: só mexe no que está faltando ou vazio.
    Nunca apaga dado. Se a aba Agendamentos ainda for a da v1 (sem a
    coluna Código), ela é RENOMEADA pra "Agendamentos (v1)" e uma nova
-   entra no lugar, porque as colunas mudaram de ordem.
+   entra no lugar, porque as colunas mudaram de ordem. Numa planilha
+   que já existe, acrescenta os parâmetros novos da aba Config e cria
+   as abas Mensagens e Datas se faltarem.
    ================================================================== */
 
 function montarPlanilha() {
@@ -588,13 +939,21 @@ function montarPlanilha() {
   preencherSeVazia(pegarOuCriar(NUCLEO.ABA_CONFIG), [
     ['Parâmetro', 'Valor', 'Ajuda'],
     ['WhatsApp do João', '5561981607166', 'só números, com 55 e DDD. É por aqui que a confirmação abre. CONFERIR com o João'],
-    ['Email de aviso', '', 'recebe aviso de cada marcação e cancelamento. Vazio = não recebe'],
+    ['Email de aviso', '', 'recebe aviso de cada marcação e cancelamento, e as listas da semana e de confirmação. Vazio = cai no email da própria conta'],
     ['Antecedência mínima', 2, 'horas. Não deixa marcar em cima da hora'],
-    ['Janela de agenda', 21, 'dias pra frente que a agenda abre'],
+    ['Janela de agenda', 14, 'dias pra frente que a agenda abre. Curto de propósito, deixa margem pra imprevisto'],
     ['Passo dos horários', 15, 'minutos entre um horário e o próximo na lista'],
     ['Extra domicílio', 45, 'minutos de deslocamento, além da duração do serviço'],
-    ['Cancelar pelo site até', 6, 'horas antes do horário. 0 desliga o cancelamento pelo site']
+    ['Cancelar pelo site até', 6, 'horas antes do horário. 0 desliga o cancelamento pelo site'],
+    ['Recall a partir de', 15, 'dias desde o último corte pra pessoa entrar na lista de recall'],
+    ['Recall ignora após', 60, 'dias. Quem sumiu faz mais que isso não entra no recall automático'],
+    ['Dia do resumo', 'Segunda', 'dia da semana em que a lista da semana chega por email'],
+    ['Hora do resumo', 8, 'hora aproximada do email da lista da semana'],
+    ['Hora da confirmação', 18, 'hora aproximada do email com as confirmações do dia seguinte']
   ]);
+
+  // Planilha que já existia: acrescenta só os parâmetros que faltam.
+  completarConfig(ss, feito);
 
   /* ---------- Serviços ---------- */
   preencherSeVazia(pegarOuCriar(NUCLEO.ABA_SERVICOS), [
@@ -662,21 +1021,81 @@ function montarPlanilha() {
      'Primeira vez', 'Última visita', 'Visitas', 'Observações']
   ]);
 
+  /* ---------- Mensagens (textos de recall, aniversário, confirmação) ---------- */
+  preencherSeVazia(pegarOuCriar(NUCLEO.ABA_MENSAGENS), [
+    ['chave', 'texto  ·  use {nome}, {dias}, {hora}, {servico}, {local}'],
+    ['recall',      PADRAO_MSG.recall],
+    ['aniversario', PADRAO_MSG.aniversario],
+    ['confirmacao', PADRAO_MSG.confirmacao]
+  ]);
+
+  /* ---------- Datas comemorativas (dd/mm) ----------
+     Coluna da data vira TEXTO antes de receber valor, senão o Google
+     converte "15/09" numa data de verdade. O motor lida com os dois
+     casos, mas texto é mais previsível pro João editar. */
+  var dts = pegarOuCriar(NUCLEO.ABA_DATAS);
+  if (dts.getLastRow() === 0) {
+    dts.getRange(1, 1, 60, 1).setNumberFormat('@');
+    preencherSeVazia(dts, [
+      ['data (dd/mm)', 'nome', 'mensagem  ·  use {nome}', 'ativo'],
+      ['15/09', 'Dia do Cliente', 'Fala {nome}! Hoje é Dia do Cliente e eu queria te agradecer por confiar o teu corte comigo. Valeu demais.', 'sim'],
+      ['24/12', 'Natal',          'Fala {nome}, passando pra desejar um feliz Natal pra ti e tua família. Obrigado pela parceria esse ano.', 'sim'],
+      ['31/12', 'Ano novo',       '{nome}, que o ano novo venha completo pra ti. Valeu pela confiança, e bora manter o visual em dia.', 'sim']
+    ]);
+  } else {
+    feito.push('"' + NUCLEO.ABA_DATAS + '" já tinha conteúdo, não mexi');
+  }
+  // Datas que mudam de dia todo ano (Dia dos Pais, Páscoa): o João
+  // acrescenta a linha com a data daquele ano quando chegar perto.
+
   /* ---------- ordem das abas, só pra ficar legível ---------- */
   [NUCLEO.ABA_CONFIG, NUCLEO.ABA_SERVICOS, NUCLEO.ABA_EXPED,
-   NUCLEO.ABA_AGEND, NUCLEO.ABA_CLIENTES].forEach(function (nome, i) {
+   NUCLEO.ABA_AGEND, NUCLEO.ABA_CLIENTES, NUCLEO.ABA_MENSAGENS,
+   NUCLEO.ABA_DATAS].forEach(function (nome, i) {
     var a = ss.getSheetByName(nome);
     if (a) { ss.setActiveSheet(a); ss.moveActiveSheet(i + 1); }
   });
 
   // A config muda, então o cache velho não serve mais.
   CacheService.getScriptCache().remove('config');
+  CacheService.getScriptCache().remove('mensagens');
 
   Logger.log('== montarPlanilha ==');
   feito.forEach(function (l) { Logger.log('  - ' + l); });
   Logger.log('Planilha: ' + ss.getName());
   Logger.log('Abas agora: ' + ss.getSheets().map(function (s) { return s.getName(); }).join(', '));
-  Logger.log('\nAgora rode  testar  pra conferir que o motor lê tudo.');
+  Logger.log('\nAgora rode  testar  pra conferir que o motor lê tudo,');
+  Logger.log('e  instalarGatilhos  pra ligar a lista da semana e as confirmações.');
 
   return feito;
+}
+
+// Acrescenta na aba Config os parâmetros que ainda não estão lá.
+// Só roda quando a aba já tem conteúdo (planilha antiga); a aba vazia
+// já sai completa pelo preencherSeVazia acima.
+function completarConfig(ss, feito) {
+  var a = ss.getSheetByName(NUCLEO.ABA_CONFIG);
+  if (!a || a.getLastRow() === 0) return;
+
+  var jaTem = a.getRange(1, 1, a.getLastRow(), 1).getValues()
+    .map(function (r) { return String(r[0]).trim().toLowerCase(); });
+
+  function falta(prefixo) {
+    return !jaTem.some(function (e) { return e.indexOf(prefixo) === 0; });
+  }
+  // "recall" sozinho tem que ignorar a linha "recall ignora após"
+  var temRecallBase = jaTem.some(function (e) {
+    return e.indexOf('recall') === 0 && e.indexOf('recall ignora') !== 0;
+  });
+
+  var novas = [];
+  if (!temRecallBase)          novas.push(['Recall a partir de', 15, 'dias desde o último corte pra pessoa entrar na lista de recall']);
+  if (falta('recall ignora'))  novas.push(['Recall ignora após', 60, 'dias. Quem sumiu faz mais que isso não entra no recall automático']);
+  if (falta('dia do resumo'))  novas.push(['Dia do resumo', 'Segunda', 'dia da semana em que a lista da semana chega por email']);
+  if (falta('hora do resumo')) novas.push(['Hora do resumo', 8, 'hora aproximada do email da lista da semana']);
+  if (falta('hora da confirm')) novas.push(['Hora da confirmação', 18, 'hora aproximada do email com as confirmações do dia seguinte']);
+
+  novas.forEach(function (l) { a.appendRow(l); feito.push('Config: "' + l[0] + '" adicionada'); });
+  if (!novas.length) feito.push('Config: parâmetros de relacionamento já estavam lá');
+  else feito.push('Config: confira "Janela de agenda" à mão (o motor não mexe em valor já existente)');
 }

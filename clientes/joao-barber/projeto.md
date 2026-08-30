@@ -1,25 +1,39 @@
 # João Barber · o projeto inteiro
 
 > Arquivo único do cliente: briefing, escopo, plano, preço e riscos.
-> Atualizado em 29/08/2026.
+> Atualizado em 30/08/2026.
 >
 > Fonte bruta: `conversa-dialogo.md` (transcrição de 29 min, 17/08).
 > Identidade visual: `identidade.md`. Site: `site/NOTAS.md`.
 > Motor do agendamento: `agendamento/` (`INDICE.md` tem todo campo que
-> entra e sai, `CLASP.md` tem como publicar).
+> entra e sai, `CLASP.md` tem como publicar, `RELACIONAMENTO.md` tem a
+> camada 3).
 
 ---
 
-## Estado em 29/08/2026
+## Estado em 30/08/2026: parte técnica fechada
 
-**O agendamento está no ar e funciona de ponta a ponta.**
+**Site, agendamento, cancelamento e camada 3 de relacionamento funcionam
+de ponta a ponta.** O que falta não é código: é conteúdo e informação do
+João, mais o Google Meu Negócio.
 
 | Peça | Onde | Estado |
 |---|---|---|
 | Site | `joao-barber-aqz.netlify.app` | No ar, **escondido** (`noindex` + `robots.txt` + senha da Netlify), porque a mídia ainda é de terceiros |
-| Motor | Apps Script na conta `joaobarber.agenda@gmail.com` | v2 publicada (versão 2), URL `/exec` fixa |
-| Planilha | 5 abas: Config, Serviços, Expediente, Agendamentos, Clientes | Montada pela função `montarPlanilha` |
+| Motor | Apps Script na conta `joaobarber.agenda@gmail.com` | v2 + camada 3 publicada (versão 4+), URL `/exec` fixa |
+| Planilha | 7 abas: Config, Serviços, Expediente, Agendamentos, Clientes, Mensagens, Datas | Montada pela função `montarPlanilha` |
 | Agenda | Google Agenda da mesma conta | Recebe os eventos |
+| Gatilhos | `resumoSemanal` (semanal), `confirmacoesDoDia` (diário) | Instalados por `instalarGatilhos` |
+
+### O que a camada 3 trouxe (30/08)
+
+Detalhe em `agendamento/RELACIONAMENTO.md`. Recall, aniversário, datas
+comemorativas e confirmação do dia seguinte: dois gatilhos de tempo
+mandam email pro João com link de WhatsApp pronto por pessoa. Nada
+dispara mensagem sozinho, ele envia um a um do número dele. Textos na aba
+`Mensagens`, calendário na aba `Datas`. **Janela de agenda encurtada de
+21 pra 14 dias** a pedido do Miguel. Testado rodando as duas funções na
+mão e conferindo o email.
 
 ### O que o v2 trouxe (29/08)
 
@@ -42,38 +56,52 @@
 5. **Publicar o motor virou um comando**: `./publicar-motor.ps1 -Nota
    "..."` na pasta `agendamento/`, via clasp, sem abrir o editor
 
-### Testado em 29/08, contra o endpoint real
+### Testado contra o endpoint real
 
-Config lida da planilha, dias e horários batendo com a aba Expediente,
-domicílio oferecendo menos horários que a barbearia (24 contra 30, por
-causa dos 45 min de deslocamento), chave errada recusada, 3 marcações
-criadas com código, horário sumindo ao marcar e voltando ao cancelar,
-código inexistente e cancelamento repetido recusados. A dedup de cliente
-foi exercitada com o mesmo número em formatos diferentes e com um
-segundo número.
+29/08 (v2): config lida da planilha, dias e horários batendo com a aba
+Expediente, domicílio com menos horários que a barbearia, chave errada
+recusada, marcações com código, horário sumindo ao marcar e voltando ao
+cancelar, código inexistente e cancelamento repetido recusados, dedup de
+cliente exercitada.
+
+30/08 (camada 3): `resumoSemanal` e `confirmacoesDoDia` rodados na mão,
+email chegou certo. Bug corrigido no caminho: o campo Hora vinha da
+planilha como data (o Google converte "09:00" em valor de hora) e
+quebrava o link de WhatsApp; o motor passou a normalizar com `hhmm()`.
+Dia da semana nos emails forçado pra português (`diaSemanaPt`), porque o
+`EEEE` do `formatDate` sai no idioma da conta.
 
 ### O que trava o projeto
 
-**Tudo o que falta depende de uma conversa com o João.** Não sobrou
-trabalho técnico relevante.
+**Tudo o que falta depende do João, ou é o Google Meu Negócio.** Não
+sobrou trabalho técnico.
 
 - **O número de WhatsApp dele.** Passou `61 8160-7166`, um dígito a menos
   que o padrão. Está `5561981607166` na aba Config, **a confirmar**. É o
   mais urgente: a confirmação virou obrigatória e com o número errado
   ela não abre
+- **Lista de contatos antigos** na aba Clientes (WhatsApp, Nome,
+  Aniversário, Última visita). Sem ela o recall e o aniversário da
+  camada 3 ficam vazios, só pegam quem marcar daqui pra frente
 - **Mídia real** (fotos, vídeo, retrato, logo JB): é o que trava tirar o
   `noindex` e divulgar o site
 - **Dados reais** de serviço, expediente, preço, bairros e deslocamento.
   Agora se corrige na planilha, não no código
 - **Números da linha de base** (seção 7)
+- **Google Meu Negócio**: cadastro dá pra começar já, verificação precisa
+  do vídeo do João
+- **Mensagem de ausência do WhatsApp Business**: config no app, telefone
+  do João
 
 ### Pendências pequenas do Miguel
 
-- Apagar as linhas de teste na planilha: 3 em Agendamentos (marcadas
-  `Cancelado`, nome começando com `TESTE Mateus`) e 2 em Clientes. Os
-  eventos já sumiram da agenda. **Antes de apagar**, conferir na aba
-  Clientes que o primeiro `TESTE Mateus` está com Visitas = 2 e o
-  segundo com Visitas = 1 em linha separada: é a prova da dedup
+Fechadas em 30/08: dados de teste apagados (Agendamentos e Clientes),
+aba `Agendamentos (v1)` removida, célula "Antecedência mínima" da Config
+corrigida pra `2`, gatilhos da camada 3 instalados, idioma da conta
+`joaobarber.agenda` trocado pra português.
+
+Abertas:
+
 - Apagar o "Projeto sem título" vazio em script.google.com (o clasp não
   tem permissão de Drive pra isso)
 - Repetir `setx NETLIFY_AUTH_TOKEN` e `clasp login` no PC quando for
@@ -164,12 +192,19 @@ Ver a arquitetura na seção 4. **Tela pronta em 20/08/2026**, rodando com
 dados provisórios até o João confirmar serviços, durações e expediente.
 
 **2. Recall de 15 dias.** Lista de quem passou do prazo desde o último
-corte. Ele abre uma vez por dia e chama, um por um, do número dele.
+corte. **Construído em 30/08/2026** (`agendamento/RELACIONAMENTO.md`):
+gatilho semanal no motor monta a lista e manda por email pro João com
+link de WhatsApp pronto por pessoa. Ele envia um por um, do número dele.
+Pendente só a base de clientes antiga (a nova se preenche sozinha).
 
-**3. Aniversário e datas comemorativas.** Aviso da semana mais textos
-prontos. Brinde que custa pouco e vale muito: hidratação, sobrancelha,
-acabamento. Nunca desconto no corte, porque desconto ensina o cliente a
-esperar desconto.
+**3. Aniversário e datas comemorativas.** Entram na mesma lista da semana
+do item 2: aniversariantes dos próximos 7 dias e a data comemorativa da
+semana (aba `Datas`), com textos prontos na aba `Mensagens`. Brinde que
+custa pouco e vale muito: hidratação, sobrancelha, acabamento. Nunca
+desconto no corte, porque desconto ensina o cliente a esperar desconto.
+
+**Confirmação do dia seguinte** entrou junto: todo fim de tarde o motor
+lista quem tem horário amanhã pro João confirmar.
 
 **4. Google Meu Negócio.** Como negócio com área de atendimento, sem
 endereço público. Abrir cedo, a verificação demora dias e quem grava o
@@ -253,25 +288,34 @@ Plano B, se o Apps Script apertar: **Cal.com**, grátis, conecta na mesma
 agenda do Google, permite perguntas extras e cores da marca. E a página do
 Google segue existindo como plano C, para o caso de tudo dar errado.
 
-### Camada 3: o painel, no lugar da planilha crua
+### Camada 3: a lista da semana por email
 
-O Miguel preferiu algo no site em vez de planilha, onde ele marque "esse
-cortou tal dia" e o sistema diga quem chamar. É o desenho certo, e a
-planilha não desaparece, ela vira o banco de dados por trás.
+**Construída em 30/08/2026.** Detalhe técnico em
+`agendamento/RELACIONAMENTO.md`.
 
-- O **Apps Script** (grátis, dentro da conta Google dele) lê a agenda e
-  escreve na planilha. A base se preenche sozinha a cada agendamento
-- Uma **página escondida do site**, com a cara da marca dele, mostra três
-  listas: quem chamar hoje, aniversários da semana, e os próximos
-  agendados. Com botão de marcar atendimento feito
-- Abre no celular, sem instalar nada
+O desenho mudou do plano original. Era pra ser uma página escondida do
+site com listas ("quem chamar hoje", "aniversários", "próximos") e botão
+de marcar atendimento feito. Virou mais simples e sem página nova:
 
-Fica pra depois do agendamento estar rodando, porque painel sem dado é
-tela vazia.
+- O **Apps Script** (grátis, na conta do João) já lê a agenda e escreve
+  na aba `Clientes`, que se preenche sozinha a cada agendamento
+- **Dois gatilhos de tempo** no mesmo motor:
+  - `resumoSemanal`: uma vez por semana, email com aniversariantes,
+    recall (15 a 60 dias sem cortar e sem horário marcado), data
+    comemorativa da semana e a agenda dos próximos 7 dias
+  - `confirmacoesDoDia`: todo fim de tarde, email com quem tem horário
+    amanhã pra confirmar
+- Cada pessoa vem com um **link `wa.me` pronto**: o João toca, o WhatsApp
+  abre na conversa com o texto escrito, ele envia. Um por um, do número
+  dele
+- Textos e datas moram nas abas `Mensagens` e `Datas`, o João edita sem
+  tocar em código
 
-**Cuidado:** essa página tem telefone de cliente. Não pode ficar num
-endereço adivinhável nem indexada no Google. Entra com chave na URL, fora
-do mapa do site e com `noindex`.
+Por que email e não página: não tem telefone de cliente exposto em URL
+nenhuma (o risco que a página escondida trazia), não tem tela nova pra
+manter, e o email já é o canal que ele abre no celular. A página com
+botão "atendimento feito" fica na fila de "depois", se a lista por email
+não bastar.
 
 ### O limite que precisa estar claro: mensagem automática no WhatsApp
 
@@ -291,6 +335,11 @@ Então, no que a gente monta:
 
 Isso não é limitação do projeto, é como funciona pra todo mundo. Prometer
 disparo automático no WhatsApp pro João seria promessa que quebra.
+
+O caminho pra um dia ter disparo oficial (API da Meta, número dedicado,
+templates aprovados, custo, e quando passa a valer a pena) está mapeado
+em `agendamento/RELACIONAMENTO.md`. Hoje não vale: o envio manual com
+texto pronto entrega quase o mesmo com zero risco pro número dele.
 
 ## 5. Google Meu Negócio, pra quem atende em casa
 

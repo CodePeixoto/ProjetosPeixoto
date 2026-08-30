@@ -171,12 +171,16 @@ Pasta em `clientes/joao-barber/`: `projeto.md` (tudo sobre o projeto),
 `conversa-dialogo.md` (transcrição), `identidade.md`, `site/` e
 `agendamento/`.
 
-Estado em 29/08/2026: **site no ar e agendamento funcionando de verdade.**
-Publicado em `joao-barber-aqz.netlify.app`, mas escondido (`noindex`,
-`robots.txt` e senha da Netlify) porque a mídia ainda é de terceiros. O
-motor roda na conta `joaobarber.agenda@gmail.com`, lê a agenda real e
-grava na planilha. Falta o conteúdo do João: mídia, dados reais e o
-número de WhatsApp confirmado.
+Estado em 30/08/2026: **parte técnica fechada.** Site, agendamento,
+cancelamento e camada 3 de relacionamento (recall, aniversário, datas,
+confirmação do dia seguinte) funcionam de ponta a ponta. Publicado em
+`joao-barber-aqz.netlify.app`, mas escondido (`noindex`, `robots.txt` e
+senha da Netlify) porque a mídia ainda é de terceiros. O motor roda na
+conta `joaobarber.agenda@gmail.com`. Falta o conteúdo do João (mídia,
+dados reais, número de WhatsApp, lista de contatos antigos pro recall) e
+o Google Meu Negócio. Próxima fase: ajustes de design e escrita, só
+depois do técnico fechado (que está). Detalhe da camada 3 em
+`clientes/joao-barber/agendamento/RELACIONAMENTO.md`.
 
 ## Como trabalho
 
