@@ -136,8 +136,7 @@ clasp clone COLE_O_ID_AQUI --rootDir .
 
 O `clone` gera o `.clasp.json` com o `scriptId` e **baixa o código que
 está na conta**. Esse arquivo é ignorado pelo Git (é específico da
-conta). Se precisar recriar à mão, copie `.clasp.json.exemplo` pra
-`.clasp.json` e cole o `scriptId`.
+conta): em outra máquina, é só refazer o `clasp login` + `clasp clone`.
 
 > **Cuidado:** o `clone` pode sobrescrever o `apps-script.gs` local com a
 > versão v1 que está na conta. O nosso v2 está no Git, então se isso

@@ -1,95 +1,85 @@
 # João Barber · o projeto inteiro
 
-> Arquivo único do cliente. Junta o que antes estava espalhado em
-> `briefing.md`, `analise-conversa.md`, `plano-de-acao.md` e
-> `conversa-com-joao.md`. Atualizado em 21/08/2026.
+> Arquivo único do cliente: briefing, escopo, plano, preço e riscos.
+> Atualizado em 29/08/2026.
 >
 > Fonte bruta: `conversa-dialogo.md` (transcrição de 29 min, 17/08).
-> Identidade visual: `identidade.md`. Documentação do site: `site/NOTAS.md`.
-> Motor do agendamento: `agendamento/`.
->
-> **Site não está no ar.** Publicação é sob demanda, com `/publicar-site`.
->
-> **Onde a construção está (21/08/2026):** a tela de agendamento existe e
-> funciona de ponta a ponta dentro do site, em modo demonstração (horários
-> calculados no navegador, nada gravado). Falta ligar o motor numa conta
-> Google, o que troca os horários de mentira pelos de verdade sem mexer em
-> mais nada. Ver `site/NOTAS.md` e `agendamento/INSTALAR.md`.
->
-> **Atualização 26/08/2026:** conta Google dedicada criada,
-> `joaobarber.agenda@gmail.com` (só o email fica aqui, senha não).
-> Planilha criada (`SHEET_ID` já preenchido no `apps-script.gs`), `CHAVE`
-> gerada e replicada nos dois lados (site e script), script colado,
-> testado (agenda e planilha acessíveis) e publicado (Passo 4). `URL` do
-> app da Web preenchida no bloco `AGENDA` do site: **o motor de verdade
-> está ligado, modo demonstração desativado.** Dados de serviço,
-> expediente e WhatsApp seguem **fictícios** até o João confirmar os
-> reais (seção 7). Falta testar marcando um horário real no site
-> publicado e apagar o evento/linha de teste depois (Passo 5 do
-> `INSTALAR.md`).
->
-> **Atualização 27/08/2026 (tarde): site no ar e motor testado de ponta
-> a ponta.** O site foi publicado na Netlify em
-> **https://joao-barber-aqz.netlify.app** (protegido por `noindex` +
-> `robots.txt`, não aparece no Google). Projeto Netlify
-> `joao-barber-aqz`, id em `clientes/joao-barber/.netlify-site-id`
-> (esse arquivo mantém o endereço estável, não apagar).
->
-> O token novo da Netlify já estava criado no `setx` (escopo User) mas
-> não valia na sessão do Claude ainda; foi lido direto do ambiente do
-> Windows pra publicar sem precisar reiniciar.
->
-> Teste de integração feito contra o endpoint real do Apps Script
-> (mesmo que o site chama):
-> - `GET acao=dias` e `GET acao=horarios`: devolvem horários reais lidos
->   da agenda do João. OK.
-> - `POST` de agendamento: criou o evento **"Corte · TESTE MazyOS -
->   apagar"** em **28/08/2026 às 19:15** na agenda e gravou a linha na
->   planilha. Depois do POST, os horários 18:45/19:00/19:15 sumiram da
->   lista, confirmando que a escrita caiu na agenda. OK.
->
-> Limpeza feita em 27/08: o Miguel apagou o evento de teste da agenda e
-> a linha da planilha. Confirmado pelo motor — os horários
-> 18:45/19:00/19:15 de 28/08 voltaram pra lista (34 horários livres de
-> novo). **Site publicado e agendamento validado de ponta a ponta.**
->
-> **Atualização 29/08/2026: agendamento v2 (config na planilha,
-> confirmação obrigatória, cancelamento por código).** Miguel pediu, na
-> fase de montar a ideia pra mostrar ao João:
-> 1. **Config na planilha:** serviços, expediente e regras saíram do
->    código pra 5 abas (Config, Serviços, Expediente, Agendamentos,
->    Clientes). O João edita a planilha, sem tocar em código. O site pega
->    a lista via `acao=config`. Modelos das abas em
->    `agendamento/planilha-modelo/`, índice de todo dado em
->    `agendamento/INDICE.md`
-> 2. **Aba Clientes** que se preenche sozinha: uma linha por pessoa que
->    atualiza a cada visita (nome, aniversário, primeira vez, última
->    visita, nº de visitas, observações acumuladas). É a "ficha do
->    cliente" do projeto começando a existir, sem encher a planilha
-> 3. **Confirmação obrigatória:** ao confirmar, o site abre o WhatsApp do
->    João já escrito, sem botão opcional
-> 4. **Cancelamento pelo site:** cada marcação gera um código de 4
->    letras; o cliente desmarca sozinho até X horas antes (parâmetro na
->    Config). Apaga o evento, marca a linha como Cancelado, avisa o João
->    por WhatsApp e email
->
-> **O site já está atualizado e publicado** (roda com o motor v1 antigo
-> sem quebrar: cai no fallback embutido enquanto o `acao=config` não
-> existir). O `apps-script.gs` novo está pronto mas **o Miguel precisa
-> colar e reimplantar na conta do João e recriar a planilha com as 5
-> abas** (`agendamento/INSTALAR.md`, seção "Migrar da v1").
->
-> **Número do João:** ele passou `61 8160-7166` (8 dígitos após o DDD,
-> falta 1). Site e modelo estão com `5561981607166`. **Confirmar.**
->
-> **Pendências:**
-> - Miguel: deployar o motor v2 e montar a planilha de 5 abas na conta do João
-> - Dados reais de serviço, expediente e WhatsApp (agora é preencher a
->   planilha, não mexer em código) — seção 7
-> - Fazer o mesmo processo de token da Netlify (`setx NETLIFY_AUTH_TOKEN`)
->   no PC quando for mexer por lá
-> - O token antigo da Netlify (`Hospedagem de sites de cliente`, criado
->   19/08) **expira em 18/09/2026** — renomear ou revogar
+> Identidade visual: `identidade.md`. Site: `site/NOTAS.md`.
+> Motor do agendamento: `agendamento/` (`INDICE.md` tem todo campo que
+> entra e sai, `CLASP.md` tem como publicar).
+
+---
+
+## Estado em 29/08/2026
+
+**O agendamento está no ar e funciona de ponta a ponta.**
+
+| Peça | Onde | Estado |
+|---|---|---|
+| Site | `joao-barber-aqz.netlify.app` | No ar, **escondido** (`noindex` + `robots.txt` + senha da Netlify), porque a mídia ainda é de terceiros |
+| Motor | Apps Script na conta `joaobarber.agenda@gmail.com` | v2 publicada (versão 2), URL `/exec` fixa |
+| Planilha | 5 abas: Config, Serviços, Expediente, Agendamentos, Clientes | Montada pela função `montarPlanilha` |
+| Agenda | Google Agenda da mesma conta | Recebe os eventos |
+
+### O que o v2 trouxe (29/08)
+
+1. **A planilha virou o painel.** Serviços, expediente e regras saíram do
+   código pras abas Config, Serviços e Expediente. O João edita a
+   planilha e vale em até 2 minutos, sem publicar nada. Acabou a cópia
+   dupla entre site e script
+2. **A aba Clientes se preenche sozinha**: uma linha por pessoa, que
+   atualiza a cada visita (nome, aniversário, primeira vez, última
+   visita, nº de visitas, observações que acumulam). É a "ficha do
+   cliente" começando a existir, sem inchar a planilha. Casa pelo
+   telefone normalizado (DDD + 8 últimos dígitos), então o mesmo cliente
+   digitando o número de jeitos diferentes não vira duas linhas
+3. **Confirmação obrigatória**: ao confirmar, o site abre o WhatsApp do
+   João já escrito, sem botão opcional
+4. **Cancelamento pelo site**: cada marcação gera um código de 4 letras.
+   O cliente desmarca sozinho até X horas antes (parâmetro na Config).
+   Apaga o evento, marca a linha como Cancelado (não apaga, é dado) e
+   avisa o João
+5. **Publicar o motor virou um comando**: `./publicar-motor.ps1 -Nota
+   "..."` na pasta `agendamento/`, via clasp, sem abrir o editor
+
+### Testado em 29/08, contra o endpoint real
+
+Config lida da planilha, dias e horários batendo com a aba Expediente,
+domicílio oferecendo menos horários que a barbearia (24 contra 30, por
+causa dos 45 min de deslocamento), chave errada recusada, 3 marcações
+criadas com código, horário sumindo ao marcar e voltando ao cancelar,
+código inexistente e cancelamento repetido recusados. A dedup de cliente
+foi exercitada com o mesmo número em formatos diferentes e com um
+segundo número.
+
+### O que trava o projeto
+
+**Tudo o que falta depende de uma conversa com o João.** Não sobrou
+trabalho técnico relevante.
+
+- **O número de WhatsApp dele.** Passou `61 8160-7166`, um dígito a menos
+  que o padrão. Está `5561981607166` na aba Config, **a confirmar**. É o
+  mais urgente: a confirmação virou obrigatória e com o número errado
+  ela não abre
+- **Mídia real** (fotos, vídeo, retrato, logo JB): é o que trava tirar o
+  `noindex` e divulgar o site
+- **Dados reais** de serviço, expediente, preço, bairros e deslocamento.
+  Agora se corrige na planilha, não no código
+- **Números da linha de base** (seção 7)
+
+### Pendências pequenas do Miguel
+
+- Apagar as linhas de teste na planilha: 3 em Agendamentos (marcadas
+  `Cancelado`, nome começando com `TESTE Mateus`) e 2 em Clientes. Os
+  eventos já sumiram da agenda. **Antes de apagar**, conferir na aba
+  Clientes que o primeiro `TESTE Mateus` está com Visitas = 2 e o
+  segundo com Visitas = 1 em linha separada: é a prova da dedup
+- Apagar o "Projeto sem título" vazio em script.google.com (o clasp não
+  tem permissão de Drive pra isso)
+- Repetir `setx NETLIFY_AUTH_TOKEN` e `clasp login` no PC quando for
+  mexer por lá
+- O token antigo da Netlify (`Hospedagem de sites de cliente`, criado
+  19/08) **expira em 18/09/2026**: renomear ou revogar
 
 ---
 
@@ -357,24 +347,32 @@ Observações pro Miguel, não pra ele:
 ## 7. O que ainda falta saber
 
 A conversa foi ótima em estratégia e não tocou em número nenhum. Sem isso
-não existe "antes e depois" e o case vira favor:
+não existe "antes e depois" e o case vira favor.
+
+**É a lista de perguntas da próxima conversa com ele.** Desde o v2, quase
+tudo aqui se resolve **editando a planilha**, sem tocar em código nem
+republicar nada — a coluna diz onde cada resposta entra.
+
+| O que perguntar | Onde a resposta entra |
+|---|---|
+| **O número de WhatsApp dele em dígitos**, com 55 e DDD (o link curto do perfil não aceita texto pronto). Ele passou `61 8160-7166`, que tem um dígito a menos: **confirmar** | aba Config |
+| Dias e horários na Rota 020 e no domicílio | aba Expediente |
+| Duração real de cada serviço, e se falta algum (hoje o chute é corte 40, barba 30, combo 70, acabamento 20, sobrancelha 15) | aba Serviços |
+| Quanto tempo reservar de deslocamento no domicílio (hoje 45 min) | Config, "Extra domicílio" |
+| Um email dele pra receber aviso de marcação e cancelamento | Config, "Email de aviso" |
+| Preço de corte, barba, combo, e quanto a mais no domicílio | fica fora do site de propósito (seção 3) |
+| Quais bairros ele cobre a domicílio | texto do site |
+| Fotos e vídeo reais dele trabalhando, e retrato pra seção Sobre | `site/img/` e `site/video/` |
+| Logo JB em PNG com fundo transparente, ou SVG | `site/` |
+
+Os que **não** são configuração, e servem pra medir o case:
 
 - [ ] Quantos horários ele atende por dia e quantos enchem
 - [ ] Quantos clientes fixos tem hoje
-- [ ] Preço de corte, barba, combo, e quanto a mais no domicílio
-- [ ] Quais bairros ele cobre a domicílio
-- [ ] Dias e horários na Rota 020 e no domicílio
 - [ ] De onde vêm os clientes novos hoje
-- [ ] Fotos e vídeo reais dele trabalhando (o site ainda usa material de
-      terceiros e não pode ir pro ar assim)
-- [ ] **Duração real de cada serviço**, e se falta algum na lista (hoje o
-      site e o motor carregam o mesmo chute: corte 40, barba 30, combo 70,
-      acabamento 20, sobrancelha 15)
-- [ ] **Quanto tempo reservar de deslocamento** no domicílio (hoje 45 min)
-- [ ] **O número de WhatsApp dele em dígitos**, com 55 e DDD, pra mensagem
-      de confirmação já ir escrita. O link curto do perfil não aceita texto
-      pronto
-- [ ] Logo JB em PNG com fundo transparente, ou SVG
+
+Esses três param de precisar de pergunta com o tempo: a aba Clientes e o
+campo "como me achou" respondem sozinhos conforme o agendamento roda.
 
 ---
 

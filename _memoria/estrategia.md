@@ -246,10 +246,60 @@ topo do `clientes/joao-barber/projeto.md`. Nesse mesmo dia mudou também
 a política de token da Netlify pra variável de ambiente por máquina, ver
 `CLAUDE.md` da raiz.
 
-Na conversa com o João que vem em seguida, pegar tudo de uma vez: dias e
-horários reais, duração de cada serviço, tempo de deslocamento do
-domicílio, preços, bairros, o número dele em dígitos, as fotos e o vídeo
-originais, e o logo JB. A lista completa está na seção 7 do `projeto.md`.
+---
 
-E abrir o Google Meu Negócio cedo, que a verificação demora dias e o vídeo
-é ele que grava.
+# ESTADO ATUAL (29/08/2026) — começar por aqui
+
+> Ponto de partida pra "vamos continuar o projeto". Detalhe técnico no
+> topo do `clientes/joao-barber/projeto.md`.
+
+## O que está pronto e funcionando
+
+O **agendamento v2 está no ar e testado de ponta a ponta**. O site
+(`joao-barber-aqz.netlify.app`, escondido do Google) conversa com o motor
+que roda na conta `joaobarber.agenda@gmail.com`. Marcar cria evento na
+agenda e alimenta duas abas da planilha; cancelar por código apaga o
+evento e devolve o horário.
+
+Três decisões que mudaram a arquitetura:
+
+1. **A planilha virou o painel de controle.** Serviços, expediente e
+   regras saíram do código pras abas Config, Serviços e Expediente. O
+   João edita a planilha e vale em 2 minutos, sem publicar nada
+2. **A aba Clientes se preenche sozinha**, uma linha por pessoa que
+   atualiza a cada visita. Casa pelo telefone normalizado (DDD + 8
+   últimos dígitos), então o mesmo cliente digitando o número de jeitos
+   diferentes não vira duas linhas, e dois clientes de mesmo nome com
+   números diferentes viram duas
+3. **Publicar o motor virou um comando** (`publicar-motor.ps1` + clasp),
+   como o site já era com `/publicar-site`
+
+## O que trava o projeto agora
+
+**Tudo depende de uma conversa com o João.** Não sobrou trabalho técnico
+relevante: o que falta é conteúdo e informação dele.
+
+- **O número de WhatsApp dele.** Passou `61 8160-7166`, que tem um dígito
+  a menos que o padrão. Está `5561981607166` na aba Config, a confirmar.
+  É o mais urgente: a confirmação virou obrigatória no fluxo, e com o
+  número errado ela não abre
+- **Mídia real** (fotos, vídeo, retrato, logo JB). É o que trava tirar o
+  `noindex` e divulgar o site
+- **Dados reais**: serviços e durações, expediente, preços, bairros do
+  domicílio, tempo de deslocamento. Hoje é tudo chute, mas agora se
+  corrige na planilha, não no código
+- **Números da linha de base** (seção 7 do `projeto.md`), sem os quais o
+  case vira "fiz um site pra um amigo" em vez de "reduzi X pra Y"
+
+## Próximos passos, em ordem
+
+1. **Conversar com o João**: mostrar o agendamento funcionando, pegar o
+   número em dígitos, os dados reais e a mídia. A lista completa está na
+   seção 7 do `projeto.md`
+2. **Google Meu Negócio**: abrir cedo, a verificação demora dias e o
+   vídeo é ele que grava. É a entrega mais atrasada do plano original
+3. **Preencher a planilha** com o que ele passar, e tirar `noindex`,
+   `robots.txt` e a senha da Netlify quando a mídia real entrar
+4. **Recall de 15 dias** (camada 3), que se alimenta da aba Clientes que
+   já está sendo preenchida sozinha
+5. Cobrança começa por volta de 19/09/2026

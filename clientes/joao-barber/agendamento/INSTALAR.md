@@ -76,11 +76,12 @@ número que a mensagem de confirmação abre.
 
 ### Se preferir fazer à mão
 
-Os modelos estão em `planilha-modelo/` (`Config.csv`, `Servicos.csv`,
-`Expediente.csv`, `Agendamentos.csv`, `Clientes.csv`), pra importar em
-Arquivo → Importar → Substituir aba atual. Nesse caminho, **lembrar de
+As colunas de cada aba estão em `INDICE.md`, seção 3. Os valores de
+partida estão dentro da própria função `montarPlanilha`, no fim do
+`apps-script.gs` — é de lá que dá pra copiar. Nesse caminho, **lembrar de
 formatar as colunas de hora do Expediente como texto** (Formatar →
-Número → Texto simples) antes de colar.
+Número → Texto simples) **antes** de colar, senão o Google converte
+"09:00" em hora de verdade e o motor lê errado.
 
 ---
 

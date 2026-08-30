@@ -1,8 +1,0 @@
-Parâmetro,Valor,Ajuda
-WhatsApp do João,5561981607166,so numeros com 55 e DDD. E por aqui que a mensagem de confirmacao abre. CONFERIR
-Email de aviso,,email que recebe aviso de cada marcacao e cancelamento. Vazio = nao recebe
-Antecedência mínima,2,horas. Nao deixa marcar em cima da hora
-Janela de agenda,21,dias pra frente que a agenda abre
-Passo dos horários,15,minutos entre um horario e outro na lista
-Extra domicílio,45,minutos de deslocamento reservados alem da duracao do servico
-Cancelar pelo site até,6,horas antes do horario. 0 desliga o cancelamento pelo site

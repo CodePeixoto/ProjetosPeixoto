@@ -51,7 +51,9 @@ Evitar: [o que destoa do seu jeito]
 
 ## Regras do sistema
 
-- Cliente novo → criar pasta `clientes/<Nome>/` com `briefing.md`
+- Cliente novo → criar pasta `clientes/<Nome>/` com um **`projeto.md`**
+  único, que junta briefing, escopo, plano e preço. Não espalhar em
+  vários arquivos
 - Proposta enviada → `clientes/<Nome>/proposta.html` (ou pasta `propostas/`
   se ainda não fechou)
 - [outras regras que aparecerem com o uso]

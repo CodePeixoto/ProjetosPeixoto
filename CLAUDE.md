@@ -171,10 +171,12 @@ Pasta em `clientes/joao-barber/`: `projeto.md` (tudo sobre o projeto),
 `conversa-dialogo.md` (transcrição), `identidade.md`, `site/` e
 `agendamento/`.
 
-Estado em 21/08/2026: site pronto e **fora do ar** (a mídia ainda é de
-terceiros), com a **tela de agendamento funcionando em modo demonstração**
-dentro do próprio site. Falta ligar o motor numa conta Google dedicada, em
-criação.
+Estado em 29/08/2026: **site no ar e agendamento funcionando de verdade.**
+Publicado em `joao-barber-aqz.netlify.app`, mas escondido (`noindex`,
+`robots.txt` e senha da Netlify) porque a mídia ainda é de terceiros. O
+motor roda na conta `joaobarber.agenda@gmail.com`, lê a agenda real e
+grava na planilha. Falta o conteúdo do João: mídia, dados reais e o
+número de WhatsApp confirmado.
 
 ## Como trabalho
 
@@ -224,9 +226,16 @@ Entraram na operação em agosto/2026, por causa do case do João Barber:
       apareceria nas duas. Decidido em 27/08/2026
 - [x] **Google Agenda + Planilhas + Apps Script**, o motor do
       agendamento. Roda de graça dentro da conta Google do cliente. Pro
-      João, o script está escrito e **ainda não foi instalado**: espera a
-      conta dedicada ao projeto, em criação em 21/08/2026, que vai ser
-      entregue a ele por senha em vez de migrada depois
+      João **está instalado e rodando** na conta dedicada
+      `joaobarber.agenda@gmail.com`, criada pelo Miguel pra ser entregue
+      por senha em vez de migrada depois. Serviços, expediente e regras
+      moram na planilha, não no código
+- [x] **clasp** (Apps Script CLI), pra publicar o motor pelo terminal em
+      vez do editor do navegador, igual o `/publicar-site` faz com o
+      site. Instalado global (`npm i -g @google/clasp`), **uma vez por
+      máquina**, e exige `Set-ExecutionPolicy -Scope CurrentUser
+      RemoteSigned` no Windows. Login fica em `~/.clasprc.json`, fora do
+      Git e fora da pasta. Entrou em 29/08/2026
 - [x] **Google Meu Negócio**, perfil do cliente
 
 Ainda fora da operação:

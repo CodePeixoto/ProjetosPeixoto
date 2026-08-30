@@ -26,9 +26,15 @@ perdida ou tiver a sessão comprometida, revoga só aquele token no painel
 da Netlify, sem afetar a outra máquina).
 
 ```bash
-test -n "$NETLIFY_AUTH_TOKEN" && echo "TOKEN OK (variável de ambiente)" \
-  || (test -s .claude/.netlify-token && echo "TOKEN OK (arquivo antigo, considerar migrar)") \
-  || echo "SEM TOKEN"
+test -n "$NETLIFY_AUTH_TOKEN" && echo "TOKEN OK" || echo "SEM TOKEN"
+```
+
+No Windows, o `setx` só vale pra terminais novos. Se a variável foi
+criada agora e o `SEM TOKEN` insistir, dá pra ler direto do ambiente do
+usuário sem reiniciar nada:
+
+```powershell
+$env:NETLIFY_AUTH_TOKEN = [Environment]::GetEnvironmentVariable('NETLIFY_AUTH_TOKEN','User')
 ```
 
 Se aparecer `SEM TOKEN`, **parar** e passar isso pro usuário:
@@ -46,9 +52,6 @@ Se aparecer `SEM TOKEN`, **parar** e passar isso pro usuário:
 >    novas), e me avisa que tá pronto
 
 Não pedir o token no chat. Não repetir o valor dele em resposta nenhuma.
-Se ainda existir um `.claude/.netlify-token` de uma configuração antiga,
-ele serve só de reserva: migrar pra variável de ambiente quando der e
-apagar o arquivo depois.
 
 ---
 
@@ -56,47 +59,54 @@ apagar o arquivo depois.
 
 Descobrir de qual cliente se trata. A pasta é `clientes/<cliente>/site`.
 
-### 1. Conferir a pasta e carregar o token
+### 1. Conferir a pasta e o token
 
 ```bash
-test -z "$NETLIFY_AUTH_TOKEN" && export NETLIFY_AUTH_TOKEN=$(cat .claude/.netlify-token 2>/dev/null)
 ls clientes/<cliente>/site/index.html
 ```
+
+**Rodar o deploy de dentro da pasta do cliente** (`cd clientes/<cliente>`
+e `--dir site`). O Netlify CLI resolve o `--dir` a partir da pasta que
+contém o `.netlify/`, então caminho relativo à raiz do repositório é
+concatenado errado e dá "deploy directory has not been found".
 
 ### 2. Criar o projeto, se for a primeira vez do cliente
 
 Existe projeto quando `clientes/<cliente>/.netlify-site-id` existe.
 Se não existir:
 
-```bash
-SLUG=$(npx -y netlify-cli@latest api listAccountsForUser --json 2>/dev/null \
-  | grep -o '"slug":"[^"]*"' | head -1 | sed 's/.*:"//;s/"//')
+O `netlify api` **não aceita `--json`** (é opção global do CLI, não do
+subcomando) e `sites:create` também não. A saída vem como texto:
 
-npx -y netlify-cli@latest sites:create \
-  --name <cliente>-<3 letras aleatórias> \
-  --account-slug "$SLUG" --json > /tmp/novo-site.json
+```powershell
+# 1. descobrir o slug da conta
+npx -y netlify-cli@latest api listAccountsForUser | ConvertFrom-Json |
+  Select-Object -First 1 -ExpandProperty slug
 
-grep -o '"site_id":"[^"]*"' /tmp/novo-site.json | head -1 \
-  | sed 's/.*:"//;s/"//' > clientes/<cliente>/.netlify-site-id
+# 2. criar o projeto (3 letras aleatórias no fim, pra o nome ser único)
+npx -y netlify-cli@latest sites:create --name <cliente>-<3 letras> --account-slug <SLUG>
 ```
 
 O `--name` vira o endereço (`<nome>.netlify.app`) e precisa ser único no
-Netlify inteiro, por isso as três letras no fim. Se der erro de nome em
-uso, tentar de novo com outro sufixo.
+Netlify inteiro. Se der erro de nome em uso, tentar outro sufixo.
 
-Commitar o arquivo `.netlify-site-id`, ele é o que garante que o link não
-muda nas próximas publicações.
+Copiar o **Project ID** da saída pra `clientes/<cliente>/.netlify-site-id`
+e **commitar**: é ele que garante que o link não muda nas publicações
+seguintes.
 
 ### 3. Publicar
 
-```bash
-npx -y netlify-cli@latest deploy \
-  --dir clientes/<cliente>/site \
-  --site $(cat clientes/<cliente>/.netlify-site-id) \
-  --prod --json
+**De dentro da pasta do cliente**, com `--dir site` (ver o aviso do
+passo 1):
+
+```powershell
+cd clientes/<cliente>
+npx -y netlify-cli@latest deploy --dir site --site <ID do .netlify-site-id> --prod
 ```
 
-O link está no campo `ssl_url` da resposta.
+O link sai na linha **Production URL**. Se a saída disser
+`CDN requesting 0 files`, é porque o conteúdo publicado já é idêntico ao
+local: não é erro, é "nada mudou".
 
 ### 4. Entregar
 
