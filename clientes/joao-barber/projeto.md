@@ -4,7 +4,7 @@
 > Atualizado em 30/08/2026.
 >
 > Fonte bruta: `conversa-dialogo.md` (transcrição de 29 min, 17/08).
-> Identidade visual: `identidade.md`. Site: `site/NOTAS.md`.
+> Identidade visual: `identidade.md`. Site: `NOTAS-SITE.md`.
 > Motor do agendamento: `agendamento/` (`INDICE.md` tem todo campo que
 > entra e sai, `CLASP.md` tem como publicar, `RELACIONAMENTO.md` tem a
 > camada 3).
@@ -221,7 +221,7 @@ vídeo é ele.
 - **Site reformulado**: Sobre com a história real (o barbeiro que odiava
   pedir um corte e receber outro, mais o Plano Piloto), seção "como
   funciona o atendimento" com as perguntas dele, e seção "consulta por
-  foto". Detalhes em `site/NOTAS.md`
+  foto". Detalhes em `NOTAS-SITE.md`
 - **Conteúdo pro Instagram.** A transcrição já tem uns dez temas na voz
   dele: por que eu pergunto antes de cortar, "dois dedos" é mais do que
   você imagina, low fade e a diferença entre sério e molecão

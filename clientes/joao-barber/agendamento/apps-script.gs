@@ -70,6 +70,7 @@ function lerConfig() {
     passoMin: 15,
     domicilioExtra: 45,
     cancelarAteHoras: 6,
+    guardarMeses: 24,
     recallDias: 15,
     recallLimiteDias: 60,
     resumoDia: 'Segunda',
@@ -91,6 +92,7 @@ function lerConfig() {
     else if (chave.indexOf('passo') === 0)           cfg.passoMin = num(val, cfg.passoMin);
     else if (chave.indexOf('domic') === 0)           cfg.domicilioExtra = num(val, 0);
     else if (chave.indexOf('cancel') === 0)          cfg.cancelarAteHoras = num(val, 0);
+    else if (chave.indexOf('guardar') === 0)         cfg.guardarMeses = num(val, cfg.guardarMeses);
     else if (chave.indexOf('recall ignora') === 0)   cfg.recallLimiteDias = num(val, cfg.recallLimiteDias);
     else if (chave.indexOf('recall') === 0)          cfg.recallDias = num(val, cfg.recallDias);
     else if (chave.indexOf('dia do resumo') === 0)   cfg.resumoDia = String(val).trim() || cfg.resumoDia;
@@ -181,6 +183,79 @@ function hhmm(v) {
 }
 
 /* ==================================================================
+   PORTARIA: o que entra pelo site não é confiável
+   ------------------------------------------------------------------
+   O App da Web é aberto (ANYONE_ANONYMOUS) e a CHAVE viaja dentro do
+   HTML do site, então ela é pública: qualquer pessoa que abrir o
+   código-fonte da página consegue chamar o motor direto. A chave serve
+   contra varredura automática, não contra alguém decidido.
+
+   O que protege de verdade é isto aqui: conferir tudo que chega, e
+   limitar quantas vezes a mesma coisa pode ser tentada. Sem isso, dá
+   pra encher a agenda de horário falso ou ficar chutando código de
+   cancelamento até derrubar o horário de outra pessoa.
+   ================================================================== */
+
+var LIMITE = {
+  NOME:       60,     // caracteres
+  ENDERECO:   200,
+  OBSERVACAO: 300,
+
+  // Freios. A janela é em segundos e o teto do CacheService do Apps
+  // Script é 21600 (6 horas), então nada aqui passa disso.
+  CANCEL_ERRO:      8,    CANCEL_ERRO_SEG:   900,    // 8 chutes em 15 min
+  AGENDA_TELEFONE:  3,    AGENDA_TEL_SEG:  21600,    // 3 marcações por número em 6h
+  AGENDA_TOTAL:    12,    AGENDA_TOTAL_SEG: 3600     // 12 marcações no site por hora
+};
+
+/**
+ * Limpa texto que veio de fora antes de gravar em qualquer lugar.
+ * Chama-se limpo() e não texto() porque "texto" já é nome de variável
+ * em outras funções daqui, e a sombra confundiria na leitura.
+ * Tira caractere de controle, junta espaço repetido e corta no limite.
+ * Sem isso, um POST feito na mão grava megabytes na planilha.
+ */
+function limpo(v, max) {
+  return String(v == null ? '' : v)
+    .replace(/[\x00-\x1F\x7F]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+    .slice(0, max || 200);
+}
+
+/**
+ * Devolve o telefone só em dígitos se ele for um celular brasileiro
+ * plausível, ou '' se não for. Número inválido significa horário que o
+ * João não consegue confirmar, então é melhor recusar na entrada.
+ */
+function telefoneValido(v) {
+  var d = soDigitos(v);
+  if (d.length > 11 && d.indexOf('55') === 0) d = d.slice(2);
+  if (d.length !== 10 && d.length !== 11) return '';
+  var ddd = Number(d.slice(0, 2));
+  if (ddd < 11 || ddd > 99) return '';
+  if (d.length === 11 && d.charAt(2) !== '9') return '';   // celular começa com 9
+  return d;
+}
+
+/**
+ * Contador com prazo de validade, guardado no cache do script.
+ * Devolve quantas vezes aquela chave já apareceu dentro da janela.
+ * É a base dos freios: não precisa de planilha nem de escopo novo.
+ */
+function contar(chave, segundos) {
+  var c = CacheService.getScriptCache();
+  var n = Number(c.get(chave) || 0) + 1;
+  c.put(chave, String(n), Math.min(segundos, 21600));
+  return n;
+}
+
+// Lê o contador sem somar. Serve pra barrar antes de fazer o trabalho.
+function tentativas(chave) {
+  return Number(CacheService.getScriptCache().get(chave) || 0);
+}
+
+/* ==================================================================
    ENTRADA: consultas (o site chama por GET)
    ================================================================== */
 
@@ -207,7 +282,10 @@ function doGet(e) {
     return json({ erro: 'acao desconhecida' });
 
   } catch (err) {
-    return json({ erro: String(err) });
+    // a mensagem crua da exceção pode citar id de planilha e nome de
+    // aba. Isso fica no log da conta do João, não vai pro navegador
+    console.error('doGet: ' + err);
+    return json({ erro: 'falha', mensagem: 'Não consegui consultar a agenda agora.' });
   }
 }
 
@@ -220,7 +298,12 @@ function doPost(e) {
   try {
     trava.waitLock(10000);
 
-    var d = JSON.parse(e.postData.contents);
+    // corpo gigante nem chega a virar objeto: 8 KB é muito mais do que
+    // qualquer agendamento honesto ocupa
+    var cru = (e && e.postData && e.postData.contents) || '';
+    if (cru.length > 8192) return json({ erro: 'grande demais' });
+
+    var d = JSON.parse(cru);
     if (d.chave !== NUCLEO.CHAVE) return json({ erro: 'chave invalida' });
 
     if (d.acao === 'cancelar') return cancelar(d);
@@ -228,7 +311,8 @@ function doPost(e) {
     return agendar(d);
 
   } catch (err) {
-    return json({ erro: String(err) });
+    console.error('doPost: ' + err);
+    return json({ erro: 'falha', mensagem: 'Não consegui gravar agora. Tenta de novo em instantes.' });
   } finally {
     trava.releaseLock();
   }
@@ -237,11 +321,81 @@ function doPost(e) {
 function agendar(d) {
   var cfg = lerConfig();
 
+  /* --- 1. isca de robô ---------------------------------------------
+     Campo escondido no formulário. Gente nunca preenche, robô que sai
+     preenchendo tudo, sim. Recusa sem explicar o motivo. */
+  if (limpo(d.confirmacao, 40)) return json({ erro: 'recusado' });
+
+  /* --- 2. conferir e cortar tudo que veio de fora ------------------ */
+  var nome = limpo(d.nome, LIMITE.NOME);
+  var tel  = telefoneValido(d.telefone);
+  if (nome.length < 2) {
+    return json({ erro: 'nome', mensagem: 'Coloca teu nome pra eu saber quem chega.' });
+  }
+  if (!tel) {
+    return json({ erro: 'telefone', mensagem: 'Confere o número com DDD, é por ali que eu confirmo.' });
+  }
+
   var servico = cfg.servicos[d.servico];
   if (!servico) return json({ erro: 'servico invalido' });
 
-  var inicio = new Date(d.inicio);                 // ISO vindo do site
-  var dur = duracaoTotal(cfg, d.servico, d.local);
+  var ondeChave = (d.local === 'domicilio') ? 'domicilio' : 'barbearia';
+  var endereco = ondeChave === 'domicilio' ? limpo(d.endereco, LIMITE.ENDERECO) : '';
+  if (ondeChave === 'domicilio' && endereco.length < 6) {
+    return json({ erro: 'endereco', mensagem: 'Preciso do endereço pra saber onde te encontrar.' });
+  }
+
+  // o resto do motor passa a trabalhar só com o que foi conferido
+  d.nome = nome;
+  d.telefone = tel;
+  d.local = ondeChave;
+  d.endereco = endereco;
+  d.aniversario = limpo(d.aniversario, 5);
+  d.origem = limpo(d.origem, 40);
+  d.observacao = limpo(d.observacao, LIMITE.OBSERVACAO);
+
+  /* --- 3. freios ---------------------------------------------------
+     Marcar pelo site é livre. Encher a agenda de horário falso, não. */
+  if (contar('ag-tel-' + chaveTelefone(tel), LIMITE.AGENDA_TEL_SEG) > LIMITE.AGENDA_TELEFONE) {
+    return json({
+      erro: 'demais',
+      mensagem: 'Esse número já marcou várias vezes seguidas. Me chama no WhatsApp que a gente resolve na conversa.'
+    });
+  }
+  if (contar('ag-total', LIMITE.AGENDA_TOTAL_SEG) > LIMITE.AGENDA_TOTAL) {
+    return json({
+      erro: 'demais',
+      mensagem: 'Chegou marcação demais ao mesmo tempo por aqui. Tenta daqui a pouco, ou me chama no WhatsApp.'
+    });
+  }
+
+  /* --- 4. o horário tem que ser um dos que o motor ofereceu --------
+     Antes daqui, o motor aceitava qualquer instante que chegasse no
+     POST: 3 da manhã, domingo fechado, ano que vem, ou uma data que
+     nem existe. Conferir contra a própria lista resolve os quatro de
+     uma vez, porque ela já respeita expediente, antecedência e o
+     encaixe no passo da grade. A janela de dias fica logo abaixo,
+     que é a única regra que a lista não cobre. */
+  var inicio = new Date(d.inicio);
+  if (isNaN(inicio.getTime())) {
+    return json({ erro: 'horario', mensagem: 'Esse horário não é válido. Escolhe de novo na tela.' });
+  }
+
+  var limiteJanela = Date.now() + (cfg.janelaDias + 1) * 86400000;
+  if (inicio.getTime() > limiteJanela) {
+    return json({ erro: 'horario', mensagem: 'Só dá pra marcar dentro dos próximos ' + cfg.janelaDias + ' dias.' });
+  }
+
+  var diaTexto = Utilities.formatDate(inicio, NUCLEO.FUSO, 'yyyy-MM-dd');
+  var horaTexto = Utilities.formatDate(inicio, NUCLEO.FUSO, 'HH:mm');
+  if (horariosLivres(cfg, diaTexto, d.servico, ondeChave).indexOf(horaTexto) === -1) {
+    return json({
+      erro: 'ocupado',
+      mensagem: 'Esse horário não está mais disponível. Escolhe outro na tela.'
+    });
+  }
+
+  var dur = duracaoTotal(cfg, d.servico, ondeChave);
   var fim = new Date(inicio.getTime() + dur * 60000);
 
   // Confere de novo, agora que está travado.
@@ -249,11 +403,12 @@ function agendar(d) {
     return json({ erro: 'ocupado', mensagem: 'Esse horário acabou de ser preenchido. Escolha outro.' });
   }
 
-  var local = d.local === 'domicilio'
-    ? 'A domicílio: ' + (d.endereco || 'endereço a confirmar')
+  var local = ondeChave === 'domicilio'
+    ? 'A domicílio: ' + endereco
     : 'Barbearia Rota 020';
 
-  var codigo = novoCodigo();
+  var ss = SpreadsheetApp.openById(NUCLEO.SHEET_ID);
+  var codigo = novoCodigo(ss);
 
   var descricao = [
     'Cliente: ' + d.nome,
@@ -273,7 +428,6 @@ function agendar(d) {
     location: local
   });
 
-  var ss = SpreadsheetApp.openById(NUCLEO.SHEET_ID);
   gravarAgendamento(ss, d, inicio, servico, local, codigo, evento.getId());
   upsertCliente(ss, d, inicio);
 
@@ -292,10 +446,39 @@ function agendar(d) {
   });
 }
 
+/**
+ * Desmarca pelo código.
+ *
+ * Passou a exigir também os 4 últimos dígitos do WhatsApp. Motivo: o
+ * código tem 4 letras de um alfabeto de 32, e sozinho ele era a única
+ * coisa entre um estranho e o horário de outra pessoa. Chutar código
+ * até acertar é trabalho de robô, não de gente. Com o telefone junto,
+ * quem chuta precisa acertar as duas coisas ao mesmo tempo, e o freio
+ * abaixo corta a repetição.
+ *
+ * A resposta é a mesma pra código que não existe e pra telefone que
+ * não bate, de propósito: senão a tela vira um jeito de descobrir
+ * quais códigos existem.
+ */
 function cancelar(d) {
   var cfg = lerConfig();
-  var cod = String(d.codigo || '').trim().toUpperCase();
+  var cod = String(d.codigo || '').trim().toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 6);
+  var fim4 = soDigitos(d.telefone).slice(-4);
+
   if (!cod) return json({ erro: 'sem codigo', mensagem: 'Digite o código do agendamento.' });
+  if (fim4.length < 4) {
+    return json({
+      erro: 'sem telefone',
+      mensagem: 'Digite também os 4 últimos números do WhatsApp que você usou pra marcar.'
+    });
+  }
+
+  if (tentativas('cancel-erro') >= LIMITE.CANCEL_ERRO) {
+    return json({
+      erro: 'demais',
+      mensagem: 'Teve tentativa demais por aqui nos últimos minutos. Espera um pouco, ou me chama no WhatsApp que eu desmarco.'
+    });
+  }
 
   var ss = SpreadsheetApp.openById(NUCLEO.SHEET_ID);
   var a = aba(ss, NUCLEO.ABA_AGEND);
@@ -307,9 +490,12 @@ function cancelar(d) {
   var cData = cab.indexOf('Data do corte');
   var cHora = cab.indexOf('Hora');
   var cNome = cab.indexOf('Nome');
+  var cTel = cab.indexOf('WhatsApp');
 
   for (var i = linhas.length - 1; i >= 1; i--) {
     if (String(linhas[i][cCod]).trim().toUpperCase() !== cod) continue;
+    // código certo com telefone errado cai fora sem dar pista nenhuma
+    if (cTel >= 0 && soDigitos(linhas[i][cTel]).slice(-4) !== fim4) continue;
 
     if (String(linhas[i][cStatus]).trim().toLowerCase().indexOf('cancel') === 0) {
       return json({ erro: 'ja cancelado', mensagem: 'Esse agendamento já está cancelado.' });
@@ -343,7 +529,11 @@ function cancelar(d) {
     });
   }
 
-  return json({ erro: 'nao achou', mensagem: 'Não achei esse código. Confere as letras, ou me chama no WhatsApp.' });
+  contar('cancel-erro', LIMITE.CANCEL_ERRO_SEG);
+  return json({
+    erro: 'nao achou',
+    mensagem: 'Não achei esse agendamento. Confere o código e os 4 últimos números, ou me chama no WhatsApp.'
+  });
 }
 
 /* ==================================================================
@@ -451,7 +641,7 @@ function upsertCliente(ss, d, inicio) {
   if (a.getLastRow() === 0) {
     a.appendRow([
       'WhatsApp', 'Nome', 'Aniversário', 'Como me achou',
-      'Primeira vez', 'Última visita', 'Visitas', 'Observações'
+      'Primeira vez', 'Última visita', 'Visitas', 'Observações', 'Não enviar'
     ]);
     a.setFrozenRows(1);
   }
@@ -503,10 +693,40 @@ function agenda() {
     : CalendarApp.getDefaultCalendar();
 }
 
-function novoCodigo() {
+/**
+ * Sorteia um código de 4 letras que ainda não foi usado.
+ *
+ * Antes o sorteio era cego. São 32^4 (pouco mais de um milhão) de
+ * combinações, o que parece muito, mas repetição de sorteio acontece
+ * bem antes do fim da lista: por volta da milésima marcação a chance
+ * de duas iguais já passa de 50%. Código repetido significa desmarcar
+ * o horário da pessoa errada, então agora ele confere a coluna antes.
+ */
+function novoCodigo(ss) {
   var abc = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';   // sem O/0 e I/1
+  var usados = {};
+
+  try {
+    var linhas = aba(ss, NUCLEO.ABA_AGEND).getDataRange().getValues();
+    var col = linhas.length ? linhas[0].indexOf('Código') : -1;
+    if (col >= 0) {
+      for (var i = 1; i < linhas.length; i++) {
+        usados[String(linhas[i][col]).trim().toUpperCase()] = true;
+      }
+    }
+  } catch (e) {
+    // planilha ainda sem a aba: segue com sorteio simples
+    console.error('novoCodigo: ' + e);
+  }
+
   var s = '';
-  for (var i = 0; i < 4; i++) s += abc.charAt(Math.floor(Math.random() * abc.length));
+  for (var tentativa = 0; tentativa < 40; tentativa++) {
+    s = '';
+    for (var j = 0; j < 4; j++) s += abc.charAt(Math.floor(Math.random() * abc.length));
+    if (!usados[s]) return s;
+  }
+
+  console.error('novoCodigo: 40 sorteios seguidos caíram em código já usado');
   return s;
 }
 
@@ -566,8 +786,8 @@ function json(obj) {
    ================================================================== */
 
 var PADRAO_MSG = {
-  recall:      'Fala {nome}, tudo certo? Vi aqui que já faz {dias} dias desde o teu último corte. Bora marcar? Me manda um dia que fica bom pra ti.',
-  aniversario: 'Opa {nome}! Passando pra te desejar um feliz aniversário. Quando quiser marcar o corte é só chamar. Abraço!',
+  recall:      'Fala {nome}, tudo certo? Vi aqui que já faz {dias} dias desde o teu último corte. Bora marcar? Me manda um dia que fica bom pra ti. Se não quiser mais receber lembrete meu, é só falar que eu paro.',
+  aniversario: 'Opa {nome}! Passando pra te desejar um feliz aniversário. Quando quiser marcar o corte é só chamar. Abraço! Se não quiser mais receber mensagem minha, é só falar.',
   confirmacao: 'Oi {nome}, tudo bem? Confirmando o teu horário de amanhã às {hora} ({servico}, {local}). Posso confirmar?'
 };
 
@@ -720,7 +940,8 @@ function resumoSemanal() {
   var cab = clientes[0];
   var c = {
     tel: cab.indexOf('WhatsApp'), nome: cab.indexOf('Nome'),
-    aniv: cab.indexOf('Aniversário'), ult: cab.indexOf('Última visita')
+    aniv: cab.indexOf('Aniversário'), ult: cab.indexOf('Última visita'),
+    naoEnviar: cab.indexOf('Não enviar')
   };
 
   var aniversario = [], recall = [];
@@ -728,6 +949,13 @@ function resumoSemanal() {
   for (var i = 1; i < clientes.length; i++) {
     var r = clientes[i];
     if (!r[c.tel]) continue;
+    /* Direito de oposição, art. 18 da LGPD, virado em coluna: quem
+       pedir pra não receber mais recebe um "sim" na coluna "Não
+       enviar" e some destas duas listas. A confirmação do dia
+       seguinte continua, porque ela é sobre um horário que a própria
+       pessoa marcou, não é divulgação. */
+    if (c.naoEnviar >= 0 && String(r[c.naoEnviar]).trim()) continue;
+    if (String(r[c.tel]).indexOf('anonimizado') === 0) continue;
     var nome = String(r[c.nome] || 'cliente');
     var chave = chaveTelefone(r[c.tel]);
 
@@ -851,7 +1079,9 @@ function instalarGatilhos() {
 
   ScriptApp.getProjectTriggers().forEach(function (t) {
     var f = t.getHandlerFunction();
-    if (f === 'resumoSemanal' || f === 'confirmacoesDoDia') ScriptApp.deleteTrigger(t);
+    if (f === 'resumoSemanal' || f === 'confirmacoesDoDia' || f === 'limparDadosAntigos') {
+      ScriptApp.deleteTrigger(t);
+    }
   });
 
   var DIAS = {
@@ -869,10 +1099,115 @@ function instalarGatilhos() {
   ScriptApp.newTrigger('confirmacoesDoDia').timeBased()
     .everyDays(1).atHour(faixaHora(cfg.confirmarHora)).create();
 
+  // faxina de dados antigos, uma vez por mês, de madrugada
+  ScriptApp.newTrigger('limparDadosAntigos').timeBased()
+    .onMonthDay(1).atHour(4).create();
+
   Logger.log('Gatilhos criados:');
-  Logger.log('  resumoSemanal     -> toda ' + cfg.resumoDia + ', por volta de ' + faixaHora(cfg.resumoHora) + 'h');
-  Logger.log('  confirmacoesDoDia -> todo dia, por volta de ' + faixaHora(cfg.confirmarHora) + 'h');
+  Logger.log('  resumoSemanal      -> toda ' + cfg.resumoDia + ', por volta de ' + faixaHora(cfg.resumoHora) + 'h');
+  Logger.log('  confirmacoesDoDia  -> todo dia, por volta de ' + faixaHora(cfg.confirmarHora) + 'h');
+  Logger.log('  limparDadosAntigos -> dia 1 de cada mês, de madrugada');
   Logger.log('Mudou dia/hora na aba Config? Rode instalarGatilhos de novo.');
+}
+
+/* ==================================================================
+   limparDadosAntigos  ·  o prazo de guarda da LGPD, em código
+   ------------------------------------------------------------------
+   A LGPD manda apagar o dado pessoal quando ele deixa de ser
+   necessário pra finalidade que justificou a coleta (art. 15 e 16).
+   Cliente que não volta há anos não é mais base de agendamento nem de
+   recall: é arquivo morto com telefone e endereço de gente dentro.
+
+   O que este gatilho faz, uma vez por mês:
+     - aba Clientes: quem não aparece há mais que "Guardar dados por"
+       perde nome, telefone, aniversário e observação. Sobra a linha
+       anonimizada, só com a contagem de visitas, que serve pra
+       estatística e não identifica ninguém
+     - aba Agendamentos: linha antiga perde nome e telefone pelo mesmo
+       motivo. Data, serviço e local ficam
+
+   Nada some da vista do João sem aviso: o resumo vai por email.
+   Rodar na mão, sem esperar o dia 1, é seguro.
+   ================================================================== */
+function limparDadosAntigos() {
+  var cfg = lerConfig();
+  var meses = cfg.guardarMeses;
+  if (!meses || meses <= 0) {
+    Logger.log('Guardar dados por = 0: faxina desligada.');
+    return;
+  }
+
+  var corte = new Date();
+  corte.setMonth(corte.getMonth() - meses);
+  var ss = SpreadsheetApp.openById(NUCLEO.SHEET_ID);
+  var mexidas = [];
+
+  /* ---------- Clientes ---------- */
+  try {
+    var ac = aba(ss, NUCLEO.ABA_CLIENTES);
+    var lc = ac.getDataRange().getValues();
+    var cab = lc[0] || [];
+    var iTel = cab.indexOf('WhatsApp');
+    var iNome = cab.indexOf('Nome');
+    var iNasc = cab.indexOf('Aniversário');
+    var iUlt = cab.indexOf('Última visita');
+    var iObs = cab.indexOf('Observações');
+    var n = 0;
+
+    for (var i = 1; i < lc.length; i++) {
+      var ultima = lc[i][iUlt];
+      if (!ultima) continue;
+      var quando = (ultima instanceof Date) ? ultima : new Date(String(ultima));
+      if (isNaN(quando.getTime()) || quando >= corte) continue;
+      if (String(lc[i][iTel]).indexOf('anonimizado') === 0) continue;   // já passou por aqui
+
+      if (iTel >= 0)  ac.getRange(i + 1, iTel + 1).setValue('anonimizado');
+      if (iNome >= 0) ac.getRange(i + 1, iNome + 1).setValue('(cliente antigo)');
+      if (iNasc >= 0) ac.getRange(i + 1, iNasc + 1).setValue('');
+      if (iObs >= 0)  ac.getRange(i + 1, iObs + 1).setValue('');
+      n++;
+    }
+    if (n) mexidas.push(n + ' cliente(s) sem voltar há mais de ' + meses + ' meses foram anonimizados');
+  } catch (e) {
+    console.error('limparDadosAntigos/Clientes: ' + e);
+  }
+
+  /* ---------- Agendamentos ---------- */
+  try {
+    var aa = aba(ss, NUCLEO.ABA_AGEND);
+    var la = aa.getDataRange().getValues();
+    var cab2 = la[0] || [];
+    var jData = cab2.indexOf('Data do corte');
+    var jNome = cab2.indexOf('Nome');
+    var jTel = cab2.indexOf('WhatsApp');
+    var m = 0;
+
+    for (var k = 1; k < la.length; k++) {
+      var dt = la[k][jData];
+      if (!dt) continue;
+      var quando2 = (dt instanceof Date) ? dt : new Date(String(dt) + 'T12:00:00');
+      if (isNaN(quando2.getTime()) || quando2 >= corte) continue;
+      if (String(la[k][jNome]) === '(removido)') continue;
+
+      if (jNome >= 0) aa.getRange(k + 1, jNome + 1).setValue('(removido)');
+      if (jTel >= 0)  aa.getRange(k + 1, jTel + 1).setValue('');
+      m++;
+    }
+    if (m) mexidas.push(m + ' agendamento(s) com mais de ' + meses + ' meses perderam nome e telefone');
+  } catch (e) {
+    console.error('limparDadosAntigos/Agendamentos: ' + e);
+  }
+
+  if (!mexidas.length) {
+    Logger.log('Faxina rodou e não achou nada pra limpar.');
+    return;
+  }
+
+  Logger.log(mexidas.join('\n'));
+  avisarEmail(cfg, 'Limpeza de dados antigos',
+    'A faxina mensal da planilha rodou hoje:\n\n' + mexidas.join('\n')
+    + '\n\nIsso é a regra de prazo de guarda que está na política de privacidade '
+    + 'do site. Pra mudar o prazo, é a linha "Guardar dados por" na aba Config.');
 }
 
 function faixaHora(n) {
@@ -945,6 +1280,7 @@ function montarPlanilha() {
     ['Passo dos horários', 15, 'minutos entre um horário e o próximo na lista'],
     ['Extra domicílio', 45, 'minutos de deslocamento, além da duração do serviço'],
     ['Cancelar pelo site até', 6, 'horas antes do horário. 0 desliga o cancelamento pelo site'],
+    ['Guardar dados por', 24, 'meses sem voltar. Passou disso, o cliente é anonimizado sozinho (LGPD). 0 desliga a faxina'],
     ['Recall a partir de', 15, 'dias desde o último corte pra pessoa entrar na lista de recall'],
     ['Recall ignora após', 60, 'dias. Quem sumiu faz mais que isso não entra no recall automático'],
     ['Dia do resumo', 'Segunda', 'dia da semana em que a lista da semana chega por email'],
@@ -954,6 +1290,7 @@ function montarPlanilha() {
 
   // Planilha que já existia: acrescenta só os parâmetros que faltam.
   completarConfig(ss, feito);
+  completarClientes(ss, feito);
 
   /* ---------- Serviços ---------- */
   preencherSeVazia(pegarOuCriar(NUCLEO.ABA_SERVICOS), [
@@ -1018,7 +1355,7 @@ function montarPlanilha() {
   /* ---------- Clientes ---------- */
   preencherSeVazia(pegarOuCriar(NUCLEO.ABA_CLIENTES), [
     ['WhatsApp', 'Nome', 'Aniversário', 'Como me achou',
-     'Primeira vez', 'Última visita', 'Visitas', 'Observações']
+     'Primeira vez', 'Última visita', 'Visitas', 'Observações', 'Não enviar']
   ]);
 
   /* ---------- Mensagens (textos de recall, aniversário, confirmação) ---------- */
@@ -1073,6 +1410,29 @@ function montarPlanilha() {
 // Acrescenta na aba Config os parâmetros que ainda não estão lá.
 // Só roda quando a aba já tem conteúdo (planilha antiga); a aba vazia
 // já sai completa pelo preencherSeVazia acima.
+/**
+ * Planilha que já existia não ganha coluna nova sozinha: o
+ * preencherSeVazia só mexe em aba vazia. Esta função acrescenta a
+ * coluna "Não enviar" na aba Clientes, que é onde o pedido de "não
+ * quero mais receber mensagem" fica registrado (art. 18 da LGPD).
+ * Sem ela, o recall continua chamando quem já pediu pra parar.
+ */
+function completarClientes(ss, feito) {
+  var a = ss.getSheetByName(NUCLEO.ABA_CLIENTES);
+  if (!a || a.getLastRow() === 0) return;
+
+  var cab = a.getRange(1, 1, 1, a.getLastColumn()).getValues()[0]
+    .map(function (v) { return String(v).trim(); });
+
+  if (cab.indexOf('Não enviar') >= 0) {
+    feito.push('Clientes: coluna "Não enviar" já estava lá');
+    return;
+  }
+
+  a.getRange(1, cab.length + 1).setValue('Não enviar');
+  feito.push('Clientes: coluna "Não enviar" criada (escreva "sim" pra quem pedir pra não receber mensagem)');
+}
+
 function completarConfig(ss, feito) {
   var a = ss.getSheetByName(NUCLEO.ABA_CONFIG);
   if (!a || a.getLastRow() === 0) return;
@@ -1094,6 +1454,7 @@ function completarConfig(ss, feito) {
   if (falta('dia do resumo'))  novas.push(['Dia do resumo', 'Segunda', 'dia da semana em que a lista da semana chega por email']);
   if (falta('hora do resumo')) novas.push(['Hora do resumo', 8, 'hora aproximada do email da lista da semana']);
   if (falta('hora da confirm')) novas.push(['Hora da confirmação', 18, 'hora aproximada do email com as confirmações do dia seguinte']);
+  if (falta('guardar'))        novas.push(['Guardar dados por', 24, 'meses sem voltar. Passou disso, o cliente é anonimizado sozinho (LGPD). 0 desliga a faxina']);
 
   novas.forEach(function (l) { a.appendRow(l); feito.push('Config: "' + l[0] + '" adicionada'); });
   if (!novas.length) feito.push('Config: parâmetros de relacionamento já estavam lá');

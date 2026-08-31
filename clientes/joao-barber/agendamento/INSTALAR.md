@@ -9,7 +9,7 @@
 > do Miguel.
 >
 > **A tela do site já existe e já funciona sem isso aqui**, em modo
-> demonstração (ver `../site/NOTAS.md`). O que este passo a passo faz é
+> demonstração (ver `../NOTAS-SITE.md`). O que este passo a passo faz é
 > trocar os horários de mentira pelos de verdade.
 >
 > **Já rodou a v1?** As mudanças da v2 estão no fim, em "Migrar da v1".

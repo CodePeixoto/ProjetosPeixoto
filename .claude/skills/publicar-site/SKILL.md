@@ -124,6 +124,12 @@ avisar e perguntar antes de subir.
 - [ ] **A mídia é do cliente?** Foto de banco de imagem ou de outra
       empresa em site comercial é problema de direito autoral, e o
       público local percebe na hora
+- [ ] **Tem algum arquivo interno dentro de `site/`?** Tudo que estiver
+      nessa pasta vai pro ar e fica baixável direto pela URL, mesmo sem
+      link nenhum apontando pra ele e mesmo com `robots.txt`. Anotação,
+      briefing, planilha, backup e `.md` de documentação ficam **fora**
+      dela. Foi o que aconteceu no João Barber: o `NOTAS.md` estava em
+      `site/` e virou `NOTAS-SITE.md` na pasta do cliente
 - [ ] Sobrou algum `<!-- PLACEHOLDER -->` no HTML?
 - [ ] Telefone, WhatsApp e redes sociais estão certos?
 - [ ] O cliente aprovou o conteúdo? Site no ar é a cara dele

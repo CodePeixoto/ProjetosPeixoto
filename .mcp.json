@@ -1,0 +1,16 @@
+{
+  "mcpServers": {
+    "chrome": {
+      "command": "cmd",
+      "args": [
+        "/c",
+        "npx",
+        "-y",
+        "chrome-devtools-mcp@latest",
+        "--autoConnect",
+        "--executablePath",
+        "C:/Program Files/Google/Chrome/Application/chrome.exe"
+      ]
+    }
+  }
+}

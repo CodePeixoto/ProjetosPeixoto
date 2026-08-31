@@ -129,6 +129,7 @@ header .header-cta{margin-left:auto;padding:11px 16px;font-size:11px}
   border-bottom:1px solid var(--linha);
 }
 .menu-mobile a:last-of-type{border-bottom:0}
+.menu-mobile a.ativo{color:var(--dourado)}
 .menu-mobile .btn{margin-top:16px}
 
 /* ---------- botões ---------- */
@@ -468,7 +469,12 @@ section{padding:88px 0;border-bottom:1px solid var(--linha);scroll-margin-top:78
 
 .ag-status{margin-top:16px;font-size:14.5px;line-height:1.6;color:var(--muted)}
 .ag-status.ruim{color:#E5A06E}
-.ag-privacidade{margin-top:20px;font-size:13px;color:#6E6E68}
+.ag-privacidade{margin-top:20px;font-size:13px;line-height:1.7;color:#6E6E68}
+.ag-privacidade a{color:var(--dourado)}
+
+/* isca de robô: fora da tela, fora da ordem de tabulação e fora do
+   leitor de tela. Só um preenchedor automático de formulário acha */
+.ag-isca{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
 
 /* confirmação */
 .ag-ok{text-align:center;padding:10px 0}
@@ -481,22 +487,34 @@ section{padding:88px 0;border-bottom:1px solid var(--linha);scroll-margin-top:78
   width:26px;height:26px;fill:none;stroke:currentColor;
   stroke-width:2;stroke-linecap:round;stroke-linejoin:round;
 }
+/* o "auto" nas laterais é obrigatório em todo parágrafo daqui: com
+   max-width e margem lateral zero, a caixa encosta na esquerda e o
+   texto centralizado dentro dela sai torto em relação ao resto */
 .ag-ok .quando{
   font-size:20px;font-weight:500;letter-spacing:.03em;
-  color:var(--dourado);margin:14px 0 8px;
+  color:var(--dourado);margin:14px auto 8px;
 }
 .ag-ok p{max-width:46ch;margin-left:auto;margin-right:auto}
-.ag-ok .btn{margin-top:26px}
+/* o botão não pode ser mais largo que o cartão: no celular o texto
+   é longo e, com nowrap, ele vazava por cima do parágrafo de cima */
+.ag-ok .btn{margin-top:26px;max-width:100%;white-space:normal;text-align:center}
 .ag-ok .ag-pe{justify-content:center}
 .ag-ok .ag-codigo{
   font-size:15px;color:var(--claro);margin:14px auto 0;
 }
+/* o espaçamento entre letras também sobra depois da última, e joga o
+   código pra esquerda. O margin-right negativo devolve essa sobra */
 .ag-ok .ag-codigo b{
-  color:var(--dourado);letter-spacing:.22em;font-weight:600;
+  color:var(--dourado);letter-spacing:.22em;margin-right:-.22em;font-weight:600;
 }
 .ag-ok .ag-obrig{
   margin:18px auto 0;font-size:14.5px;line-height:1.65;
   color:#E5C98A;max-width:42ch;
+}
+/* em tela estreita o botão do WhatsApp ocupa a largura toda do cartão,
+   em vez de tentar caber numa linha só e transbordar */
+@media(max-width:560px){
+  .ag-ok .btn{width:100%;padding:15px 12px;letter-spacing:.10em}
 }
 
 /* desmarcar */
@@ -582,6 +600,8 @@ footer{padding:56px 0 44px}
 .rod-contato a{color:var(--muted);text-decoration:none}
 .rod-contato a:hover{color:var(--dourado)}
 
+.rod-base a{color:#6E6E68;text-decoration:none}
+.rod-base a:hover{color:var(--dourado)}
 .rod-base{
   margin-top:40px;padding-top:22px;border-top:1px solid var(--linha);
   display:grid;gap:10px;text-align:center;
@@ -705,7 +725,7 @@ html.anim .regua.on{animation:risco .9s cubic-bezier(.22,.7,.3,1) forwards}
 <main>
 
   <!-- ============ HERO ============ -->
-  <!-- MÍDIA DE FUNDO (ver NOTAS.md)
+  <!-- MÍDIA DE FUNDO (ver ../NOTAS-SITE.md)
        Fotos: img/foto-*.jpg (passam em loop)   Vídeo: video/hero.mp4 (só desktop) -->
   <div class="hero">
 
@@ -764,7 +784,7 @@ html.anim .regua.on{animation:risco .9s cubic-bezier(.22,.7,.3,1) forwards}
       </div>
 
       <!-- PLACEHOLDER: trocar por um retrato de verdade do João (vertical).
-           Ver NOTAS.md. Esse é o único lugar do site que pede foto dele sozinho. -->
+           Ver ../NOTAS-SITE.md. Esse é o único lugar do site que pede foto dele sozinho. -->
       <div class="sobre-foto">
         <img src="img/foto-3.jpg" alt="João Lucas atendendo um cliente">
       </div>
@@ -855,7 +875,7 @@ html.anim .regua.on{animation:risco .9s cubic-bezier(.22,.7,.3,1) forwards}
   <!-- ============ TRABALHOS ============ -->
   <!-- PLACEHOLDER: as 8 fotos e os nomes dos cortes são de exemplo.
        Trocar por trabalhos reais do João, e conferir se o nome bate
-       com o que aparece na foto. Ver NOTAS.md. -->
+       com o que aparece na foto. Ver ../NOTAS-SITE.md. -->
   <section id="trabalhos">
     <div class="wrap">
       <div class="sec-head">
@@ -1065,7 +1085,7 @@ html.anim .regua.on{animation:risco .9s cubic-bezier(.22,.7,.3,1) forwards}
                        placeholder="(61) 9 9999-9999" required>
               </div>
               <div class="ag-campo">
-                <label for="ag-nasc">Aniversário (opcional)</label>
+                <label for="ag-nasc">Aniversário, só pra eu te dar parabéns (opcional)</label>
                 <input type="text" id="ag-nasc" inputmode="numeric" maxlength="5" placeholder="dia/mês">
               </div>
               <div class="ag-campo">
@@ -1081,8 +1101,16 @@ html.anim .regua.on{animation:risco .9s cubic-bezier(.22,.7,.3,1) forwards}
               </div>
               <div class="ag-campo largo">
                 <label for="ag-obs">Alguma observação? (opcional)</label>
-                <textarea id="ag-obs" placeholder="Ex: não curto a lateral muito curta"></textarea>
+                <textarea id="ag-obs" maxlength="300" placeholder="Ex: não curto a lateral muito curta"></textarea>
               </div>
+            </div>
+
+            <!-- Isca de robô. Fica escondida: gente nunca vê nem preenche,
+                 preenchedor automático de formulário preenche. Se vier
+                 com qualquer coisa dentro, o motor recusa a marcação. -->
+            <div class="ag-isca" aria-hidden="true">
+              <label for="ag-confirmacao">Deixe este campo em branco</label>
+              <input type="text" id="ag-confirmacao" tabindex="-1" autocomplete="off">
             </div>
 
             <p class="ag-status" id="ag-status-4" role="status"></p>
@@ -1093,7 +1121,12 @@ html.anim .regua.on{animation:risco .9s cubic-bezier(.22,.7,.3,1) forwards}
             </div>
           </form>
 
-          <p class="ag-privacidade">Seu contato fica só comigo, pra confirmar o horário e te lembrar.</p>
+          <p class="ag-privacidade">
+            Seu contato fica só comigo, pra confirmar o horário e te lembrar do corte.
+            Não passo pra ninguém e não vendo lista.
+            <a href="privacidade.html">Como eu cuido dos seus dados</a>.
+            Se o corte for pra menor de idade, quem marca é o pai, a mãe ou o responsável.
+          </p>
         </div>
 
         <!-- passo 5: confirmação -->
@@ -1118,11 +1151,22 @@ html.anim .regua.on{animation:risco .9s cubic-bezier(.22,.7,.3,1) forwards}
         <!-- desmarcar: fica sempre visível, pra quem volta ao site depois -->
         <details class="ag-cancelar" id="ag-cancelar" hidden>
           <summary>Precisa desmarcar um horário?</summary>
-          <p class="ag-dica">Digite o código que apareceu quando você agendou.</p>
-          <div class="ag-campo">
-            <label for="ag-cod">Código do agendamento</label>
-            <input type="text" id="ag-cod" maxlength="4" autocomplete="off"
-                   style="text-transform:uppercase" placeholder="Ex: K7QP">
+          <p class="ag-dica">
+            Digite o código que apareceu quando você agendou, e os 4 últimos
+            números do WhatsApp que você usou. Os dois juntos, pra ninguém
+            desmarcar o horário de outra pessoa.
+          </p>
+          <div class="ag-campos">
+            <div class="ag-campo">
+              <label for="ag-cod">Código do agendamento</label>
+              <input type="text" id="ag-cod" maxlength="4" autocomplete="off"
+                     style="text-transform:uppercase" placeholder="Ex: K7QP">
+            </div>
+            <div class="ag-campo">
+              <label for="ag-cod-tel">4 últimos números do seu WhatsApp</label>
+              <input type="text" id="ag-cod-tel" maxlength="4" inputmode="numeric"
+                     autocomplete="off" placeholder="Ex: 7166">
+            </div>
           </div>
           <p class="ag-status" id="ag-cancelar-msg" role="status"></p>
           <button type="button" class="btn btn-ghost" id="ag-cancelar-btn">Desmarcar</button>
@@ -1214,7 +1258,7 @@ html.anim .regua.on{animation:risco .9s cubic-bezier(.22,.7,.3,1) forwards}
       <div class="rod-base">
         <span>© 2026 João Lucas · Barbeiro</span>
         <span>Barbearia Espaço Rota 020 · Sobradinho DF</span>
-        <span>Agendamento pelo site</span>
+        <span><a href="privacidade.html">Privacidade e uso dos dados</a></span>
       </div>
     </div>
   </div>
@@ -1246,6 +1290,56 @@ function fundoDoHeader(){
 }
 window.addEventListener('scroll', fundoDoHeader, {passive:true});
 fundoDoHeader(); // caso a página abra já rolada (F5 no meio)
+
+
+/* ---------- menu que acompanha a rolagem ----------
+   Acende no menu a seção que está sendo lida. Sem isso o "Início" fica
+   marcado a página inteira. Vale pro menu do desktop e pro do celular. */
+(function(){
+  var links = Array.prototype.slice.call(
+    document.querySelectorAll('nav a[href^="#"], .menu-mobile a[href^="#"]:not(.btn)')
+  );
+  if (!links.length) return;
+
+  var alvos = [];
+  function juntar(seletor, href){
+    var el = document.querySelector(seletor);
+    if (el) alvos.push({el:el, href:href});
+  }
+  juntar('.hero', '#topo');
+  // o #agendar não tem link no menu, mas entra na lista mesmo assim:
+  // assim nenhum item fica aceso por engano enquanto a pessoa agenda
+  ['#sobre','#servicos','#trabalhos','#domicilio','#agendar','#contato']
+    .forEach(function(h){ juntar(h, h); });
+
+  var aceso = null;
+  function medir(){
+    var linha = window.scrollY + 100;   // altura do cabeçalho, mais uma folga
+    var achado = alvos[0];
+    alvos.forEach(function(a){
+      if (a.el.getBoundingClientRect().top + window.scrollY <= linha) achado = a;
+    });
+    // no fim da rolagem o último trecho vence, mesmo sendo curto demais
+    // pra chegar na linha de leitura
+    if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) {
+      achado = alvos[alvos.length - 1];
+    }
+    if (achado.href === aceso) return;
+    aceso = achado.href;
+    links.forEach(function(a){
+      a.classList.toggle('ativo', a.getAttribute('href') === aceso);
+    });
+  }
+
+  var esperando = false;
+  window.addEventListener('scroll', function(){
+    if (esperando) return;
+    esperando = true;
+    requestAnimationFrame(function(){ esperando = false; medir(); });
+  }, {passive:true});
+  window.addEventListener('resize', medir, {passive:true});
+  medir();
+})();
 
 
 /* ---------- mídia do hero ----------
@@ -1619,6 +1713,12 @@ if (!semAnimacao) {
   function irPara(n, focar){
     Object.keys(passos).forEach(function(k){ passos[k].hidden = (+k !== n); });
 
+    /* quem abriu o "desmarcar" e depois clicou num serviço mudou de ideia:
+       está marcando, não desmarcando. O bloco fecha sozinho em qualquer
+       troca de passo, senão fica aberto o fluxo inteiro */
+    var desmarcar = id('ag-cancelar');
+    if (desmarcar && desmarcar.open) desmarcar.open = false;
+
     Array.prototype.forEach.call(trilha.children, function(li){
       var p = +li.getAttribute('data-p');
       li.classList.toggle('atual', p === n);
@@ -1633,6 +1733,17 @@ if (!semAnimacao) {
     }
   }
 
+  /* Monta um elemento com texto dentro, em vez de costurar HTML em
+     string. O nome do serviço vem da planilha, ou seja, de fora do
+     código: com innerHTML, o dia que alguém escrevesse uma tag lá o
+     navegador executaria. Com textContent, aparece como texto. */
+  function tag(nome, classe, txt){
+    var el = document.createElement(nome);
+    if (classe) el.className = classe;
+    if (txt != null) el.textContent = txt;
+    return el;
+  }
+
   function desenharResumo(n){
     var partes = [];
     if (estado.servico && n > 1) partes.push(SERVICOS[estado.servico].nome);
@@ -1640,7 +1751,11 @@ if (!semAnimacao) {
     if (estado.data && estado.hora && n > 3) partes.push(rotulo(estado.data) + ' às ' + estado.hora);
 
     resumo.hidden = (!partes.length || n === 5);
-    resumo.innerHTML = partes.map(function(p){ return '<b>' + p + '</b>'; }).join(' · ');
+    resumo.textContent = '';
+    partes.forEach(function(p, i){
+      if (i) resumo.appendChild(document.createTextNode(' · '));
+      resumo.appendChild(tag('b', null, p));
+    });
   }
 
   // sem o segundo argumento, desmarca todos
@@ -1671,8 +1786,13 @@ if (!semAnimacao) {
       b.className = 'ag-op';
       b.setAttribute('data-servico', chave);
       b.setAttribute('aria-pressed', 'false');
-      b.innerHTML = '<span><b>' + s.nome + '</b><i>' + (s.texto || '') + '</i></span>'
-                  + '<em>' + s.minutos + ' min</em>';
+
+      var caixaTxt = tag('span');
+      caixaTxt.appendChild(tag('b', null, s.nome));
+      caixaTxt.appendChild(tag('i', null, s.texto || ''));
+      b.appendChild(caixaTxt);
+      b.appendChild(tag('em', null, s.minutos + ' min'));
+
       b.addEventListener('click', function(){ escolherServico(chave); });
       alvo.appendChild(b);
     });
@@ -1827,7 +1947,9 @@ if (!semAnimacao) {
       telefone:    tel,
       aniversario: id('ag-nasc').value.trim(),
       origem:      id('ag-origem').value,
-      observacao:  id('ag-obs').value.trim()
+      observacao:  id('ag-obs').value.trim(),
+      // isca: vai vazia de gente de verdade. O motor recusa se vier cheia
+      confirmacao: id('ag-confirmacao').value
     };
 
     enviarBtn.disabled = true;
@@ -1883,7 +2005,9 @@ if (!semAnimacao) {
     var elCod = id('ag-codigo');
     if (ligado && r && r.codigo) {
       elCod.hidden = false;
-      elCod.innerHTML = 'Teu código: <b>' + r.codigo + '</b> — guarda pra desmarcar se precisar.';
+      elCod.textContent = 'Teu código: ';
+      elCod.appendChild(tag('b', null, r.codigo));
+      elCod.appendChild(document.createTextNode('. Guarda pra desmarcar se precisar.'));
     } else {
       elCod.hidden = true;
     }
@@ -1910,17 +2034,28 @@ if (!semAnimacao) {
     bloco.hidden = false;
 
     var campo = id('ag-cod');
+    var campoTel = id('ag-cod-tel');
     var msg   = id('ag-cancelar-msg');
     var botao = id('ag-cancelar-btn');
 
+    campoTel.addEventListener('input', function(){
+      this.value = digitos(this.value).slice(0, 4);
+    });
+
     botao.addEventListener('click', function(){
       var cod = (campo.value || '').trim().toUpperCase();
+      var fim = digitos(campoTel.value);
       if (cod.length < 4) { avisar(msg, 'Digite as 4 letras do código.'); campo.focus(); return; }
+      if (fim.length < 4) {
+        avisar(msg, 'Digite também os 4 últimos números do teu WhatsApp.');
+        campoTel.focus();
+        return;
+      }
 
       botao.disabled = true;
       limpar(msg, 'Procurando teu agendamento...');
 
-      enviar({acao:'cancelar', chave:AGENDA.CHAVE, codigo:cod}).then(function(r){
+      enviar({acao:'cancelar', chave:AGENDA.CHAVE, codigo:cod, telefone:fim}).then(function(r){
         botao.disabled = false;
 
         if (r && r.ok) {

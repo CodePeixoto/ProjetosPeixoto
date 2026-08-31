@@ -1,0 +1,52 @@
+# Cabeçalhos de segurança do site do João Barber
+# ---------------------------------------------------------------
+# A Netlify lê este arquivo da pasta publicada e aplica em toda
+# resposta. Formato: o caminho na coluna zero, os cabeçalhos
+# indentados abaixo, linha em branco separando blocos.
+# Documentação: https://docs.netlify.com/manage/routing/headers/
+#
+# Por que cada um está aqui:
+#
+#   Strict-Transport-Security  o navegador passa a recusar http://
+#                              nesse endereço por um ano
+#   X-Content-Type-Options     impede o navegador de "adivinhar" que um
+#                              arquivo é outra coisa (nosniff)
+#   X-Frame-Options            ninguém consegue abrir o site dentro de
+#   e frame-ancestors 'none'   um iframe e fingir que o agendamento é
+#                              dele. Os dois juntos porque o antigo
+#                              ainda cobre navegador velho
+#   Referrer-Policy            o site de destino de um link não recebe
+#                              o endereço completo da página de origem
+#   Permissions-Policy         desliga câmera, microfone e localização,
+#                              que essa página nunca usa
+#   Content-Security-Policy    a parte que mais protege: diz de onde a
+#                              página pode carregar coisa e, sobretudo,
+#                              PARA ONDE ela pode mandar dado. Mesmo se
+#                              alguém conseguisse injetar script aqui,
+#                              connect-src barra o envio do formulário
+#                              pra qualquer servidor que não seja o
+#                              motor do João
+#
+# Detalhes da CSP que não são óbvios:
+#
+#   script.googleusercontent.com  o Apps Script responde 302 e joga a
+#                                 resposta pra esse outro domínio. Sem
+#                                 ele liberado, o agendamento quebra
+#   'unsafe-inline' no script     o JS e o CSS moram dentro do
+#   e no style                    index.html de propósito (o site não
+#                                 tem etapa de build). Trocar por hash
+#                                 é possível e está anotado no NOTAS.md
+#                                 como melhoria opcional
+#   frame-src www.google.com      é o iframe do mapa da Rota 020
+
+/*
+  Strict-Transport-Security: max-age=31536000
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: geolocation=(), camera=(), microphone=(), payment=()
+  Cross-Origin-Opener-Policy: same-origin
+  # TEMPORÁRIO: sai junto com o noindex do index.html e o robots.txt,
+  # quando a mídia real do João entrar e o site puder ser divulgado.
+  X-Robots-Tag: noindex, nofollow
+  Content-Security-Policy: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; img-src 'self' data:; media-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; connect-src 'self' https://script.google.com https://script.googleusercontent.com; frame-src https://www.google.com; form-action 'self'

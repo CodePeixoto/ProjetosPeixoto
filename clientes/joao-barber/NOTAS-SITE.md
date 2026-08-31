@@ -320,6 +320,63 @@ passando: troca de dia, marcação única, formulário vazio recusado,
 máscara de telefone e de aniversário, confirmação e recomeço. Layout
 conferido em 390px e em 1280px.
 
+### Acertos de acabamento (30/08/2026)
+
+Cinco correções pedidas depois de olhar o site no navegador:
+
+1. **O menu do topo acompanha a rolagem.** O CSS de `nav a.ativo` já
+   existia, mas nada trocava a classe: o "Início" ficava aceso a página
+   inteira. Agora um bloco de script mede a seção que está sendo lida e
+   acende o item, no desktop e no menu do celular. O `#agendar` entra na
+   conta mesmo sem link no menu, pra nenhum item ficar aceso por engano
+   enquanto a pessoa agenda
+2. **O "desmarcar um horário" fecha sozinho.** Quem abria o bloco e
+   depois clicava num serviço continuava com ele aberto o fluxo inteiro.
+   Agora `irPara()` fecha o `<details>` em qualquer troca de passo
+3. **Centralização da confirmação.** A regra `.ag-ok p` dá
+   `max-width:46ch` com margem lateral automática, mas `.ag-ok .quando`
+   vinha depois com `margin:14px 0 8px` e zerava esses lados: a caixa
+   encostava na esquerda e a data saía torta em relação ao resto. Virou
+   `margin:14px auto 8px`
+4. **Espaçamento do código.** O `letter-spacing:.22em` também sobra
+   depois da última letra, o que jogava o `SDA5` pra esquerda.
+   Compensado com `margin-right:-.22em`. De quebra, o travessão daquela
+   frase saiu (regra de `_memoria/preferencias.md`)
+5. **Botão do WhatsApp no celular.** Com `white-space:nowrap`, o rótulo
+   "Enviar confirmação no WhatsApp" ficava mais largo que o cartão em
+   tela de 390px e vazava por cima do texto. Agora o botão pode quebrar
+   linha e, abaixo de 560px, ocupa a largura toda
+
+Conferido com script no Chromium em 1440px e 390px: nenhum desvio de
+centralização, botão dentro do cartão e sem rolagem horizontal.
+
+### Segurança e privacidade (31/08/2026)
+
+A auditoria inteira está em `../SEGURANCA.md`. O que mudou **neste
+arquivo aqui** (o site):
+
+- **`_headers`**, arquivo novo na pasta. A Netlify lê e aplica em toda
+  resposta: bloqueio de iframe, HTTPS forçado, câmera e microfone
+  desligados, e a CSP dizendo de onde a página carrega coisa e pra onde
+  ela pode mandar dado. **Duas armadilhas anotadas lá dentro:** o Apps
+  Script desvia pra `script.googleusercontent.com` (sem esse domínio
+  liberado o agendamento morre), e o `'unsafe-inline'` existe porque o JS
+  e o CSS moram dentro do `index.html`
+- **`privacidade.html`**, página nova, no mesmo visual. Linkada no rodapé
+  e dentro do passo 4 do agendamento
+- **Campo isca** escondido no formulário (`#ag-confirmacao`). Fica fora da
+  tela e fora da tabulação. Robô preenche, gente não. Vem preenchido, o
+  motor recusa
+- **Desmarcar agora pede o código e os 4 últimos dígitos do WhatsApp.**
+  Campo novo `#ag-cod-tel`. Só o código era chutável
+- **Nada que vem da planilha entra como HTML.** Os cartões de serviço, a
+  linha de resumo e o código na confirmação passaram a ser montados com
+  `textContent`, via a função `tag()`. Antes eram string com `innerHTML`
+- **Duas frases novas no formulário**: o link da política e o aviso de que
+  corte de menor é marcado pelo responsável. O rótulo do aniversário
+  passou a dizer pra que serve, porque finalidade escondida não vale como
+  autorização
+
 ### O que falta (depende do João)
 
 Agora tudo isso é campo na planilha (abas Config, Serviços, Expediente),

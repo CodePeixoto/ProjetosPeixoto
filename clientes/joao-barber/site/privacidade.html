@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacidade · João Barber</title>
+<meta name="description" content="Como o João Barber usa e guarda os dados de quem marca horário pelo site.">
+
+<!-- TEMPORÁRIO: sai junto com o noindex do index.html, quando a mídia
+     real do João entrar e o site puder ser divulgado. -->
+<meta name="robots" content="noindex, nofollow">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --preto:#0B0B0B; --carvao:#141414; --dourado:#C9A227;
+  --claro:#FAFAF7; --muted:#A8A8A2; --linha:rgba(250,250,247,.12);
+  color-scheme:dark;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--preto);color:var(--claro);
+  font-family:'Oswald',system-ui,sans-serif;font-weight:300;line-height:1.7;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{width:100%;max-width:760px;margin:0 auto;padding:0 22px}
+
+header{border-bottom:1px solid var(--linha);background:var(--carvao)}
+.header-in{display:flex;align-items:center;justify-content:space-between;height:78px;gap:16px}
+.logo{text-decoration:none;color:var(--claro);display:flex;align-items:center;gap:10px}
+.logo svg{width:26px;height:26px;color:var(--dourado);flex:none}
+.logo b{font-size:23px;font-weight:600;line-height:1}
+.logo b span{color:var(--dourado)}
+.voltar{
+  font-size:12px;font-weight:400;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--muted);text-decoration:none;
+}
+.voltar:hover{color:var(--dourado)}
+
+main{padding:56px 0 80px}
+.eyebrow{font-size:12px;font-weight:500;text-transform:uppercase;letter-spacing:.30em;color:var(--dourado)}
+h1{
+  font-size:clamp(28px,5vw,42px);font-weight:700;line-height:1.12;
+  text-transform:uppercase;margin:14px 0 18px;
+}
+.regua{width:58px;height:2px;background:var(--dourado);border:0;margin-bottom:22px}
+.data{font-size:13px;color:#6E6E68;letter-spacing:.04em}
+
+h2{
+  font-size:20px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;
+  margin:44px 0 14px;padding-top:22px;border-top:1px solid var(--linha);
+}
+p{font-size:16px;color:var(--muted);margin-bottom:14px}
+p.forte{color:rgba(250,250,247,.90)}
+a{color:var(--dourado)}
+ul{margin:0 0 16px 20px}
+li{font-size:16px;color:var(--muted);margin-bottom:9px}
+li b, p b{color:var(--claro);font-weight:500}
+.pendente{
+  display:inline-block;padding:1px 7px;border:1px solid rgba(201,162,39,.5);
+  font-size:12px;letter-spacing:.10em;text-transform:uppercase;color:var(--dourado);
+}
+
+.rolagem{overflow-x:auto}
+table{width:100%;border-collapse:collapse;margin:8px 0 18px;font-size:15px;min-width:520px}
+th,td{text-align:left;padding:11px 10px;border-bottom:1px solid var(--linha);vertical-align:top}
+th{
+  font-size:11.5px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--dourado);white-space:nowrap;
+}
+td{color:var(--muted)}
+td:first-child{color:var(--claro)}
+
+.caixa{
+  margin:22px 0;padding:16px 18px;background:var(--carvao);
+  border:1px solid var(--linha);border-left:3px solid var(--dourado);
+}
+.caixa p:last-child{margin-bottom:0}
+
+footer{
+  border-top:1px solid var(--linha);padding:30px 0 46px;
+  font-size:13px;color:#6E6E68;text-align:center;
+}
+footer a{color:var(--muted);text-decoration:none}
+footer a:hover{color:var(--dourado)}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap header-in">
+    <a href="index.html" class="logo">
+      <svg viewBox="0 0 40 40" aria-hidden="true">
+        <circle cx="10" cy="31" r="5" fill="none" stroke="currentColor" stroke-width="2.4"/>
+        <circle cx="30" cy="31" r="5" fill="none" stroke="currentColor" stroke-width="2.4"/>
+        <path d="M27.5 27.5 L10 5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+        <path d="M12.5 27.5 L30 5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" fill="none"/>
+      </svg>
+      <b>João<span>Barber</span></b>
+    </a>
+    <a class="voltar" href="index.html">Voltar pro site</a>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+
+    <span class="eyebrow">Privacidade</span>
+    <h1>Como eu cuido dos seus dados</h1>
+    <hr class="regua">
+    <p class="data">Última atualização: 31 de agosto de 2026</p>
+
+    <p class="forte" style="margin-top:26px">
+      Escrevi essa página em português de gente, sem juridiquês. Ela vale
+      pra quem marca horário pelo site do João Barber. Ficou dúvida? Me
+      chama no WhatsApp que eu explico.
+    </p>
+
+    <h2>Quem é o responsável</h2>
+    <p>
+      Sou eu, João Lucas, barbeiro em Sobradinho DF. Eu respondo pelos
+      dados que você digita aqui no site, o que a lei chama de controlador.
+    </p>
+    <ul>
+      <li><b>Nome:</b> João Lucas <span class="pendente">completar</span></li>
+      <li><b>CNPJ:</b> <span class="pendente">preencher</span></li>
+      <li><b>Onde atendo:</b> Barbearia Espaço Rota 020, Quadra 08, Bloco 19, Lote 07, Sobradinho, Brasília DF, e a domicílio em Sobradinho e região</li>
+      <li><b>Pra falar sobre seus dados:</b> <span class="pendente">preencher email</span>, ou o mesmo WhatsApp do agendamento</li>
+    </ul>
+    <p>
+      Sou microempreendedor. Pela Resolução nº 2 de 2022 da ANPD, negócio
+      desse porte não precisa nomear um encarregado de dados, desde que
+      exista um canal aberto pra tratar do assunto. O canal é o contato
+      acima, e ele responde.
+    </p>
+
+    <h2>O que eu coleto, e por quê</h2>
+    <p>Só o que eu preciso pra te atender. Não peço CPF, não peço RG e não peço nada de pagamento.</p>
+
+    <div class="rolagem">
+      <table>
+        <tr>
+          <th>Dado</th><th>Pra que serve</th><th>Obrigatório?</th>
+        </tr>
+        <tr>
+          <td>Nome</td>
+          <td>Saber quem chega, e te chamar pelo nome</td>
+          <td>Sim</td>
+        </tr>
+        <tr>
+          <td>WhatsApp</td>
+          <td>Confirmar o horário, avisar de imprevisto, e você desmarcar se precisar</td>
+          <td>Sim</td>
+        </tr>
+        <tr>
+          <td>Endereço</td>
+          <td>Só quando o atendimento é na sua casa. É pra eu saber onde te encontrar</td>
+          <td>Só a domicílio</td>
+        </tr>
+        <tr>
+          <td>Dia e mês do aniversário</td>
+          <td>Só pra te mandar parabéns. Não peço o ano</td>
+          <td>Não</td>
+        </tr>
+        <tr>
+          <td>Como você me achou</td>
+          <td>Saber o que está funcionando na divulgação</td>
+          <td>Não</td>
+        </tr>
+        <tr>
+          <td>Observação</td>
+          <td>O que você quiser me avisar sobre o corte</td>
+          <td>Não</td>
+        </tr>
+        <tr>
+          <td>Serviço, dia, hora e local</td>
+          <td>É o agendamento em si</td>
+          <td>Sim</td>
+        </tr>
+      </table>
+    </div>
+
+    <p>
+      O site não usa cookie, não tem Google Analytics, não tem pixel de
+      rede social e não acompanha sua navegação. Se um dia isso mudar, por
+      causa de anúncio, essa página muda junto e aparece um aviso pedindo
+      sua permissão antes.
+    </p>
+
+    <h2>Com que autorização eu uso isso</h2>
+    <p>A LGPD (Lei 13.709 de 2018) pede que eu diga em que me apoio pra usar cada dado:</p>
+    <ul>
+      <li><b>Marcar, confirmar e desmarcar horário:</b> execução do serviço que você mesmo pediu, art. 7, inciso V. Sem nome e telefone eu não consigo te atender</li>
+      <li><b>Lembrar que já faz um tempo do último corte:</b> legítimo interesse em manter contato com quem já é meu cliente, art. 7, inciso IX. Você pode pedir pra parar quando quiser, e eu paro na hora</li>
+      <li><b>Mensagem de aniversário:</b> só existe se você tiver escrito a data, o que é opcional. Preencher ali é você me autorizando a usar pra isso, e só pra isso</li>
+    </ul>
+
+    <h2>Quanto tempo eu guardo</h2>
+    <p>
+      Enquanto você for meu cliente. Passando <b>24 meses sem você
+      aparecer</b>, seu nome, telefone, aniversário e observações são
+      apagados sozinhos da minha planilha, numa limpeza que roda todo dia
+      1 de cada mês. Sobra só a contagem de atendimentos, que não
+      identifica ninguém e me serve pra saber como o negócio anda.
+    </p>
+    <p>
+      Se você pedir pra apagar antes disso, eu apago antes disso. Uma
+      exceção: registro que eu precise manter por obrigação fiscal fica o
+      tempo que a lei mandar.
+    </p>
+
+    <h2>Quem mais vê</h2>
+    <p>Eu não vendo, não troco e não empresto lista de cliente pra ninguém. Mas alguns serviços participam do caminho, e é justo você saber:</p>
+    <ul>
+      <li><b>Google</b> (Agenda, Planilhas e Apps Script): é onde a minha agenda e a minha lista de clientes moram, dentro da minha conta</li>
+      <li><b>Netlify</b>: é a empresa que mantém esse site no ar</li>
+      <li><b>WhatsApp, da Meta</b>: é por onde eu confirmo o horário com você</li>
+      <li><b>Google Fontes e Google Mapas</b>: a fonte das letras e o mapa da barbearia vêm do Google, então o Google enxerga o endereço de internet de quem abre a página</li>
+    </ul>
+    <p>
+      Essas empresas têm servidor fora do Brasil, então seus dados
+      trafegam pra fora do país. É o que acontece em praticamente qualquer
+      site hoje, e elas seguem regras próprias de proteção de dados.
+    </p>
+
+    <h2>O que você pode exigir de mim</h2>
+    <p>O artigo 18 da LGPD te dá esses direitos, e eu atendo todos:</p>
+    <ul>
+      <li>Saber se eu tenho dado seu, e quais são</li>
+      <li>Corrigir o que estiver errado ou desatualizado</li>
+      <li>Apagar o que não for mais necessário, ou pedir pra apagar tudo</li>
+      <li>Saber com quem eu compartilhei</li>
+      <li>Levar seus dados pra outro lugar, se pedir</li>
+      <li>Se opor ao uso, e não receber mais mensagem minha de lembrete ou de aniversário</li>
+      <li>Voltar atrás numa permissão que você já tinha dado</li>
+    </ul>
+    <div class="caixa">
+      <p class="forte">
+        Como pedir: me manda mensagem no mesmo WhatsApp do agendamento, ou
+        no email lá em cima, dizendo o que você quer. Eu respondo em até 15
+        dias. É de graça, e você não precisa explicar o motivo.
+      </p>
+    </div>
+    <p>
+      Se você achar que eu não resolvi direito, pode reclamar na ANPD, a
+      Autoridade Nacional de Proteção de Dados, em
+      <a href="https://www.gov.br/anpd" target="_blank" rel="noopener">gov.br/anpd</a>.
+    </p>
+
+    <h2>Corte de criança e adolescente</h2>
+    <p>
+      Quando o corte é pra menor de idade, quem marca é o pai, a mãe ou o
+      responsável, e o contato que fica guardado é o do adulto. Eu não peço
+      aniversário de menor, não mando mensagem de divulgação pra menor, e
+      não guardo nada além do necessário pra fazer o corte.
+    </p>
+
+    <h2>Foto do seu corte</h2>
+    <p>
+      Eu só publico foto de cliente no site ou no Instagram <b>com
+      autorização de quem aparece na foto</b>, dada por escrito e pra
+      aquela finalidade. Se for menor de idade, quem autoriza é o
+      responsável. Deixar eu tirar a foto não é o mesmo que deixar eu
+      publicar: são duas permissões, e eu peço as duas.
+    </p>
+    <p>
+      Mudou de ideia depois? Me avisa e eu tiro do ar. Não precisa explicar
+      por quê.
+    </p>
+
+    <h2>Segurança</h2>
+    <p>
+      Sua informação fica dentro da minha conta Google, protegida por senha
+      e verificação em duas etapas, e só eu tenho acesso. O site abre
+      sempre em conexão criptografada. Se acontecer algum vazamento que
+      possa te trazer risco, eu te aviso e comunico a ANPD, como a lei
+      manda.
+    </p>
+
+    <h2>Se essa página mudar</h2>
+    <p>
+      A data lá em cima diz da última vez que ela mudou. Se a mudança for
+      grande, eu aviso pelo WhatsApp antes de valer.
+    </p>
+
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p style="margin:0">
+      João Lucas · Barbeiro · Sobradinho DF ·
+      <a href="index.html">Voltar pro site</a>
+    </p>
+  </div>
+</footer>
+
+</body>
+</html>

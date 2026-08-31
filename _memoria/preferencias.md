@@ -31,6 +31,27 @@ perguntar antes de inventar um tom.
 
 - Emoji em contexto formal
 
+## Segurança vem antes (definido em 31/08/2026)
+
+**Regra permanente, declarada pelo Miguel:** em site, sistema ou qualquer
+projeto, segurança é a coisa que ele mais quer atenção. Não é etapa
+final, é filtro do dia a dia.
+
+O que isso significa na prática:
+
+- Ao entregar qualquer coisa que receba dado de fora (formulário,
+  endpoint, upload, login), **auditar antes de dizer que está pronto**.
+  Não esperar ele perguntar
+- Percebeu uma brecha, mesmo pequena, mesmo fora do que foi pedido:
+  **avisar na hora e mandar um plano de ação**, apontando onde arrumar e
+  o que aquilo pode causar depois
+- Ordenar o que for achado por risco real, e separar o que o Claude
+  resolve sozinho do que depende do Miguel ou do cliente
+- Vale também pro jurídico do dado (LGPD, imagem, menor de idade), que
+  pra ele é parte da mesma preocupação
+- Referência do que já foi feito nesse padrão:
+  `clientes/joao-barber/SEGURANCA.md`
+
 ## Estilo geral
 
 Em aberto. Sem padrão definido ainda, além das regras acima.

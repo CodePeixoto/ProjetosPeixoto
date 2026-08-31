@@ -67,6 +67,7 @@ no `apps-script.gs`. As duas últimas (`Mensagens`, `Datas`) são da camada
 | Passo dos horários | `15` | minutos entre um horário e o próximo na lista |
 | Extra domicílio | `45` | minutos de deslocamento, somados à duração do serviço |
 | Cancelar pelo site até | `6` | horas antes do horário. `0` desliga o cancelamento pelo site |
+| Guardar dados por | `24` | meses sem o cliente voltar. Passou disso, a faxina mensal anonimiza a linha dele. `0` desliga (LGPD, art. 15 e 16) |
 | Recall a partir de | `15` | dias desde o último corte pra entrar no recall |
 | Recall ignora após | `60` | dias. Acima disso, fora do recall automático |
 | Dia do resumo | `Segunda` | dia da semana em que a lista da semana chega por email |
@@ -74,7 +75,7 @@ no `apps-script.gs`. As duas últimas (`Mensagens`, `Datas`) são da camada
 | Hora da confirmação | `18` | hora aproximada do email de confirmação do dia seguinte |
 
 O motor casa pelo começo do texto (`whatsapp`, `email`, `anteced`, `janela`,
-`passo`, `domic`, `cancel`, `recall`, `recall ignora`, `dia do resumo`,
+`passo`, `domic`, `cancel`, `guardar`, `recall`, `recall ignora`, `dia do resumo`,
 `hora do resumo`, `hora da confirm`), então a redação exata do rótulo não
 trava nada.
 
@@ -137,6 +138,7 @@ duplica.** É a ficha do cliente do `projeto.md` começando a existir.
 | Última visita | atualizada a cada novo agendamento |
 | Visitas | contador, +1 a cada agendamento |
 | Observações | **acumula**: `2026-09-02: não curto a lateral curta \| 2026-10-01: ...` |
+| Não enviar | **o João escreve à mão.** Qualquer coisa aqui (`sim`) tira a pessoa do recall e do aniversário. É o direito de oposição da LGPD (art. 18) virado em coluna. A confirmação do dia seguinte continua, porque é sobre um horário que a própria pessoa marcou |
 
 #### Como o motor sabe que é a mesma pessoa
 
@@ -230,6 +232,14 @@ menos de X horas, vem com `whatsapp` pra falar com o João).
   email de aviso, coluna Código da aba Agendamentos, descrição do evento.
 - **Serve pra:** o cliente desmarcar pelo site sem precisar falar com ninguém,
   enquanto faltar mais que "Cancelar pelo site até" horas.
+- **Nunca se repete:** antes de devolver, o motor confere a coluna Código
+  inteira. Sorteio cego repetiria por volta da milésima marcação, e código
+  repetido significa desmarcar o horário da pessoa errada.
+- **Sozinho ele não desmarca nada.** Desde 31/08/2026 o site pede o código
+  **e os 4 últimos dígitos do WhatsApp** usado na marcação. Além disso, 8
+  tentativas erradas em 15 minutos travam a porta. Sem isso, 4 letras eram
+  a única coisa entre um robô e a agenda do João. Detalhe em
+  `../SEGURANCA.md`.
 
 ---
 
