@@ -305,6 +305,27 @@ relevante: o que falta é conteúdo e informação dele.
 
 ---
 
+# 31/08/2026: segurança e LGPD fechadas
+
+Auditoria completa em `clientes/joao-barber/SEGURANCA.md`. O motor ganhou
+porteiro na entrada (só aceita horário que ele mesmo ofereceria, exige
+código mais telefone pra desmarcar, tem freios contra marcação em massa
+e contra chute de código), o site ganhou cabeçalhos de segurança e uma
+página de privacidade, e entrou faxina mensal que anonimiza cliente sem
+retorno há 24 meses.
+
+Conferido em produção pelo `testar()`: três gatilhos instalados, prazo de
+guarda valendo, coluna de opt-out existindo. O número de WhatsApp do João
+foi confirmado por teste e saiu da lista de pendências.
+
+O que sobra do lado do Miguel: verificação em duas etapas na conta do
+João (em andamento), acordo escrito sobre dados, e limpar as 2 linhas de
+teste da aba Clientes. Do lado do João, o que sempre foi: mídia real,
+dados reais, CNPJ, email de contato, contatos antigos e autorização de
+imagem.
+
+---
+
 # 30/08/2026: camada 3 no ar, parte técnica fechada
 
 A **camada 3 de relacionamento foi construída, publicada e testada**.

@@ -254,14 +254,32 @@ Nada disso é código. É o que sobra.
 
 ### Miguel
 
-| # | O quê | Por quê |
+| # | O quê | Situação |
 |---|---|---|
-| 1 | Publicar o motor (`./publicar-motor.ps1`) e o site (`/publicar-site`) | enquanto não publicar, as correções acima só existem no computador |
-| 2 | Rodar `montarPlanilha` uma vez | cria a linha "Guardar dados por" na Config e a coluna "Não enviar" na aba Clientes |
-| 3 | Rodar `instalarGatilhos` uma vez | liga a faxina mensal de dados antigos |
-| 4 | Ligar verificação em duas etapas na conta `joaobarber.agenda@gmail.com` | essa conta guarda a agenda e a lista de clientes inteira. Hoje ela está protegida só por senha, e a senha está com você. É o maior risco isolado que sobrou no sistema |
-| 5 | Acordo escrito com o João sobre dados | quem é o dono dos dados (ele), quem opera (você), e o que acontece com o teu acesso quando terminar |
-| 6 | Decidir o prazo de guarda | está em 24 meses. É palpite razoável, não decisão tomada |
+| 1 | Publicar o motor e o site | **FEITO em 31/08.** Motor na versão 7, site republicado |
+| 2 | Rodar `montarPlanilha` | **FEITO.** Conferido pelo `testar()`: prazo de guarda em 24 meses e coluna "Não enviar" existindo |
+| 3 | Rodar `instalarGatilhos` | **FEITO.** Os três gatilhos instalados, incluindo a faxina mensal |
+| 4 | Verificação em duas etapas na conta `joaobarber.agenda@gmail.com` | **em andamento.** Essa conta guarda a agenda e a lista de clientes inteira. É o maior risco isolado que sobra |
+| 5 | Acordo escrito com o João sobre dados | pendente. Quem é o dono dos dados (ele), quem opera (você), e o que acontece com o teu acesso quando terminar |
+| 6 | Decidir o prazo de guarda | 24 meses valendo. É palpite razoável, dá pra mudar na aba Config |
+| 7 | Limpar as linhas de teste da aba Clientes | o `testar()` de 31/08 acusou 2 clientes cadastrados, e não existe cliente real ainda. Provavelmente sobra dos testes de ponta a ponta. Se for isso, apagar: senão entram no recall de segunda e o João manda mensagem pra ninguém |
+
+### Como conferir que a parte de LGPD está de pé
+
+Rodar **`testar()`** no editor do Apps Script. Ele responde INSTALADO ou
+FALTANDO em cada item. O resultado bom, conferido em 31/08/2026:
+
+```
+Gatilho resumoSemanal: INSTALADO
+Gatilho confirmacoesDoDia: INSTALADO
+Gatilho limparDadosAntigos: INSTALADO
+Prazo de guarda: 24 meses
+Coluna "Não enviar": EXISTE
+```
+
+Publicar o código não basta: esses dois últimos dependem de
+`montarPlanilha` ter rodado na conta, e sem eles o opt-out e a faxina
+ficam publicados mas dormindo.
 
 ### João Lucas
 

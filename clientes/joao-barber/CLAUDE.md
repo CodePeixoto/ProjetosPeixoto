@@ -102,7 +102,8 @@ que é a marca do Miguel.
 - **Mexeu no `apps-script.gs`? Rode `node teste-motor.js` antes de
   publicar.** São 44 verificações, quase todas de segurança. Falhou
   alguma, não publica
-- Nada do que entrou em 31/08 pede escopo Google novo (só `CacheService`,
-  que não usa escopo), então **não precisa reautorizar**. Mas precisa
-  rodar `montarPlanilha` (cria a linha "Guardar dados por" e a coluna
-  "Não enviar") e `instalarGatilhos` (liga a faxina mensal) uma vez
+- `montarPlanilha` e `instalarGatilhos` **já foram rodados em 31/08**, e
+  o `testar()` confirmou: três gatilhos instalados, prazo de guarda em 24
+  meses, coluna "Não enviar" existindo. Pra conferir de novo depois de
+  qualquer mudança, é só rodar `testar()` no editor: ele diz INSTALADO ou
+  FALTANDO item por item
