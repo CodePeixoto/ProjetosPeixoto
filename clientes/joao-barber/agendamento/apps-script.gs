@@ -1225,14 +1225,50 @@ function faixaHora(n) {
 function testar() {
   var cfg = lerConfig();
   var hoje = Utilities.formatDate(new Date(), NUCLEO.FUSO, 'yyyy-MM-dd');
+
+  Logger.log('=== O BÁSICO ===');
   Logger.log('Agenda: ' + agenda().getName());
   Logger.log('WhatsApp na Config: ' + (cfg.whatsapp || '(vazio!)'));
   Logger.log('Janela de agenda: ' + cfg.janelaDias + ' dias');
   Logger.log('Serviços ativos: ' + Object.keys(cfg.servicos).join(', '));
   Logger.log('Expediente hoje: ' + JSON.stringify(cfg.expediente[new Date().getDay()]));
   Logger.log('Horários livres hoje pra corte: ' + horariosLivres(cfg, hoje, 'corte', 'barbearia'));
+
+  /* A partir daqui é a conferência da parte de segurança e LGPD que
+     entrou em 31/08/2026. Só publicar o código não basta: duas coisas
+     dependem de montarPlanilha e instalarGatilhos terem rodado, e sem
+     elas o opt-out e a faxina ficam publicados mas dormindo. */
+  Logger.log('');
+  Logger.log('=== SEGURANÇA E LGPD ===');
+
   var gs = ScriptApp.getProjectTriggers().map(function (t) { return t.getHandlerFunction(); });
-  Logger.log('Gatilhos instalados: ' + (gs.length ? gs.join(', ') : '(nenhum, rode instalarGatilhos)'));
+  ['resumoSemanal', 'confirmacoesDoDia', 'limparDadosAntigos'].forEach(function (nome) {
+    Logger.log('Gatilho ' + nome + ': ' + (gs.indexOf(nome) >= 0 ? 'INSTALADO' : 'FALTANDO (rode instalarGatilhos)'));
+  });
+
+  Logger.log('Prazo de guarda: ' + (cfg.guardarMeses > 0
+    ? cfg.guardarMeses + ' meses'
+    : 'DESLIGADO (a linha "Guardar dados por" falta na Config, ou está 0)'));
+
+  try {
+    var ac = aba(SpreadsheetApp.openById(NUCLEO.SHEET_ID), NUCLEO.ABA_CLIENTES);
+    if (ac.getLastRow() === 0) {
+      Logger.log('Aba Clientes: vazia, sem cabeçalho ainda');
+    } else {
+      var cab = ac.getRange(1, 1, 1, ac.getLastColumn()).getValues()[0]
+        .map(function (v) { return String(v).trim(); });
+      Logger.log('Coluna "Não enviar": ' + (cab.indexOf('Não enviar') >= 0
+        ? 'EXISTE (escreva "sim" pra quem pedir pra não receber mensagem)'
+        : 'FALTANDO (rode montarPlanilha)'));
+      Logger.log('Clientes cadastrados: ' + (ac.getLastRow() - 1));
+    }
+  } catch (e) {
+    Logger.log('Aba Clientes: erro ao ler, ' + e);
+  }
+
+  Logger.log('');
+  Logger.log('Se aparecer FALTANDO ou DESLIGADO acima, rode montarPlanilha');
+  Logger.log('e instalarGatilhos, nessa ordem, e rode testar() de novo.');
 }
 
 /* ==================================================================
@@ -1273,7 +1309,7 @@ function montarPlanilha() {
   /* ---------- Config ---------- */
   preencherSeVazia(pegarOuCriar(NUCLEO.ABA_CONFIG), [
     ['Parâmetro', 'Valor', 'Ajuda'],
-    ['WhatsApp do João', '5561981607166', 'só números, com 55 e DDD. É por aqui que a confirmação abre. CONFERIR com o João'],
+    ['WhatsApp do João', '5561981607166', 'só números, com 55 e DDD. É por aqui que a confirmação abre. Confirmado em 31/08/2026'],
     ['Email de aviso', '', 'recebe aviso de cada marcação e cancelamento, e as listas da semana e de confirmação. Vazio = cai no email da própria conta'],
     ['Antecedência mínima', 2, 'horas. Não deixa marcar em cima da hora'],
     ['Janela de agenda', 14, 'dias pra frente que a agenda abre. Curto de propósito, deixa margem pra imprevisto'],

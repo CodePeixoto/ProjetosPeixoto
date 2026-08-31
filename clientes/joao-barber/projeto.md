@@ -76,10 +76,9 @@ Dia da semana nos emails forçado pra português (`diaSemanaPt`), porque o
 **Tudo o que falta depende do João, ou é o Google Meu Negócio.** Não
 sobrou trabalho técnico.
 
-- **O número de WhatsApp dele.** Passou `61 8160-7166`, um dígito a menos
-  que o padrão. Está `5561981607166` na aba Config, **a confirmar**. É o
-  mais urgente: a confirmação virou obrigatória e com o número errado
-  ela não abre
+- ~~O número de WhatsApp dele.~~ **RESOLVIDO em 31/08/2026:**
+  `5561981607166` confirmado por teste, a mensagem cai direto nele. Era
+  o item mais urgente, porque a confirmação virou obrigatória no fluxo
 - **Lista de contatos antigos** na aba Clientes (WhatsApp, Nome,
   Aniversário, Última visita). Sem ela o recall e o aniversário da
   camada 3 ficam vazios, só pegam quem marcar daqui pra frente
@@ -404,7 +403,7 @@ republicar nada — a coluna diz onde cada resposta entra.
 
 | O que perguntar | Onde a resposta entra |
 |---|---|
-| **O número de WhatsApp dele em dígitos**, com 55 e DDD (o link curto do perfil não aceita texto pronto). Ele passou `61 8160-7166`, que tem um dígito a menos: **confirmar** | aba Config |
+| ~~O número de WhatsApp dele em dígitos~~ **resolvido em 31/08/2026**, `5561981607166` testado e funcionando | aba Config |
 | Dias e horários na Rota 020 e no domicílio | aba Expediente |
 | Duração real de cada serviço, e se falta algum (hoje o chute é corte 40, barba 30, combo 70, acabamento 20, sobrancelha 15) | aba Serviços |
 | Quanto tempo reservar de deslocamento no domicílio (hoje 45 min) | Config, "Extra domicílio" |

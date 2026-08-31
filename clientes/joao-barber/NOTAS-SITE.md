@@ -385,7 +385,6 @@ não é mais mexer em código:
 1. Dias e horários reais que ele atende, na barbearia e a domicílio → aba Expediente
 2. Duração real de cada serviço, e se falta algum → aba Serviços
 3. Quanto tempo reservar de deslocamento → Config, "Extra domicílio"
-4. **O número de WhatsApp dele em dígitos.** Ele passou `61 8160-7166`,
-   que tem um dígito a menos que o padrão (celular no DF tem 9 dígitos).
-   O site e o modelo da planilha estão com `5561981607166` (com o 9),
-   marcado pra CONFERIR
+4. ~~O número de WhatsApp dele em dígitos.~~ **RESOLVIDO em 31/08/2026:**
+   `5561981607166` está certo. O Miguel testou mandando pelo link e a
+   mensagem caiu direto no número do João

@@ -279,10 +279,9 @@ Três decisões que mudaram a arquitetura:
 **Tudo depende de uma conversa com o João.** Não sobrou trabalho técnico
 relevante: o que falta é conteúdo e informação dele.
 
-- **O número de WhatsApp dele.** Passou `61 8160-7166`, que tem um dígito
-  a menos que o padrão. Está `5561981607166` na aba Config, a confirmar.
-  É o mais urgente: a confirmação virou obrigatória no fluxo, e com o
-  número errado ela não abre
+- ~~O número de WhatsApp dele.~~ **RESOLVIDO em 31/08/2026:** o Miguel
+  testou o link e a mensagem cai direto no número do João. A confirmação
+  obrigatória do fluxo funciona
 - **Mídia real** (fotos, vídeo, retrato, logo JB). É o que trava tirar o
   `noindex` e divulgar o site
 - **Dados reais**: serviços e durações, expediente, preços, bairros do
