@@ -188,6 +188,40 @@ menor é marcado pelo responsável. O rótulo do aniversário passou a dizer
 pra que serve ("só pra eu te dar parabéns"), porque finalidade escondida
 não vale como autorização.
 
+**Revisão de 31/08, depois de comparar com uma política grande de
+verdade (a do Canva).** A comparação não serviu pra copiar estrutura,
+porque o Canva descreve anúncio, cookie, IA e conta de menor, e o João
+tem um formulário de seis campos. Serviu pra passar a nossa item por
+item pelo art. 9. Cinco buracos apareceram, e os cinco foram fechados:
+
+1. **Consequência de não dar o dado opcional** (art. 18, VIII). A tabela
+   tinha a coluna "Obrigatório?", mas faltava dizer em texto que campo
+   opcional é opcional de verdade e não muda o atendimento
+2. **Registro de acesso da hospedagem.** A página dizia que não
+   acompanha a navegação, o que é verdade, mas a Netlify guarda log com
+   IP como qualquer hospedagem. Omitir isso é omissão
+3. **Ausência de decisão automatizada** (art. 20). Não existe nenhuma no
+   sistema do João, e dizer isso vale mais que ficar calado
+4. **Quem responde e quem opera** (art. 9, VI). O João é o controlador,
+   o Miguel é quem mexe na ferramenta. Estava implícito, agora está
+   escrito
+5. **O iframe do mapa.** Ele faz o navegador do visitante falar com o
+   Google, e se a pessoa estiver logada numa conta Google, o Google
+   reconhece por conta própria. Isso está fora do alcance do João, e
+   agora está dito
+
+### Política de cookies: não existe, de propósito
+
+Medido com navegador de verdade, com a página inteira aberta e o mapa
+carregado: **zero cookies, `localStorage` vazio, `sessionStorage`
+vazio.** O site não cria nada no navegador de ninguém.
+
+Por isso não existe página de política de cookies, e criar uma agora
+seria pior que não ter: descreveria tratamento que não acontece, e
+documento que promete o que não existe é problema, não proteção.
+
+Isso muda no dia do Meta Pixel ou do Google Analytics. Ver seção 6.
+
 ---
 
 ## 3. Como isso é testado

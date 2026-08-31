@@ -7,9 +7,12 @@
         "npx",
         "-y",
         "chrome-devtools-mcp@latest",
-        "--autoConnect",
         "--executablePath",
-        "C:/Program Files/Google/Chrome/Application/chrome.exe"
+        "C:/Program Files/Google/Chrome/Application/chrome.exe",
+        "--userDataDir",
+        "C:/Users/jejos/.chrome-claude",
+        "--viewport",
+        "1280x800"
       ]
     }
   }
