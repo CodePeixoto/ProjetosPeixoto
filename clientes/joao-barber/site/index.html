@@ -439,16 +439,29 @@ section{padding:88px 0;border-bottom:1px solid var(--linha);scroll-margin-top:78
 
 /* formulário */
 .ag-campos{display:grid;gap:16px}
+
+/* Cada campo é uma coluna, e o input é empurrado pro fim dela. Sem
+   isso, rótulo que quebra em duas linhas desce o campo dele e os dois
+   da mesma fila ficam em alturas diferentes. Com isso, os inputs
+   encostam na mesma linha de base não importa o tamanho do rótulo. */
+.ag-campo{display:flex;flex-direction:column}
+.ag-campo input,.ag-campo select,.ag-campo textarea{margin-top:auto}
+
 .ag-campo label{
   display:block;margin-bottom:7px;
   font-size:11.5px;font-weight:400;letter-spacing:.18em;
-  text-transform:uppercase;color:var(--muted);
+  text-transform:uppercase;color:var(--muted);line-height:1.45;
 }
 .ag-campo input,.ag-campo select,.ag-campo textarea{
   width:100%;padding:13px 14px;border-radius:0;
   background:#0F0F0F;border:1px solid var(--linha);color:var(--claro);
   font-family:'Oswald',sans-serif;font-size:15px;font-weight:300;
 }
+/* Altura fixa nos dois de uma linha só. O menu suspenso ignora
+   line-height e nasce 1,5px mais alto que o campo de texto, o que
+   aparece quando os dois ficam lado a lado. A textarea fica de fora,
+   que ela cresce. */
+.ag-campo input,.ag-campo select{height:52px}
 .ag-campo textarea{min-height:82px;resize:vertical;line-height:1.6}
 .ag-campo input::placeholder,.ag-campo textarea::placeholder{color:#5E5E58}
 .ag-campo input:focus,.ag-campo select:focus,.ag-campo textarea:focus{
@@ -529,7 +542,7 @@ section{padding:88px 0;border-bottom:1px solid var(--linha);scroll-margin-top:78
 .ag-cancelar summary::-webkit-details-marker{display:none}
 .ag-cancelar summary:hover{color:var(--dourado)}
 .ag-cancelar[open] summary{color:var(--dourado);margin-bottom:16px}
-.ag-cancelar .ag-campo{margin-top:12px;max-width:220px}
+.ag-cancelar .ag-campo{margin-top:12px;max-width:260px}
 .ag-cancelar .btn{margin-top:16px}
 
 /* ---------- cta final ---------- */
@@ -1163,7 +1176,7 @@ html.anim .regua.on{animation:risco .9s cubic-bezier(.22,.7,.3,1) forwards}
                      style="text-transform:uppercase" placeholder="Ex: K7QP">
             </div>
             <div class="ag-campo">
-              <label for="ag-cod-tel">4 últimos números do seu WhatsApp</label>
+              <label for="ag-cod-tel">4 últimos do WhatsApp</label>
               <input type="text" id="ag-cod-tel" maxlength="4" inputmode="numeric"
                      autocomplete="off" placeholder="Ex: 7166">
             </div>
