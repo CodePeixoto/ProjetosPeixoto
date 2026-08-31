@@ -177,7 +177,7 @@ confirmação do dia seguinte) funcionam de ponta a ponta. Publicado em
 `joao-barber-aqz.netlify.app`, mas escondido (`noindex`, `robots.txt` e
 senha da Netlify) porque a mídia ainda é de terceiros. O motor roda na
 conta `joaobarber.agenda@gmail.com`. Falta o conteúdo do João (mídia,
-dados reais, número de WhatsApp, lista de contatos antigos pro recall) e
+dados reais, lista de contatos antigos pro recall) e
 o Google Meu Negócio. Próxima fase: ajustes de design e escrita, só
 depois do técnico fechado (que está). Detalhe da camada 3 em
 `clientes/joao-barber/agendamento/RELACIONAMENTO.md`.

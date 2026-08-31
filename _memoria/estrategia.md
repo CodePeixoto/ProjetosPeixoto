@@ -346,7 +346,7 @@ faria sentido se o Miguel escalar pra vários clientes, ou no Hermes.
 
 ## O que falta (nada é código)
 
-- **João:** número do WhatsApp em dígitos, lista de contatos antigos na
+- **João:** lista de contatos antigos na
   aba Clientes (destrava recall/aniversário), mídia real, dados reais,
   números da linha de base
 - **Google Meu Negócio:** cadastro dá pra começar já, verificação precisa
