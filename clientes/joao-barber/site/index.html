@@ -464,6 +464,7 @@ section{padding:88px 0;border-bottom:1px solid var(--linha);scroll-margin-top:78
 .ag-campo input,.ag-campo select{height:52px}
 .ag-campo textarea{min-height:82px;resize:vertical;line-height:1.6}
 .ag-nota-campo{margin-top:7px;font-size:13px;line-height:1.5;color:#6E6E68}
+.ag-nota-campo.nota-antes{margin:0 0 9px}
 .ag-campo input::placeholder,.ag-campo textarea::placeholder{color:#5E5E58}
 .ag-campo input:focus,.ag-campo select:focus,.ag-campo textarea:focus{
   outline:2px solid var(--dourado);outline-offset:1px;border-color:transparent;
@@ -1099,7 +1100,15 @@ html.anim .regua.on{animation:risco .9s cubic-bezier(.22,.7,.3,1) forwards}
                        placeholder="(61) 9 9999-9999" required>
               </div>
               <div class="ag-campo">
-                <label for="ag-nasc">Aniversário, só pra eu te dar parabéns (opcional)</label>
+                <label for="ag-nasc">Aniversário (opcional)</label>
+                <!-- A finalidade saiu do rótulo, que ficou pesado, mas não pode
+                     sumir da tela: esse campo se apoia em consentimento (art. 7,
+                     I), e consentimento sem finalidade declarada na hora da
+                     coleta não vale. Por isso ela virou nota.
+                     A nota fica ACIMA do campo de propósito: o input tem
+                     margin-top:auto pra encostar na mesma linha do campo
+                     vizinho, e nota embaixo quebraria esse alinhamento. -->
+                <p class="ag-nota-campo nota-antes">Só pra te mandar parabéns. Não peço o ano.</p>
                 <input type="text" id="ag-nasc" inputmode="numeric" maxlength="5" placeholder="dia/mês">
               </div>
               <div class="ag-campo">

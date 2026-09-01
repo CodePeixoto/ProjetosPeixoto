@@ -264,6 +264,19 @@ Nada disso é código. É o que sobra.
 | 6 | Decidir o prazo de guarda | 24 meses valendo. É palpite razoável, dá pra mudar na aba Config |
 | 7 | Limpar as linhas de teste da aba Clientes | o `testar()` de 31/08 acusou 2 clientes cadastrados, e não existe cliente real ainda. Provavelmente sobra dos testes de ponta a ponta. Se for isso, apagar: senão entram no recall de segunda e o João manda mensagem pra ninguém |
 
+### Decisões tomadas em 31/08
+
+- **Agendamento cancelado continua na planilha.** Decisão do Miguel. É o
+  registro do que aconteceu, é de onde sai a taxa de cancelamento e de
+  falta pro case, e o motor confere a coluna Código inteira antes de
+  sortear um novo, então apagar linha abriria caminho pra código
+  repetido. A LGPD fica coberta pela faxina dos 24 meses
+- **Cliente continua identificado só pelo telefone.** Quando o mesmo
+  número marca com nome diferente (pai marcando pro filho), o
+  agendamento guarda o nome digitado e o cadastro mantém o primeiro.
+  Fica assim por enquanto, pra resolver depois com mais calma
+
+
 ### Como conferir que a parte de LGPD está de pé
 
 Rodar **`testar()`** no editor do Apps Script. Ele responde INSTALADO ou
