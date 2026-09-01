@@ -14,6 +14,7 @@ real: o que for contexto do projeto entra no `projeto.md`.
 | `conversa-dialogo.md` | Transcrição bruta da conversa de 17/08. Fonte, não se edita |
 | `identidade.md` | Identidade visual dele. Separado porque é consultado a cada peça |
 | `SEGURANCA.md` | Auditoria de segurança e privacidade (31/08/2026), o plano de ação e o termo de imagem. Ler antes de mexer no agendamento |
+| `LGPD-REGISTRO.md` | Registro de operações de tratamento (art. 37), política simplificada de segurança e plano de resposta a incidente (art. 48). É o documento de prestação de contas: se a ANPD perguntar, a resposta está aqui. **Mexeu no que o sistema coleta ou em pra que serve? Atualiza este arquivo junto** |
 | `NOTAS-SITE.md` | Documentação técnica do site e da tela de agendamento. **Mora fora de `site/`** de propósito: tudo que está dentro daquela pasta vai pro ar e fica baixável pela internet |
 | `agendamento/` | Apps Script (`apps-script.gs`), instalação (`INSTALAR.md`), índice dos dados (`INDICE.md`), relacionamento/recall (`RELACIONAMENTO.md`), teste automático (`teste-motor.js`), e o fluxo por terminal: `CLASP.md` + `publicar-motor.ps1` + `appsscript.json` |
 

@@ -1,0 +1,174 @@
+<meta charset="utf-8">
+<title>João Barber · Agendamento online no ar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --preto:#0E0E0E;
+    --card:#1A1A1A;
+    --ouro:#C9A227;
+    --off:#FAFAF7;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#333;font-family:'Oswald',sans-serif}
+
+  .slide{
+    width:1080px;height:1350px;
+    position:relative;
+    display:flex;flex-direction:column;
+    padding:96px 90px 90px;
+    overflow:hidden;
+  }
+  .slide + .slide{margin-top:40px}
+
+  .slide.dark{background:var(--preto);color:var(--off)}
+  .slide.gold{background:var(--ouro);color:var(--preto)}
+
+  /* cabecalho comum */
+  .top{
+    position:absolute;top:56px;left:90px;right:90px;
+    display:flex;justify-content:space-between;align-items:center;
+    font-size:16px;font-weight:500;text-transform:uppercase;
+  }
+  .wordmark{letter-spacing:.34em;font-weight:700}
+  .counter{letter-spacing:.24em;font-weight:400;opacity:.75}
+  .dark .wordmark{color:var(--ouro)}
+  .gold .wordmark{color:var(--preto)}
+
+  /* regua */
+  .rule{width:72px;height:4px;background:var(--ouro);margin:26px 0}
+  .gold .rule{background:var(--preto)}
+
+  .eyebrow{
+    font-size:15px;font-weight:600;text-transform:uppercase;
+    letter-spacing:.28em;
+  }
+  .dark .eyebrow{color:var(--ouro)}
+  .gold .eyebrow{color:var(--preto);opacity:.7}
+
+  h1{
+    font-size:104px;font-weight:700;line-height:1.0;
+    text-transform:uppercase;letter-spacing:.01em;
+  }
+  h2{
+    font-size:66px;font-weight:700;line-height:1.06;
+    text-transform:uppercase;letter-spacing:.01em;
+  }
+  p.body{
+    font-size:27px;font-weight:300;line-height:1.5;max-width:30ch;
+  }
+  .gold p.body{font-weight:400}
+
+  .fill{flex:1}
+
+  .handle{
+    font-size:19px;font-weight:500;letter-spacing:.05em;
+  }
+  .dark .handle{color:var(--ouro)}
+
+  /* layout CAPA */
+  .capa h1{margin-bottom:30px}
+  .capa .apoio{
+    font-size:26px;font-weight:300;letter-spacing:.02em;opacity:.85;
+  }
+
+  /* layout SOLO */
+  .solo{justify-content:center}
+  .solo .eyebrow{margin-bottom:6px}
+
+  /* layout NUMERO */
+  .numero{justify-content:center}
+  .numero .big{
+    font-size:300px;font-weight:700;line-height:1;
+    letter-spacing:-.02em;display:block;
+  }
+  .dark .numero .big{color:var(--ouro)}
+  .gold .numero .big{color:var(--preto)}
+  .numero h2{margin:40px 0 26px}
+
+  /* layout CTA */
+  .cta{justify-content:center;align-items:flex-start}
+  .cta .mark{
+    font-size:72px;font-weight:700;text-transform:uppercase;
+    letter-spacing:.06em;color:var(--ouro);line-height:1.0;
+    margin-bottom:40px;
+  }
+  .cta h2{margin-bottom:34px}
+  .cta .btn{
+    display:inline-block;background:var(--ouro);color:var(--preto);
+    font-size:24px;font-weight:600;text-transform:uppercase;
+    letter-spacing:.14em;padding:22px 40px;
+  }
+  .cta .foot{
+    margin-top:44px;font-size:19px;font-weight:400;
+    letter-spacing:.16em;text-transform:uppercase;opacity:.8;
+  }
+</style>
+
+<!-- 01 CAPA -->
+<div class="slide dark capa">
+  <div class="top"><span class="wordmark">João Barber</span><span class="counter">01 / 07</span></div>
+  <div class="fill"></div>
+  <span class="eyebrow">Agendamento online</span>
+  <div class="rule"></div>
+  <h1>Seu horário,<br>marcado em<br>1 minuto</h1>
+  <p class="apoio">Sem ficar esperando eu ver a mensagem</p>
+  <div class="fill"></div>
+  <span class="handle">@joao_barber._</span>
+</div>
+
+<!-- 02 SOLO -->
+<div class="slide gold solo">
+  <div class="top"><span class="wordmark">João Barber</span><span class="counter">02 / 07</span></div>
+  <span class="eyebrow">O que muda</span>
+  <div class="rule"></div>
+  <h2>Você não depende<br>mais de eu estar<br>com o celular<br>na mão</h2>
+  <div style="height:34px"></div>
+  <p class="body">Antes era mandar mensagem e esperar eu responder pra saber se tinha vaga. Agora você abre a agenda, vê o que está livre de verdade e marca na hora.</p>
+</div>
+
+<!-- 03 NUMERO 1 -->
+<div class="slide dark numero">
+  <div class="top"><span class="wordmark">João Barber</span><span class="counter">03 / 07</span></div>
+  <span class="big">1</span>
+  <h2>Escolhe o serviço</h2>
+  <p class="body">Corte, barba, combo ou acabamento. Cada um já vem com o tempo certo reservado.</p>
+</div>
+
+<!-- 04 NUMERO 2 -->
+<div class="slide gold numero">
+  <div class="top"><span class="wordmark">João Barber</span><span class="counter">04 / 07</span></div>
+  <span class="big">2</span>
+  <h2>Escolhe onde</h2>
+  <p class="body">Na Rota 020 ou na sua casa. Se for a domicílio, o sistema já reserva o tempo do meu deslocamento, então o horário que aparece é real.</p>
+</div>
+
+<!-- 05 NUMERO 3 -->
+<div class="slide dark numero">
+  <div class="top"><span class="wordmark">João Barber</span><span class="counter">05 / 07</span></div>
+  <span class="big">3</span>
+  <h2>Escolhe o dia<br>e a hora</h2>
+  <p class="body">Só aparece horário que está livre na minha agenda. Você confirma e recebe um código pra desmarcar sozinho se precisar.</p>
+</div>
+
+<!-- 06 SOLO -->
+<div class="slide gold solo">
+  <div class="top"><span class="wordmark">João Barber</span><span class="counter">06 / 07</span></div>
+  <span class="eyebrow">No fim</span>
+  <div class="rule"></div>
+  <h2>Cai no meu<br>WhatsApp com<br>tudo escrito</h2>
+  <div style="height:34px"></div>
+  <p class="body">Serviço, local, dia e hora já vêm prontos na mensagem. Eu só confirmo. Rápido pra você e pra mim.</p>
+</div>
+
+<!-- 07 CTA -->
+<div class="slide dark cta">
+  <div class="top"><span class="wordmark">João Barber</span><span class="counter">07 / 07</span></div>
+  <div class="fill"></div>
+  <span class="mark">João<br>Barber</span>
+  <h2>Marque agora<br>pelo link da bio</h2>
+  <span class="btn">Agendar horário</span>
+  <span class="foot">@joao_barber._ · Sobradinho DF</span>
+  <div class="fill"></div>
+</div>

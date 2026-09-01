@@ -445,7 +445,7 @@ section{padding:88px 0;border-bottom:1px solid var(--linha);scroll-margin-top:78
    da mesma fila ficam em alturas diferentes. Com isso, os inputs
    encostam na mesma linha de base não importa o tamanho do rótulo. */
 .ag-campo{display:flex;flex-direction:column}
-.ag-campo input,.ag-campo select,.ag-campo textarea{margin-top:auto}
+.ag-campo input,.ag-campo select{margin-top:auto}
 
 .ag-campo label{
   display:block;margin-bottom:7px;
@@ -463,6 +463,7 @@ section{padding:88px 0;border-bottom:1px solid var(--linha);scroll-margin-top:78
    que ela cresce. */
 .ag-campo input,.ag-campo select{height:52px}
 .ag-campo textarea{min-height:82px;resize:vertical;line-height:1.6}
+.ag-nota-campo{margin-top:7px;font-size:13px;line-height:1.5;color:#6E6E68}
 .ag-campo input::placeholder,.ag-campo textarea::placeholder{color:#5E5E58}
 .ag-campo input:focus,.ag-campo select:focus,.ag-campo textarea:focus{
   outline:2px solid var(--dourado);outline-offset:1px;border-color:transparent;
@@ -1113,8 +1114,14 @@ html.anim .regua.on{animation:risco .9s cubic-bezier(.22,.7,.3,1) forwards}
                 </select>
               </div>
               <div class="ag-campo largo">
-                <label for="ag-obs">Alguma observação? (opcional)</label>
+                <label for="ag-obs">Alguma observação sobre o corte? (opcional)</label>
                 <textarea id="ag-obs" maxlength="300" placeholder="Ex: não curto a lateral muito curta"></textarea>
+                <!-- O aviso não é frescura: campo livre atrai informação de
+                     saúde (alergia, tratamento, problema de pele), que a LGPD
+                     trata como dado sensível no art. 11 e exige consentimento
+                     específico e destacado. Pedir pra falar pessoalmente é
+                     mais simples que criar um fluxo de consentimento pra isso. -->
+                <p class="ag-nota-campo">Só sobre o corte. Questão de pele, alergia ou tratamento, me conta na hora, pessoalmente: assim não fica escrito na minha planilha.</p>
               </div>
             </div>
 
