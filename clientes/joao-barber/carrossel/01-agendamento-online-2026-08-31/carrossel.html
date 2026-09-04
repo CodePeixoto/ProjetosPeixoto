@@ -25,15 +25,35 @@
   .slide.dark{background:var(--preto);color:var(--off)}
   .slide.gold{background:var(--ouro);color:var(--preto)}
 
+  /* fundo de foto (placeholder, trocar por midia real do Joao) */
+  .slide.foto{color:var(--off);justify-content:flex-end}
+  .slide.foto::before{
+    content:"";position:absolute;inset:0;
+    background-size:cover;background-position:center;
+    z-index:0;
+  }
+  .slide.foto::after{
+    content:"";position:absolute;inset:0;z-index:1;
+    background:linear-gradient(180deg,
+      rgba(10,10,10,.35) 0%,
+      rgba(10,10,10,.55) 42%,
+      rgba(10,10,10,.92) 100%);
+  }
+  .slide.foto > *:not(.top){position:relative;z-index:2}
+  .f1::before{background-image:url('img/foto-1.jpg')}
+  .f2::before{background-image:url('img/foto-8.jpg')}
+  .f3::before{background-image:url('img/foto-4.jpg')}
+
   /* cabecalho comum */
   .top{
     position:absolute;top:56px;left:90px;right:90px;
     display:flex;justify-content:space-between;align-items:center;
     font-size:16px;font-weight:500;text-transform:uppercase;
+    z-index:3;
   }
   .wordmark{letter-spacing:.34em;font-weight:700}
   .counter{letter-spacing:.24em;font-weight:400;opacity:.75}
-  .dark .wordmark{color:var(--ouro)}
+  .dark .wordmark,.foto .wordmark{color:var(--ouro)}
   .gold .wordmark{color:var(--preto)}
 
   /* regua */
@@ -44,38 +64,42 @@
     font-size:15px;font-weight:600;text-transform:uppercase;
     letter-spacing:.28em;
   }
-  .dark .eyebrow{color:var(--ouro)}
+  .dark .eyebrow,.foto .eyebrow{color:var(--ouro)}
   .gold .eyebrow{color:var(--preto);opacity:.7}
 
   h1{
-    font-size:104px;font-weight:700;line-height:1.0;
+    font-size:100px;font-weight:700;line-height:1.0;
     text-transform:uppercase;letter-spacing:.01em;
   }
   h2{
-    font-size:66px;font-weight:700;line-height:1.06;
-    text-transform:uppercase;letter-spacing:.01em;
+    font-size:62px;font-weight:700;line-height:1.08;
+    text-transform:uppercase;letter-spacing:.01em;max-width:15ch;
   }
   p.body{
     font-size:27px;font-weight:300;line-height:1.5;max-width:30ch;
   }
   .gold p.body{font-weight:400}
+  .foto p.body{font-weight:400}
 
   .fill{flex:1}
 
   .handle{
     font-size:19px;font-weight:500;letter-spacing:.05em;
   }
-  .dark .handle{color:var(--ouro)}
+  .dark .handle,.foto .handle{color:var(--ouro)}
 
   /* layout CAPA */
-  .capa h1{margin-bottom:30px}
+  .capa h1{margin-bottom:26px}
   .capa .apoio{
-    font-size:26px;font-weight:300;letter-spacing:.02em;opacity:.85;
+    font-size:26px;font-weight:400;letter-spacing:.02em;opacity:.9;
   }
+  .capa .handle{margin-top:30px}
 
   /* layout SOLO */
   .solo{justify-content:center}
-  .solo .eyebrow{margin-bottom:6px}
+  .solo.foto{justify-content:flex-end}
+  .solo .eyebrow{margin-bottom:0}
+  .solo p.body{margin-top:30px}
 
   /* layout NUMERO */
   .numero{justify-content:center}
@@ -85,47 +109,40 @@
   }
   .dark .numero .big{color:var(--ouro)}
   .gold .numero .big{color:var(--preto)}
-  .numero h2{margin:40px 0 26px}
+  .numero h2{margin:36px 0 24px}
 
   /* layout CTA */
   .cta{justify-content:center;align-items:flex-start}
-  .cta .mark{
-    font-size:72px;font-weight:700;text-transform:uppercase;
-    letter-spacing:.06em;color:var(--ouro);line-height:1.0;
-    margin-bottom:40px;
-  }
-  .cta h2{margin-bottom:34px}
+  .cta .rule{margin:0 0 34px}
+  .cta h2{margin-bottom:38px;font-size:74px}
   .cta .btn{
-    display:inline-block;background:var(--ouro);color:var(--preto);
+    display:inline-block;background:var(--preto);color:var(--ouro);
     font-size:24px;font-weight:600;text-transform:uppercase;
-    letter-spacing:.14em;padding:22px 40px;
+    letter-spacing:.14em;padding:24px 44px;
   }
   .cta .foot{
     margin-top:44px;font-size:19px;font-weight:400;
-    letter-spacing:.16em;text-transform:uppercase;opacity:.8;
+    letter-spacing:.16em;text-transform:uppercase;opacity:.75;
   }
 </style>
 
 <!-- 01 CAPA -->
-<div class="slide dark capa">
+<div class="slide foto f1 capa">
   <div class="top"><span class="wordmark">João Barber</span><span class="counter">01 / 07</span></div>
-  <div class="fill"></div>
   <span class="eyebrow">Agendamento online</span>
   <div class="rule"></div>
   <h1>Seu horário,<br>marcado em<br>1 minuto</h1>
   <p class="apoio">Sem ficar esperando eu ver a mensagem</p>
-  <div class="fill"></div>
   <span class="handle">@joao_barber._</span>
 </div>
 
-<!-- 02 SOLO -->
-<div class="slide gold solo">
+<!-- 02 SOLO foto -->
+<div class="slide foto f2 solo">
   <div class="top"><span class="wordmark">João Barber</span><span class="counter">02 / 07</span></div>
   <span class="eyebrow">O que muda</span>
   <div class="rule"></div>
-  <h2>Você não depende<br>mais de eu estar<br>com o celular<br>na mão</h2>
-  <div style="height:34px"></div>
-  <p class="body">Antes era mandar mensagem e esperar eu responder pra saber se tinha vaga. Agora você abre a agenda, vê o que está livre de verdade e marca na hora.</p>
+  <h2>Não precisa mais esperar eu responder</h2>
+  <p class="body">Você abre a agenda, vê o horário que está livre de verdade e marca. A qualquer hora do dia.</p>
 </div>
 
 <!-- 03 NUMERO 1 -->
@@ -133,7 +150,7 @@
   <div class="top"><span class="wordmark">João Barber</span><span class="counter">03 / 07</span></div>
   <span class="big">1</span>
   <h2>Escolhe o serviço</h2>
-  <p class="body">Corte, barba, combo ou acabamento. Cada um já vem com o tempo certo reservado.</p>
+  <p class="body">Corte, barba, combo ou acabamento. Já vem com o tempo certo reservado.</p>
 </div>
 
 <!-- 04 NUMERO 2 -->
@@ -141,34 +158,31 @@
   <div class="top"><span class="wordmark">João Barber</span><span class="counter">04 / 07</span></div>
   <span class="big">2</span>
   <h2>Escolhe onde</h2>
-  <p class="body">Na Rota 020 ou na sua casa. Se for a domicílio, o sistema já reserva o tempo do meu deslocamento, então o horário que aparece é real.</p>
+  <p class="body">Na Rota 020 ou na sua casa. No domicílio o sistema já conta o meu deslocamento, então o horário que aparece é real.</p>
 </div>
 
 <!-- 05 NUMERO 3 -->
 <div class="slide dark numero">
   <div class="top"><span class="wordmark">João Barber</span><span class="counter">05 / 07</span></div>
   <span class="big">3</span>
-  <h2>Escolhe o dia<br>e a hora</h2>
-  <p class="body">Só aparece horário que está livre na minha agenda. Você confirma e recebe um código pra desmarcar sozinho se precisar.</p>
+  <h2>Escolhe o dia e a hora</h2>
+  <p class="body">Só aparece o que está livre na minha agenda. Você confirma e recebe um código pra desmarcar sozinho.</p>
 </div>
 
-<!-- 06 SOLO -->
-<div class="slide gold solo">
+<!-- 06 SOLO foto -->
+<div class="slide foto f3 solo">
   <div class="top"><span class="wordmark">João Barber</span><span class="counter">06 / 07</span></div>
   <span class="eyebrow">No fim</span>
   <div class="rule"></div>
-  <h2>Cai no meu<br>WhatsApp com<br>tudo escrito</h2>
-  <div style="height:34px"></div>
-  <p class="body">Serviço, local, dia e hora já vêm prontos na mensagem. Eu só confirmo. Rápido pra você e pra mim.</p>
+  <h2>Cai no meu WhatsApp, tudo escrito</h2>
+  <p class="body">Serviço, local, dia e hora já vêm prontos na mensagem. Eu só confirmo.</p>
 </div>
 
 <!-- 07 CTA -->
-<div class="slide dark cta">
+<div class="slide gold cta">
   <div class="top"><span class="wordmark">João Barber</span><span class="counter">07 / 07</span></div>
-  <div class="fill"></div>
-  <span class="mark">João<br>Barber</span>
-  <h2>Marque agora<br>pelo link da bio</h2>
+  <div class="rule"></div>
+  <h2>Marque agora pelo link da bio</h2>
   <span class="btn">Agendar horário</span>
   <span class="foot">@joao_barber._ · Sobradinho DF</span>
-  <div class="fill"></div>
 </div>

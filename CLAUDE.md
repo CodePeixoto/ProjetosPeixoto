@@ -145,7 +145,9 @@ Dentro de um cliente, quando tiver agendamento, entra também
 
 Miguel, freelancer de marketing digital (sites, Meta Ads, Google Ads,
 Google Meu Negócio, conteúdo de redes sociais, e sistemas simples de
-agendamento). Primeiro cliente pago fechado em 19/08/2026.
+agendamento). **Ainda sem cliente pagante.** O João Barber é o primeiro
+interessado, e o sistema dele foi construído antes de qualquer acordo
+financeiro (ver ).
 
 ## Meu serviço
 
@@ -156,16 +158,18 @@ agendamento). Primeiro cliente pago fechado em 19/08/2026.
 - Google Meu Negócio
 - Conteúdo/carrossel pra Instagram
 
-Primeira referência de preço, praticada com o João Barber:
-**R$ 300 de implementação e R$ 200 por mês.** Capacidade simultânea:
-1 projeto enquanto o primeiro case estiver rodando.
+Preço pretendido, apresentado ao João Barber e ainda não pago por
+ninguém: **R$ 300 de implementação e R$ 200 por mês.** Capacidade
+simultânea: 1 projeto enquanto o primeiro case estiver rodando.
 
 ## Clientes ativos
 
 **João Lucas** (Instagram "João Barber"), 21 anos, barbeiro na Barbearia
 Rota 020 em Sobradinho, com CNPJ próprio e atendimento a domicílio.
-Primeiro cliente pago. Fechou verbalmente em 17/08/2026, viu o site em
-19/08. Cobrança começa em meados de setembro.
+**Interessado, não fechado.** Conversou em 17/08/2026 e viu o site em
+19/08. Ouviu o preço (R$ 300 mais R$ 200 por mês) e não recusou, e ele
+mesmo disse que só teria dinheiro no mês seguinte, por causa de dívidas.
+Não existe sim formal nem data acordada. Não tratar como cliente fechado.
 
 Pasta em `clientes/joao-barber/`: `projeto.md` (tudo sobre o projeto),
 `conversa-dialogo.md` (transcrição), `identidade.md`, `site/` e

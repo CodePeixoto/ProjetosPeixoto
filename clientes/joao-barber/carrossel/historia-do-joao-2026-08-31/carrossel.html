@@ -1,0 +1,185 @@
+<meta charset="utf-8">
+<title>João Barber · A história</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --preto:#0E0E0E;
+    --card:#1A1A1A;
+    --ouro:#C9A227;
+    --off:#FAFAF7;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#333;font-family:'Oswald',sans-serif}
+
+  .slide{
+    width:1080px;height:1350px;
+    position:relative;
+    display:flex;flex-direction:column;
+    padding:96px 90px 90px;
+    overflow:hidden;
+  }
+  .slide + .slide{margin-top:40px}
+
+  .slide.dark{background:var(--preto);color:var(--off)}
+  .slide.gold{background:var(--ouro);color:var(--preto)}
+
+  .top{
+    position:absolute;top:56px;left:90px;right:90px;
+    display:flex;justify-content:space-between;align-items:center;
+    font-size:16px;font-weight:500;text-transform:uppercase;
+  }
+  .wordmark{letter-spacing:.34em;font-weight:700}
+  .counter{letter-spacing:.24em;font-weight:400;opacity:.75}
+  .dark .wordmark{color:var(--ouro)}
+  .gold .wordmark{color:var(--preto)}
+
+  .rule{width:72px;height:4px;background:var(--ouro);margin:26px 0}
+  .gold .rule{background:var(--preto)}
+
+  .eyebrow{
+    font-size:15px;font-weight:600;text-transform:uppercase;
+    letter-spacing:.28em;
+  }
+  .dark .eyebrow{color:var(--ouro)}
+  .gold .eyebrow{color:var(--preto);opacity:.7}
+
+  h1{
+    font-size:100px;font-weight:700;line-height:1.0;
+    text-transform:uppercase;letter-spacing:.01em;
+  }
+  h2{
+    font-size:54px;font-weight:700;line-height:1.12;
+    text-transform:uppercase;letter-spacing:.01em;max-width:17ch;
+  }
+  p.body{
+    font-size:27px;font-weight:300;line-height:1.5;max-width:31ch;
+  }
+  .gold p.body{font-weight:400}
+
+  .fill{flex:1}
+  .handle{font-size:19px;font-weight:500;letter-spacing:.05em}
+  .dark .handle{color:var(--ouro)}
+
+  /* CAPA */
+  .capa h1{margin-bottom:30px}
+  .capa .apoio{font-size:26px;font-weight:300;letter-spacing:.02em;opacity:.85}
+
+  /* SOLO */
+  .solo{justify-content:center}
+  .solo .eyebrow{margin-bottom:0}
+  .solo p.body{margin-top:34px}
+
+  /* CITACAO */
+  .citacao{justify-content:center;position:relative}
+  .citacao .mark{
+    position:absolute;top:150px;left:70px;
+    font-size:420px;line-height:1;font-weight:700;
+    color:var(--ouro);opacity:.16;
+  }
+  .citacao .quote{
+    font-size:70px;font-weight:600;line-height:1.14;
+    letter-spacing:.005em;position:relative;max-width:16ch;
+  }
+  .citacao .who{
+    margin-top:40px;font-size:17px;font-weight:500;
+    text-transform:uppercase;letter-spacing:.22em;color:var(--ouro);
+  }
+
+  /* CTA */
+  .cta{justify-content:center;align-items:flex-start}
+  .cta .mark{
+    font-size:30px;font-weight:600;text-transform:uppercase;
+    letter-spacing:.34em;color:var(--preto);line-height:1.3;opacity:.65;
+    margin-bottom:0;
+  }
+  .cta .rule{margin:22px 0 40px}
+  .cta h2{margin-bottom:38px;max-width:15ch;font-size:60px}
+  .cta .btn{
+    display:inline-block;background:var(--preto);color:var(--ouro);
+    font-size:24px;font-weight:600;text-transform:uppercase;
+    letter-spacing:.14em;padding:22px 40px;
+  }
+  .cta .foot{
+    margin-top:44px;font-size:19px;font-weight:400;
+    letter-spacing:.16em;text-transform:uppercase;opacity:.75;
+  }
+</style>
+
+<!-- 01 CAPA -->
+<div class="slide dark capa">
+  <div class="top"><span class="wordmark">João Barber</span><span class="counter">01 / 08</span></div>
+  <div class="fill"></div>
+  <span class="eyebrow">A história</span>
+  <div class="rule"></div>
+  <h1>Eu pedia<br>um corte e<br>recebia outro</h1>
+  <p class="apoio">Foi assim que eu aprendi a cortar cabelo</p>
+  <div class="fill"></div>
+  <span class="handle">@joao_barber._</span>
+</div>
+
+<!-- 02 SOLO -->
+<div class="slide gold solo">
+  <div class="top"><span class="wordmark">João Barber</span><span class="counter">02 / 08</span></div>
+  <span class="eyebrow">De onde vem</span>
+  <div class="rule"></div>
+  <h2>Eu falava o que queria e saía com outra coisa na cabeça</h2>
+  <p class="body">Acontecia comigo direto. Eu pedia um corte, o barbeiro fazia o dele, e eu ficava um mês me olhando no espelho com um cabelo que não era o meu.</p>
+</div>
+
+<!-- 03 CITACAO -->
+<div class="slide dark citacao">
+  <div class="top"><span class="wordmark">João Barber</span><span class="counter">03 / 08</span></div>
+  <span class="mark">&ldquo;</span>
+  <p class="quote">Você é quem fica um mês com esse corte. Então ele tem que ser seu.</p>
+  <span class="who">João Lucas · Barbeiro</span>
+</div>
+
+<!-- 04 SOLO -->
+<div class="slide gold solo">
+  <div class="top"><span class="wordmark">João Barber</span><span class="counter">04 / 08</span></div>
+  <span class="eyebrow">O que eu fiz com isso</span>
+  <div class="rule"></div>
+  <h2>Virei do avesso o que me incomodava</h2>
+  <p class="body">Hoje eu não aceito o pedido cru. Te pergunto o que você quer, e te pergunto o que você não quer que aconteça no seu cabelo. Se sair errado, o problema é meu, porque a informação eu tinha.</p>
+</div>
+
+<!-- 05 SOLO -->
+<div class="slide dark solo">
+  <div class="top"><span class="wordmark">João Barber</span><span class="counter">05 / 08</span></div>
+  <span class="eyebrow">A parte que pouca gente sabe</span>
+  <div class="rule"></div>
+  <h2>No começo, isso era insegurança minha</h2>
+  <p class="body">Eu perguntava tanto porque tinha medo de errar. Até um cliente me dizer que, pra ele, era o contrário: cada pergunta minha passava mais segurança. Aí eu entendi que podia continuar assim.</p>
+</div>
+
+<!-- 06 SOLO -->
+<div class="slide gold solo">
+  <div class="top"><span class="wordmark">João Barber</span><span class="counter">06 / 08</span></div>
+  <span class="eyebrow">Onde eu rodei</span>
+  <div class="rule"></div>
+  <h2>Passei um tempo no Plano, cortando diplomata e deputado</h2>
+  <p class="body">Lá o corte difícil não era degradê, era tesoura. O que o cliente valorizava era a experiência inteira, não só o resultado. Isso ficou comigo.</p>
+</div>
+
+<!-- 07 SOLO -->
+<div class="slide dark solo">
+  <div class="top"><span class="wordmark">João Barber</span><span class="counter">07 / 08</span></div>
+  <span class="eyebrow">Por que voltei</span>
+  <div class="rule"></div>
+  <h2>Sobradinho é onde eu quero construir</h2>
+  <p class="body">Voltei pra cá de propósito. Tenho 21 anos e penso nisso todo dia: quero que, quando você pensar em corte bem feito em Sobradinho, o meu nome seja o primeiro que vem.</p>
+</div>
+
+<!-- 08 CTA -->
+<div class="slide gold cta">
+  <div class="top"><span class="wordmark">João Barber</span><span class="counter">08 / 08</span></div>
+  <div class="fill"></div>
+  <span class="mark">João Barber</span>
+  <div class="rule"></div>
+  <h2>Senta na cadeira. Eu te escuto primeiro.</h2>
+  <span class="btn">Me chama no WhatsApp</span>
+  <span class="foot">@joao_barber._ · Sobradinho DF</span>
+  <div class="fill"></div>
+</div>

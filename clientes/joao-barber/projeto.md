@@ -1,5 +1,11 @@
 # João Barber · o projeto inteiro
 
+> **Corrigido em 04/09/2026.** Este arquivo tratava o João como cliente
+> fechado. Ele não é. Ouviu o preço, não recusou, e disse por conta
+> própria que só teria dinheiro no mês seguinte por causa de dívidas.
+> Não há sim formal, proposta escrita nem data de pagamento. Ver o
+> bloco de aviso em `_memoria/empresa.md`.
+
 > Arquivo único do cliente: briefing, escopo, plano, preço e riscos.
 > Atualizado em 30/08/2026.
 >
@@ -115,7 +121,7 @@ Abertas:
 João Lucas, 21 anos, barbeiro na Barbearia Rota 020 (Sobradinho, DF) com
 CNPJ próprio. Atende também a domicílio. Instagram `@joao_barber._`,
 336 seguidores. WhatsApp `wa.me/message/4J746DNCQC6ED1`. Amigo próximo do
-Miguel. Primeiro cliente pago.
+Miguel. Primeiro interessado, ainda sem contrato nem pagamento.
 
 **Ele não é um barbeiro com agenda vazia.** Isso é o erro de leitura que a
 gente cometeu no começo. Na conversa de 29 minutos ele não citou horário
@@ -169,7 +175,7 @@ tu não abre do zero, abre com clientela."*
 
 ## 2. O que ele pediu, nas palavras dele
 
-Fechou a conversa com **"então fecha nós aí"**. Já disse sim.
+Fechou a conversa com **"então fecha nós aí"**, respondendo a "posso te mostrar um projeto essa semana". Era sim pra ver a proposta, não pra contratar.
 
 | # | Pedido | Palavra dele |
 |---|---|---|
@@ -369,12 +375,13 @@ aquisição. Prometer clientes vindos do Google seria promessa furada.
 
 ---
 
-## 6. Preço: fechado
+## 6. Preço: apresentado, não aceito
 
 **R$ 300 de implementação e R$ 200 por mês.** Oferecido pelo Miguel e
 aceito pelo João ("falou que estava tranquilo").
 
-Está fechado e não se reabre. Mudar preço depois de um sim é o jeito mais
+O João ouviu esses valores e não recusou, mas nunca deu um sim formal.
+Ainda assim, não baixar depois de ter falado. Mudar preço depois de dito é o jeito mais
 rápido de transformar cliente em desconfiado.
 
 Observações pro Miguel, não pra ele:

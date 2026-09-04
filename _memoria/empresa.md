@@ -7,14 +7,23 @@
 **Negócio:** Freelancer prestando serviço de marketing digital (sites, Meta Ads, Google Ads, Google Meu Negócio, conteúdo/redes sociais)
 **O que faz:** Ainda em fase de aprendizado e primeiro case. Está estruturando site, anúncios (Meta Ads, Google Ads), GMB e conteúdo de redes sociais pra clientes locais.
 **Perfil:** Freelancer
-**Atende clientes:** Primeiro cliente fechado (verbalmente) em 17/08/2026: João Lucas, 21 anos, barbeiro na Barbearia Rota 020 com CNPJ próprio, atende a domicílio, identificado no Instagram como "João Barber". É amigo próximo do Miguel. Disse sim ao pacote. Preço fechado: R$ 300 de implementação e R$ 200 por mês, aceito por ele. O pagamento começa por volta de meados de setembro/2026.
+**Atende clientes:** Nenhum cliente pagante ainda. **João Lucas** é um cliente em potencial, não fechado: 21 anos, barbeiro na Barbearia Rota 020 com CNPJ próprio, atende a domicílio, "João Barber" no Instagram, amigo próximo do Miguel.
+
+> **Cuidado com esse registro.** Até 04/09/2026 esse arquivo dizia "fechado, preço aceito, pagamento em meados de setembro". Isso nunca aconteceu, e a transcrição de 17/08 não tem uma palavra sobre preço. O erro se espalhou pra outros arquivos e influenciou decisão. O que de fato aconteceu, confirmado pelo Miguel em 04/09:
+>
+> - o João **ouviu** os R$ 300 de implementação e R$ 200 por mês, e não recusou
+> - ele mesmo levantou, sem ser perguntado, que só teria dinheiro no mês seguinte, por causa de dívidas e contas
+> - não houve "sim" formal, não houve data combinada, não houve proposta escrita
+> - o "então fecha nós aí" da transcrição responde a "posso te mostrar um projeto essa semana", não a uma contratação
+>
+> Status real: **interessado quente, sem compromisso.** O sistema inteiro foi construído antes de qualquer pagamento.
 **Equipe:** Sozinho.
 **Ferramentas:** GitHub (repositório privado `CodePeixoto/ProjetosPeixoto`), Netlify (hospedagem, publicada pelo Claude via `/publicar-site`), Google Agenda + Planilhas + Apps Script (motor do agendamento), clasp (publica o motor pelo terminal) e Google Meu Negócio. Canva, Metricool e Firecrawl seguem em uso esporádico, fora do fluxo de cliente. Ver `CLAUDE.md`.
-**Principais entregas:** Site, **agendamento online** (Google Agenda + planilha + WhatsApp, sem mensalidade de ferramenta), carrossel/conteúdo pra Instagram, Google Meu Negócio, Meta Ads e Google Ads. Preço praticado: R$ 300 de implementação e R$ 200 por mês.
+**Principais entregas:** Site, **agendamento online** (Google Agenda + planilha + WhatsApp, sem mensalidade de ferramenta), carrossel/conteúdo pra Instagram, Google Meu Negócio, Meta Ads e Google Ads. Preço que o Miguel pretende cobrar: R$ 300 de implementação e R$ 200 por mês. Ainda não foi pago por ninguém.
 
 ## Contexto adicional
 
-Miguel está no início da carreira como freelancer de marketing digital. Vendeu o primeiro serviço em 17/08/2026 (João Lucas), e o pagamento começa em meados de setembro. O objetivo de médio prazo é ganhar experiência real através desse case, aprender a precificar, vender e conduzir clientes, e no futuro construir um negócio/ecossistema próprio maior.
+Miguel está no início da carreira como freelancer de marketing digital. Ainda não vendeu nada. Conversou com o João Lucas em 17/08/2026, mostrou o site em 19/08, e construiu o sistema inteiro sem contrato e sem pagamento. O objetivo de médio prazo é ganhar experiência real através desse case, aprender a precificar, vender e conduzir clientes, e no futuro construir um negócio/ecossistema próprio maior.
 
 ## Já entregue no case João Barber (agosto/2026)
 

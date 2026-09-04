@@ -1,13 +1,21 @@
 # Estratégia
 
+> **Corrigido em 04/09/2026.** Este arquivo tratava o João como cliente
+> fechado. Ele não é. Ouviu o preço, não recusou, e disse por conta
+> própria que só teria dinheiro no mês seguinte por causa de dívidas.
+> Não há sim formal, proposta escrita nem data de pagamento. Ver o
+> bloco de aviso em `_memoria/empresa.md`.
+
 > O que importa agora. Prioridades, metas, prazos.
 > O Claude usa isso pra decidir o que sugerir primeiro e o que adiar.
 > Atualize sempre que as prioridades mudarem.
 
 ## Fase
 
-Primeiro cliente fechado verbalmente em 17/08/2026 (João Lucas / João
-Barber). Pagamento começa em meados de setembro. Até lá, 30 dias de
+Primeiro interessado, não fechado: João Lucas (João Barber), conversa em
+17/08/2026. Ouviu o preço e não recusou, e disse por conta própria que
+só teria dinheiro no mês seguinte, por causa de dívidas. Sem sim formal
+e sem data de pagamento. Até lá, 30 dias de
 montagem sem cobrança.
 
 ## Prioridade principal
@@ -301,7 +309,7 @@ relevante: o que falta é conteúdo e informação dele.
    `robots.txt` e a senha da Netlify quando a mídia real entrar
 4. **Recall de 15 dias** (camada 3), que se alimenta da aba Clientes que
    já está sendo preenchida sozinha
-5. Cobrança começa por volta de 19/09/2026
+5. Cobrança: sem data. Depende de o João fechar de verdade
 
 ---
 
